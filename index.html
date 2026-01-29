@@ -7,47 +7,52 @@
         :root { --bg: #050505; --panel: #0a0a0a; --accent: #00ff87; --text: #e0e0e0; --border: #222; --blue: #00d4ff; }
         body { font-family: 'Inter', sans-serif; background: #000; color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        /* Sidebar con LOGO GRANDE a sinistra */
+        /* SIDEBAR SINISTRA */
         #sidebar { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
-        .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid var(--border); }
-        .brand-logo { width: 100%; max-width: 200px; filter: drop-shadow(0 0 10px var(--accent)); }
+        
+        /* LOGO A SINISTRA - FORZATO GRANDE */
+        .sidebar-brand-container { padding: 25px 15px; text-align: center; background: #000; border-bottom: 1px solid var(--border); }
+        .brand-logo-main { width: 100%; max-width: 220px; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 0 12px var(--accent)); }
 
         .nav-group { padding: 10px 15px; }
-        .cat-label { font-size: 0.65rem; color: #555; text-transform: uppercase; margin: 15px 0 5px; display: block; font-weight: bold; border-left: 2px solid var(--accent); padding-left: 8px; }
-        .nav-btn { width: 100%; padding: 8px 10px; margin-bottom: 3px; background: #111; border: 1px solid #222; color: #888; text-align: left; cursor: pointer; border-radius: 4px; font-size: 0.72rem; }
-        .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; font-weight: bold; }
+        .cat-label { font-size: 0.7rem; color: var(--accent); text-transform: uppercase; margin: 20px 0 8px; display: block; font-weight: bold; letter-spacing: 1px; }
+        .nav-btn { width: 100%; padding: 10px; margin-bottom: 4px; background: #111; border: 1px solid #222; color: #888; text-align: left; cursor: pointer; border-radius: 4px; font-size: 0.75rem; transition: 0.2s; }
+        .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; font-weight: bold; transform: translateX(5px); }
 
         #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; position: relative; }
         
-        /* Header pulito con solo RNG */
-        #header { height: 60px; background: #0a0a0a; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid var(--border); }
-        #rng-box { font-family: monospace; font-size: 1.8rem; color: var(--accent); border: 1px solid #333; padding: 4px 12px; border-radius: 4px; min-width: 60px; text-align: center; }
+        /* HEADER CON RNG */
+        #header { height: 70px; background: #0a0a0a; display: flex; align-items: center; justify-content: center; gap: 30px; border-bottom: 1px solid var(--border); }
+        #rng-box { font-family: 'Courier New', monospace; font-size: 2.2rem; color: var(--accent); background: #000; border: 2px solid #333; padding: 5px 20px; border-radius: 6px; min-width: 80px; text-align: center; text-shadow: 0 0 10px var(--accent); }
         
-        /* Area centrale con LATTINA */
-        #image-area { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; background: radial-gradient(circle, #111 0%, #000 100%); position: relative; }
-        #current-img { max-width: 98%; max-height: 98%; object-fit: contain; display: none; z-index: 2; }
+        /* AREA CENTRALE NERA */
+        #image-area { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; background: radial-gradient(circle, #151515 0%, #000 100%); }
         
-        .central-can { width: 250px; cursor: pointer; transition: 0.4s; z-index: 1; filter: drop-shadow(0 0 20px rgba(0,255,135,0.2)); }
-        .central-can:hover { transform: scale(1.05); filter: drop-shadow(0 0 30px var(--accent)); }
+        /* LATTINA CENTRALE - FORZATA GRANDE */
+        .can-center-wrapper { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 5; }
+        .can-large { width: 300px; height: auto; cursor: pointer; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); filter: drop-shadow(0 0 30px rgba(0,255,135,0.15)); }
+        .can-large:hover { transform: scale(1.1); filter: drop-shadow(0 0 50px var(--accent)); }
         
-        #status-msg { margin-top: 20px; color: #555; font-weight: bold; z-index: 1; }
+        #current-img { max-width: 95%; max-height: 90%; object-fit: contain; display: none; z-index: 10; border: 1px solid #333; box-shadow: 0 0 40px rgba(0,0,0,0.8); }
+        
+        #status-text { margin-top: 320px; color: #444; font-size: 0.9rem; letter-spacing: 2px; font-weight: bold; text-transform: uppercase; }
 
-        #stack-bar { background: #050505; padding: 10px; display: flex; gap: 8px; overflow-x: auto; border-top: 1px solid var(--border); min-height: 55px; align-items: center; }
-        .stk-btn { padding: 8px 16px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 4px; cursor: pointer; font-size: 0.75rem; white-space: nowrap; font-weight: bold; }
-        .stk-btn.active { background: var(--blue); color: #000; }
+        /* FOOTER STACK */
+        #stack-bar { background: #080808; padding: 12px; display: flex; gap: 10px; overflow-x: auto; border-top: 1px solid var(--border); align-items: center; justify-content: center; }
+        .stk-btn { padding: 10px 20px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 5px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
+        .stk-btn.active { background: var(--blue); color: #000; box-shadow: 0 0 15px var(--blue); }
 
-        #right-panel { width: 320px; background: var(--panel); border-left: 1px solid var(--border); padding: 15px; overflow-y: auto; }
-        .section-box { background: rgba(255,255,255,0.02); border-radius: 6px; padding: 12px; margin-bottom: 15px; border: 1px solid #222; }
-        .inp-field { background: #000; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px; width: 100%; margin-bottom: 8px; font-size: 0.75rem; box-sizing: border-box; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .pack-btn { background: #333; color: white; border: none; padding: 8px; font-size: 0.65rem; cursor: pointer; border-radius: 3px; width: 100%; margin-top: 5px; font-weight: bold; }
+        #right-panel { width: 320px; background: var(--panel); border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; }
+        .section-box { background: #000; border: 1px solid #222; border-radius: 8px; padding: 15px; margin-bottom: 20px; }
+        .inp-field { background: #111; border: 1px solid #333; color: white; padding: 10px; border-radius: 4px; width: 100%; margin-bottom: 10px; font-size: 0.8rem; box-sizing: border-box; }
+        .btn-action { width: 100%; padding: 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 5px; transition: 0.3s; }
     </style>
 </head>
 <body>
 
 <aside id="sidebar">
-    <div class="sidebar-header">
-        <img src="logo_maximizer.webp" class="brand-logo" alt="EV MAXIMIZER">
+    <div class="sidebar-brand-container">
+        <img src="logo_maximizer.webp" class="brand-logo-main" alt="EV MAXIMIZER">
     </div>
 
     <div class="nav-group">
@@ -72,52 +77,61 @@
         <span class="cat-label">Nash Equilibrium</span>
         <button class="nav-btn" onclick="sm('nash push', this)">15. Nash Push</button>
         <button class="nav-btn" onclick="sm('nash call', this)">16. Nash Call</button>
-        
-        <hr style="border:0; border-top:1px solid #222; margin:20px 0;">
-        <button class="pack-btn" onclick="exportData()">💾 ESPORTA PACCHETTO</button>
-        <label class="pack-btn" style="display:block; text-align:center;">
-            📂 IMPORTA PACCHETTO <input type="file" id="import-file" style="display:none" onchange="importData(event)">
-        </label>
     </div>
 </aside>
 
 <main id="main-view">
     <header id="header">
         <div id="rng-box">--</div>
-        <button onclick="roll()" style="background:var(--accent); color:black; border:none; padding:8px 20px; cursor:pointer; font-weight:bold; border-radius:4px;">ROLL RNG</button>
-        <label style="background:var(--blue); color:black; padding:8px 15px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">
+        <button onclick="roll()" class="btn-action" style="background:var(--accent); color:black; width:auto; padding:10px 30px;">ROLL RNG</button>
+        <label class="btn-action" style="background:var(--blue); color:black; width:auto; padding:10px 20px; text-align:center;">
             📂 CARICA RANGE <input type="file" id="file-input" webkitdirectory directory multiple style="display:none">
         </label>
     </header>
 
     <div id="image-area">
-        <img src="can_brand.webp" id="central-can" class="central-can" alt="Power" onclick="roll()">
+        <div id="can-wrapper" class="can-center-wrapper">
+            <img src="can_brand.webp" class="can-large" alt="Power Maximizer" onclick="roll()">
+            <div id="status-text">EV MAXIMIZER READY</div>
+        </div>
         
         <img id="current-img">
-        <div id="status-msg">EV MAXIMIZER - PRONTO AL CALCOLO</div>
     </div>
-    <div id="stack-bar"></div>
+
+    <div id="stack-bar">
+        </div>
 </main>
 
 <aside id="right-panel">
-    <div class="section-box" style="border-top: 2px solid var(--blue)">
-        <h3 style="color:var(--blue)">Session Log</h3>
+    <div class="section-box" style="border-top: 3px solid var(--blue)">
+        <h3 style="color:var(--blue); margin-top:0">Session Log</h3>
         <input type="date" id="log-date" class="inp-field">
-        <div class="grid-2">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
             <input type="number" id="log-games" placeholder="GAMES" class="inp-field">
             <input type="number" id="log-evchips" placeholder="EV CHIPS" class="inp-field">
         </div>
         <input type="number" id="log-profit" placeholder="PROFIT (€)" class="inp-field">
-        <textarea id="log-notes" class="inp-field" placeholder="Note sessione..." style="height:50px; resize:none;"></textarea>
-        <button onclick="saveEVData()" class="nav-btn" style="background:var(--blue); color:black; border:none; width:100%; font-weight:bold;">SAVE DATA</button>
+        <textarea id="log-notes" class="inp-field" placeholder="Note..." style="height:60px"></textarea>
+        <button onclick="saveEVData()" class="btn-action" style="background:var(--blue); color:black;">SAVE SESSION</button>
     </div>
+    
+    <button class="btn-action" style="background:#222; color:white;" onclick="exportData()">💾 ESPORTA BACKUP</button>
+    <label class="btn-action" style="background:#222; color:white; display:block; text-align:center; margin-top:10px">
+        📂 IMPORTA BACKUP <input type="file" id="import-file" style="display:none" onchange="importData(event)">
+    </label>
 </aside>
 
 <script>
     let persistentFiles = []; 
     let currentCategory = 'btn open';
 
-    function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
+    function roll() { 
+        const val = Math.floor(Math.random() * 101);
+        document.getElementById('rng-box').innerText = val;
+        // Effetto flash sul numero
+        document.getElementById('rng-box').style.color = '#fff';
+        setTimeout(() => { document.getElementById('rng-box').style.color = 'var(--accent)'; }, 200);
+    }
 
     document.getElementById('file-input').addEventListener('change', function(e) {
         persistentFiles = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.webp'));
@@ -134,9 +148,9 @@
     function render() {
         const bar = document.getElementById('stack-bar');
         const img = document.getElementById('current-img');
-        const can = document.getElementById('central-can');
-        const msg = document.getElementById('status-msg');
+        const canWrap = document.getElementById('can-wrapper');
         bar.innerHTML = '';
+        
         if (persistentFiles.length === 0) return;
 
         const keywords = currentCategory.split(' ');
@@ -146,9 +160,12 @@
         });
 
         if (filtered.length > 0) {
-            can.style.display = 'none'; // Nasconde la lattina quando appare un range
-            msg.style.display = 'none';
+            canWrap.style.display = 'none'; // Nasconde lattina e testo
             img.style.display = 'block';
+            
+            // Ordina i file per numero di BB se presente nel nome
+            filtered.sort((a,b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
+
             filtered.forEach((f, i) => {
                 const b = document.createElement('button');
                 b.className = 'stk-btn';
@@ -165,9 +182,7 @@
             });
         } else {
             img.style.display = 'none';
-            can.style.display = 'block'; // Mostra la lattina se non ci sono range
-            msg.style.display = 'block';
-            msg.innerHTML = "Nessun file trovato.";
+            canWrap.style.display = 'block'; // Ritorna la lattina se non ci sono range
         }
     }
 
@@ -175,12 +190,12 @@
         const inputs = document.querySelectorAll('.inp-field');
         const data = {};
         inputs.forEach(inp => { if(inp.id) data[inp.id] = inp.value; });
-        localStorage.setItem('ev_maximizer_pro', JSON.stringify(data));
-        alert("Dati salvati!");
+        localStorage.setItem('ev_maximizer_pro_v2', JSON.stringify(data));
+        alert("Sessione salvata con successo!");
     }
 
     function loadEVData() {
-        const saved = localStorage.getItem('ev_maximizer_pro');
+        const saved = localStorage.getItem('ev_maximizer_pro_v2');
         if(saved) {
             const data = JSON.parse(saved);
             Object.keys(data).forEach(id => {
@@ -191,17 +206,21 @@
     }
 
     function exportData() {
-        const data = localStorage.getItem('ev_maximizer_pro');
+        const data = localStorage.getItem('ev_maximizer_pro_v2');
         const blob = new Blob([data], {type: "application/json"});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = "pack_ev_maximizer.json";
+        a.download = "EV_Maximizer_Backup.json";
         a.click();
     }
 
     function importData(event) {
         const reader = new FileReader();
-        reader.onload = (e) => { localStorage.setItem('ev_maximizer_pro', e.target.result); loadEVData(); alert("Importato!"); };
+        reader.onload = (e) => { 
+            localStorage.setItem('ev_maximizer_pro_v2', e.target.result); 
+            loadEVData(); 
+            alert("Dati importati correttamente!"); 
+        };
         reader.readAsText(event.target.files[0]);
     }
 
