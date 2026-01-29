@@ -31,7 +31,7 @@
         #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 20px; }
         #current-img { max-width: 100%; max-height: 100%; object-fit: contain; display: none; z-index: 5; }
 
-        /* SIDEBAR DESTRA: ADVISOR & REGISTRO */
+        /* SIDEBAR DESTRA: SOLO GTO ADVISOR */
         #sidebar-right { width: 360px; background: var(--panel); border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; flex-shrink: 0; }
         .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 8px; padding: 15px; margin-bottom: 20px; border-top: 3px solid var(--accent); }
         .section-title { color: var(--blue); font-size: 0.85rem; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; display: block; border-bottom: 1px solid #222; padding-bottom: 8px; }
@@ -39,14 +39,10 @@
         .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .btn-pf { background: #151515; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.65rem; cursor: pointer; font-weight: bold; text-transform: uppercase; }
         
-        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 12px; margin-top: 15px; text-align: left; min-height: 100px; display: flex; flex-direction: column; justify-content: center; }
-        #gto-text { color: var(--accent); font-size: 0.8rem; line-height: 1.4; white-space: pre-line; }
-
-        /* REGISTRO SESSIONE FORM */
-        .session-form { display: flex; flex-direction: column; gap: 8px; }
-        .input-group { display: flex; justify-content: space-between; align-items: center; }
-        .input-group label { font-size: 0.7rem; color: #888; text-transform: uppercase; }
-        .input-group input { background: #000; border: 1px solid #333; color: var(--accent); padding: 6px; border-radius: 4px; width: 110px; text-align: right; font-weight: bold; }
+        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 15px; margin-top: 15px; text-align: left; min-height: 200px; display: flex; flex-direction: column; }
+        .gto-line { margin-bottom: 10px; border-left: 2px solid var(--accent); padding-left: 10px; }
+        .gto-label { color: var(--blue); font-size: 0.65rem; font-weight: bold; text-transform: uppercase; display: block; }
+        .gto-val { color: var(--accent); font-size: 0.85rem; font-weight: bold; }
         
         .btn-action { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.75rem; transition: 0.2s; }
     </style>
@@ -103,36 +99,11 @@
                     <button class="btn-pf" onclick="advise('IP_VS_AGG')">IP vs Aggr.</button>
                     <button class="btn-pf" onclick="advise('OOP_AGG')">OOP Aggressore</button>
                     <button class="btn-pf" onclick="advise('OOP_VS_AGG')">OOP vs Aggr.</button>
-                    <button class="btn-pf" onclick="advise('BTN_VS_2')">BTN vs 2 PL</button>
-                    <button class="btn-pf" onclick="advise('HU_VS_ISO')">HU vs ISO</button>
+                    <button class="btn-pf" onclick="advise('MW_POT')">Multiway Pot</button>
+                    <button class="btn-pf" onclick="advise('HU_ISO')">HU vs ISO</button>
                 </div>
-                <div id="gto-solution-box"><span id="gto-text">Seleziona situazione post-flop...</span></div>
-            </div>
-
-            <div class="section-box" style="border-top-color: var(--blue);">
-                <span class="section-title" style="color:var(--blue)">Registro Sessione</span>
-                <div class="session-form">
-                    <div class="input-group">
-                        <label>Buy-in Totale (€)</label>
-                        <input type="number" id="buyin" oninput="calcSession()" placeholder="0.00">
-                    </div>
-                    <div class="input-group">
-                        <label>Cash Out (€)</label>
-                        <input type="number" id="cashout" oninput="calcSession()" placeholder="0.00">
-                    </div>
-                    <div class="input-group">
-                        <label>Net Amount (€)</label>
-                        <input type="text" id="net-amount" readonly style="color: var(--blue);">
-                    </div>
-                    <div class="input-group">
-                        <label>Quota Azienda (50%)</label>
-                        <input type="text" id="azienda-share" readonly>
-                    </div>
-                    <div class="input-group">
-                        <label>Quota Driver</label>
-                        <input type="text" id="driver-share" readonly>
-                    </div>
-                    <button onclick="alert('Inviato al Registro Google Sheets')" class="btn-action" style="background:var(--blue); color:black;">AGGIORNA FOGLIO</button>
+                <div id="gto-solution-box">
+                    <div id="gto-content">Seleziona situazione post-flop...</div>
                 </div>
             </div>
         </aside>
@@ -167,8 +138,6 @@
 
         if (filtered.length > 0) {
             img.style.display = 'block';
-            
-            // ORDINAMENTO DECRESCENTE (Più grande -> Più piccolo)
             filtered.sort((a,b) => {
                 let valA = parseInt(a.name.match(/\d+/)) || 0;
                 let valB = parseInt(b.name.match(/\d+/)) || 0;
@@ -196,26 +165,51 @@
     }
 
     function advise(type) {
+        const box = document.getElementById('gto-content');
         const data = { 
-            'IP_AGG': 'FLOP Dry: bet 50% Pot\nFLOP Coord: bet 100% Pot\nTURN post-bet: bet 75%\nRIVER: All-in (Polarized)', 
-            'IP_VS_AGG': 'TP Kicker 8+: Raise 3x\nMonster Draw: Call fino a 200% pot\nMarginali: Check/Call 1 strada', 
-            'OOP_AGG': 'Value: Bet 75% (Flop/Turn)\nBluff/Air: Bet 25% Flop\nMarginali: Check/Call', 
-            'OOP_VS_AGG': 'TP Kicker 8+: Raise 3x o Probe 100%\nMonster Draw: Lead Turn 100%\n3rd Pair: Probe 75% Turn',
-            'BTN_VS_2': 'Value: Bet 75% Multiway\nTop Pair: Check Flop / Bet 50% Turn\nFrequenza: C-bet ridotta del 20%',
-            'HU_VS_ISO': 'TP Kicker 8+: Raise 3x\nDraw Forti: Check-Raise 4x\nAir: Delay C-bet 50% vs Check'
+            'IP_AGG': [
+                {l: 'Flop Dry', v: 'Bet 33% Pot'},
+                {l: 'Flop Coord', v: 'Bet 75% Pot'},
+                {l: 'Turn post-bet', v: 'Bet 75% o Shove'},
+                {l: 'Board A-high', v: 'Bet 25% (Range Bet)'}
+            ],
+            'IP_VS_AGG': [
+                {l: 'TP Kicker 8+', v: 'Raise 3x / Shove'},
+                {l: 'Monster Draw', v: 'Call fino a 200% pot'},
+                {l: 'Good Draw', v: 'Call 100% / Raise vs Small'},
+                {l: 'Marginali', v: 'Check/Call 1 strada'}
+            ],
+            'OOP_AGG': [
+                {l: 'Value (TP+)', v: 'Bet 75% o Check-Raise'},
+                {l: 'Bluff/Air', v: 'Bet 25% Flop / Give up Turn'},
+                {l: 'Draw forti', v: 'Check-Raise 4x / All-in'},
+                {l: 'Marginali', v: 'Check-Call / Check-Fold'}
+            ],
+            'OOP_VS_AGG': [
+                {l: 'TP Kicker 8+', v: 'Raise 3x o Probe 100% Turn'},
+                {l: 'Monster Draw', v: 'Lead Turn 100% su blank'},
+                {l: '3rd Pair', v: 'Probe 75% Turn vs Check'},
+                {l: 'Underpair', v: 'Check-Fold vs 50% pot+'}
+            ],
+            'MW_POT': [
+                {l: 'Value', v: 'Bet 75% / 100% Pot'},
+                {l: 'Top Pair Marginal', v: 'Check-Fold o Check-Call small'},
+                {l: 'Bluff', v: 'Frequenza < 10%'},
+                {l: 'Draw', v: 'Call solo se odds dirette'}
+            ],
+            'HU_ISO': [
+                {l: 'TP Kicker 8+', v: 'Raise 3x / Stack-off'},
+                {l: 'Draw Forti', v: 'Check-Raise 4x'},
+                {l: 'Delay C-bet', v: 'Bet 50% vs Check Turn'},
+                {l: 'Air', v: 'Check-Fold'}
+            ]
         };
-        document.getElementById('gto-text').innerText = data[type] || "Seleziona situazione...";
-    }
 
-    function calcSession() {
-        const buyin = parseFloat(document.getElementById('buyin').value) || 0;
-        const cashout = parseFloat(document.getElementById('cashout').value) || 0;
-        const net = cashout - buyin;
-        const quota = net > 0 ? (net * 0.5) : 0;
-        
-        document.getElementById('net-amount').value = "€ " + net.toFixed(2);
-        document.getElementById('azienda-share').value = "€ " + quota.toFixed(2);
-        document.getElementById('driver-share').value = "€ " + (net > 0 ? quota.toFixed(2) : net.toFixed(2));
+        let html = '';
+        data[type].forEach(item => {
+            html += `<div class="gto-line"><span class="gto-label">${item.l}</span><span class="gto-val">${item.v}</span></div>`;
+        });
+        box.innerHTML = html;
     }
 </script>
 </body>
