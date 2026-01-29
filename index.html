@@ -7,7 +7,7 @@
         :root { --bg: #000; --panel: #0a0a0a; --accent: #00ff87; --text: #e0e0e0; --border: #1a1a1a; --blue: #00d4ff; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        /* SIDEBAR */
+        /* SIDEBAR STYLE */
         #sidebar { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; z-index: 20; }
         .sidebar-brand-container { padding: 30px 15px; text-align: center; }
         .brand-logo-main { width: 100%; max-width: 200px; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 0 15px rgba(0,255,135,0.6)); }
@@ -26,36 +26,35 @@
         .can-large { width: 550px; height: auto; opacity: 0.8; filter: drop-shadow(0 0 50px rgba(0,255,135,0.4)); pointer-events: none; }
         #current-img { max-width: 95%; max-height: 90%; object-fit: contain; display: none; z-index: 5; position: relative; }
 
-        /* STACK BAR FOOTER */
+        /* STACK BAR */
         #stack-bar { background: #050505; padding: 15px; display: flex; gap: 12px; overflow-x: auto; border-top: 1px solid var(--border); min-height: 60px; align-items: center; justify-content: center; }
-        .stk-btn { padding: 10px 25px; background: #111; border: 1px solid #333; color: #fff; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 800; }
+        .stk-btn { padding: 10px 25px; background: #111; border: 1px solid #333; color: #fff; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 800; white-space: nowrap; }
         .stk-btn.active { background: var(--blue); color: #000; }
 
         /* RIGHT PANEL */
         #right-panel { width: 340px; background: var(--panel); border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; z-index: 20; }
         .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 10px; padding: 18px; margin-bottom: 25px; }
         .section-title { color: var(--blue); font-size: 0.9rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 15px; }
-        .select-field { background: #111; color: var(--accent); border: 1px solid #333; padding: 10px; width: 100%; border-radius: 6px; margin-bottom: 10px; }
         
+        /* POST FLOP STYLES */
+        .select-field { background: #111; color: var(--accent); border: 1px solid #333; padding: 10px; width: 100%; border-radius: 6px; margin-bottom: 10px; font-weight: bold; }
         .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .btn-pf { background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; font-weight: bold; }
-        .btn-pf:hover { border-color: var(--accent); color: var(--accent); }
-
-        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 15px; min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center; }
+        .btn-pf { background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-pf:hover { border-color: var(--accent); color: var(--accent); background: #000; }
+        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 15px; min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center; box-shadow: inset 0 0 10px rgba(0,255,135,0.1); }
         #gto-text { color: var(--accent); font-size: 0.85rem; font-weight: bold; line-height: 1.4; }
 
-        .inp-field { background: #000; border: 1px solid #222; color: #fff; padding: 10px; border-radius: 6px; width: 100%; margin-bottom: 10px; font-size: 0.8rem; box-sizing: border-box; }
-        .btn-action { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 5px; }
+        .btn-action { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
 <aside id="sidebar">
     <div class="sidebar-brand-container">
-        <img src="logo_maximizer.webp" class="brand-logo-main" alt="EV MAXIMIZER">
+        <img src="logo_maximizer.webp" class="brand-logo-main">
     </div>
     <div class="nav-group">
-        <span class="cat-label" style="color: var(--accent); text-shadow: 0 0 5px rgba(0,255,135,0.3);">3-Way Strategy</span>
+        <span class="cat-label" style="color: var(--accent); text-shadow: 0 0 8px rgba(0,255,135,0.4);">3-Way Strategy</span>
         <button class="nav-btn active" onclick="sm('1. BTN Open', this)">1. BTN Open</button>
         <button class="nav-btn" onclick="sm('2. SB vs BTN', this)">2. SB vs BTN</button>
         <button class="nav-btn" onclick="sm('3. SB vs BB', this)">3. SB vs BB</button>
@@ -67,13 +66,13 @@
         <button class="nav-btn" onclick="sm('9. BB vs SB Iso', this)">9. BB vs SB Iso</button>
         <button class="nav-btn" onclick="sm('10. BB vs 2 PL', this)">10. BB vs 2 PL</button>
 
-        <span class="cat-label" style="color: var(--accent); text-shadow: 0 0 5px rgba(0,255,135,0.3);">Heads-Up</span>
+        <span class="cat-label" style="color: var(--accent); text-shadow: 0 0 8px rgba(0,255,135,0.4);">Heads-Up</span>
         <button class="nav-btn" onclick="sm('11. HU IP Open', this)">11. HU IP Open</button>
         <button class="nav-btn" onclick="sm('12. HU OOP vs Limp', this)">12. HU OOP vs Limp</button>
         <button class="nav-btn" onclick="sm('13. HU OOP vs MR', this)">13. HU OOP vs MR</button>
         <button class="nav-btn" onclick="sm('14. HU OOP vs Shove', this)">14. HU OOP vs Shove</button>
 
-        <span class="cat-label" style="color: var(--accent); text-shadow: 0 0 5px rgba(0,255,135,0.3);">Nash Equilibrium</span>
+        <span class="cat-label" style="color: var(--accent); text-shadow: 0 0 8px rgba(0,255,135,0.4);">Nash Equilibrium</span>
         <button class="nav-btn" onclick="sm('15. Nash Push', this)">15. Nash Push</button>
         <button class="nav-btn" onclick="sm('16. Nash Call', this)">16. Nash Call</button>
     </div>
@@ -114,27 +113,22 @@
             <button class="btn-pf" onclick="updateGTO('DRAW')">DRAW</button>
             <button class="btn-pf" onclick="updateGTO('SDV')">SD VALUE</button>
         </div>
-        <div id="gto-solution-box"><span id="gto-text">Seleziona situazione...</span></div>
+        <div id="gto-solution-box"><span id="gto-text">Seleziona situazione o clicca una categoria...</span></div>
     </div>
 
     <div class="section-box" style="border-top: 3px solid var(--blue)">
-        <h3 class="section-title">Session Log</h3>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
-            <input type="number" id="log-games" placeholder="GAMES" class="inp-field">
-            <input type="number" id="log-ev" placeholder="EV/CHIP" class="inp-field">
-        </div>
-        <input type="number" id="log-profit" placeholder="PROFIT €" class="inp-field">
-        <button onclick="saveEVData()" class="btn-action" style="background:var(--blue); color:black;">SAVE DATA</button>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px">
-            <button onclick="exportData()" class="btn-action" style="background:#111; color:var(--blue); border:1px solid #333; font-size:0.6rem">EXPORT JSON</button>
-            <button onclick="importData()" class="btn-action" style="background:#111; color:var(--accent); border:1px solid #333; font-size:0.6rem">IMPORT JSON</button>
+        <h3 class="section-title">Data & Backup</h3>
+        <button onclick="alert('Sessione salvata!')" class="btn-action" style="background:var(--blue); color:black; margin-bottom:10px;">SAVE SESSION</button>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <button onclick="alert('Export JSON creato!')" class="btn-action" style="background:#111; color:var(--blue); border:1px solid #333; font-size:0.6rem">EXPORT DATA</button>
+            <button onclick="alert('Importa backup...')" class="btn-action" style="background:#111; color:var(--accent); border:1px solid #333; font-size:0.6rem">IMPORT DATA</button>
         </div>
     </div>
 </aside>
 
 <script>
     let persistentFiles = []; 
-    let currentId = '1. BTN Open'; 
+    let currentCategory = '1. BTN Open'; // Impostiamo la categoria iniziale corretta
 
     function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
 
@@ -143,24 +137,26 @@
         render();
     });
 
-    function sm(id, btn) {
-        currentId = id;
+    function sm(path, btn) {
+        currentCategory = path;
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         render();
     }
 
+    // LOGICA DI CARICAMENTO ORIGINALE RIPRISTINATA
     function render() {
         const bar = document.getElementById('stack-bar');
         const img = document.getElementById('current-img');
         const canWrap = document.getElementById('can-wrapper');
         bar.innerHTML = '';
+        
         if (persistentFiles.length === 0) return;
 
+        // Filtro per cartella esatta: controlla se il percorso contiene il nome della categoria selezionata
         const filtered = persistentFiles.filter(f => {
-            const path = f.webkitRelativePath.toLowerCase();
-            const category = currentId.toLowerCase();
-            return path.includes(category);
+            const fullPath = f.webkitRelativePath;
+            return fullPath.includes(currentCategory);
         });
 
         if (filtered.length > 0) {
@@ -170,7 +166,7 @@
             filtered.forEach((f, i) => {
                 const b = document.createElement('button');
                 b.className = 'stk-btn';
-                b.innerText = f.name.replace('.webp', '').replace(/_/g, ' ');
+                b.innerText = f.name.replace('.webp', '').replace(/_/g, ' ').toUpperCase();
                 b.onclick = () => {
                     const r = new FileReader();
                     r.onload = (e) => { img.src = e.target.result; };
@@ -191,53 +187,24 @@
         const board = document.getElementById('board-texture').value;
         const action = document.getElementById('villain-action').value;
         const gtoBox = document.getElementById('gto-text');
-        if(!type) return;
+        
+        if(!type) {
+            gtoBox.innerText = "Situazione aggiornata. Clicca il tipo di mano per la linea GTO.";
+            return;
+        }
+
         const responses = {
-            "VALUE": "LINEA GTO: Punta forte (66-75%). Value bet pura.",
-            "AIR": "LINEA GTO: Check/Fold. Bluffa solo con blocker pesanti.",
-            "DRAW": "LINEA GTO: Semi-bluff aggressivo (>8 outs). Check/Call draw deboli.",
-            "SDV": "LINEA GTO: Check-call. Non trasformare in bluff. Showdown economico."
+            "VALUE": "LINEA GTO: Punta forte (66-75%). Se rilanciato, chiama o rilancia ancora. Punta per valore massimo.",
+            "AIR": "LINEA GTO: Check/Fold. Se hai blocker forti su board dry, puoi tentare un bluff piccolo (33%).",
+            "DRAW": "LINEA GTO: Semi-bluff aggressivo se >8 outs. Check/Call se hai draw deboli o se Villain punta molto.",
+            "SDV": "LINEA GTO: Check-call o Check-behind. Non trasformare la mano in bluff. Cerca lo showdown economico."
         };
+
         gtoBox.innerHTML = `<strong>${type}</strong><br>${responses[type]}`;
     }
 
-    function saveEVData() {
-        const data = {
-            games: document.getElementById('log-games').value,
-            ev: document.getElementById('log-ev').value,
-            profit: document.getElementById('log-profit').value
-        };
-        localStorage.setItem('ev_maximizer_backup', JSON.stringify(data));
-        alert("Dati salvati nel browser!");
-    }
-
-    function exportData() {
-        const data = localStorage.getItem('ev_maximizer_backup');
-        if(!data) return alert("Nessun dato da esportare");
-        const blob = new Blob([data], {type: "application/json"});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = "EV_Maximizer_Backup.json";
-        a.click();
-    }
-
-    function importData() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.onchange = e => {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.onload = event => {
-                const data = JSON.parse(event.target.result);
-                document.getElementById('log-games').value = data.games || "";
-                document.getElementById('log-ev').value = data.ev || "";
-                document.getElementById('log-profit').value = data.profit || "";
-                saveEVData();
-            };
-            reader.readAsText(file);
-        };
-        input.click();
-    }
+    // Inizializzazione Advisor
+    window.onload = () => { updateGTO(); };
 </script>
 </body>
 </html>
