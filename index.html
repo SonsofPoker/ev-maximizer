@@ -7,17 +7,17 @@
         :root { --bg: #000; --panel: #0a0a0a; --accent: #00ff87; --text: #e0e0e0; --border: #1a1a1a; --blue: #00d4ff; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        /* SIDEBAR STYLE */
+        /* SIDEBAR */
         #sidebar { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; z-index: 20; }
         .sidebar-brand-container { padding: 30px 15px; text-align: center; }
         .brand-logo-main { width: 100%; max-width: 200px; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 0 15px rgba(0,255,135,0.6)); }
         
         .nav-group { padding: 10px 15px; }
-        .cat-label { font-size: 0.65rem; text-transform: uppercase; margin: 20px 0 8px; display: block; font-weight: 800; letter-spacing: 1.5px; }
+        .cat-label { font-size: 0.65rem; text-transform: uppercase; margin: 20px 0 8px; display: block; font-weight: 800; letter-spacing: 1.5px; color: var(--accent); text-shadow: 0 0 8px rgba(0,255,135,0.4); }
         .nav-btn { width: 100%; padding: 12px; margin-bottom: 5px; background: #0d0d0d; border: 1px solid #222; color: #666; text-align: left; cursor: pointer; border-radius: 6px; font-size: 0.75rem; transition: 0.3s; }
         .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; font-weight: bold; }
 
-        /* MAIN VIEW */
+        /* MAIN AREA */
         #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; position: relative; }
         #header { height: 70px; background: rgba(10,10,10,0.8); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; gap: 40px; border-bottom: 1px solid var(--border); z-index: 10; }
         #rng-box { font-family: 'Monaco', monospace; font-size: 2.5rem; color: var(--accent); background: #000; border: 1px solid var(--accent); padding: 5px 25px; border-radius: 8px; min-width: 100px; text-align: center; }
@@ -35,16 +35,14 @@
         #right-panel { width: 340px; background: var(--panel); border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; z-index: 20; }
         .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 10px; padding: 18px; margin-bottom: 25px; }
         .section-title { color: var(--blue); font-size: 0.9rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 15px; }
+        .select-field { background: #111; color: var(--accent); border: 1px solid #333; padding: 10px; width: 100%; border-radius: 6px; margin-bottom: 10px; }
         
-        /* POST FLOP STYLES */
-        .select-field { background: #111; color: var(--accent); border: 1px solid #333; padding: 10px; width: 100%; border-radius: 6px; margin-bottom: 10px; font-weight: bold; }
         .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .btn-pf { background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .btn-pf:hover { border-color: var(--accent); color: var(--accent); background: #000; }
-        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 15px; min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center; box-shadow: inset 0 0 10px rgba(0,255,135,0.1); }
+        .btn-pf { background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; font-weight: bold; }
+        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 15px; min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center; }
         #gto-text { color: var(--accent); font-size: 0.85rem; font-weight: bold; line-height: 1.4; }
 
-        .btn-action { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-action { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -54,27 +52,27 @@
         <img src="logo_maximizer.webp" class="brand-logo-main">
     </div>
     <div class="nav-group">
-        <span class="cat-label" style="color: var(--accent); text-shadow: 0 0 8px rgba(0,255,135,0.4);">3-Way Strategy</span>
-        <button class="nav-btn active" onclick="sm('1. BTN Open', this)">1. BTN Open</button>
-        <button class="nav-btn" onclick="sm('2. SB vs BTN', this)">2. SB vs BTN</button>
-        <button class="nav-btn" onclick="sm('3. SB vs BB', this)">3. SB vs BB</button>
-        <button class="nav-btn" onclick="sm('4. SB vs BTN Limp', this)">4. SB vs BTN Limp</button>
-        <button class="nav-btn" onclick="sm('5. BB vs BTN', this)">5. BB vs BTN</button>
-        <button class="nav-btn" onclick="sm('6. BB vs SB', this)">6. BB vs SB</button>
-        <button class="nav-btn" onclick="sm('7. BB vs SB Limp', this)">7. BB vs SB Limp</button>
-        <button class="nav-btn" onclick="sm('8. BB vs BTN Iso', this)">8. BB vs BTN Iso</button>
-        <button class="nav-btn" onclick="sm('9. BB vs SB Iso', this)">9. BB vs SB Iso</button>
-        <button class="nav-btn" onclick="sm('10. BB vs 2 PL', this)">10. BB vs 2 PL</button>
+        <span class="cat-label">3-Way Strategy</span>
+        <button class="nav-btn active" onclick="sm('1.', this)">1. BTN Open</button>
+        <button class="nav-btn" onclick="sm('2.', this)">2. SB vs BTN</button>
+        <button class="nav-btn" onclick="sm('3.', this)">3. SB vs BB</button>
+        <button class="nav-btn" onclick="sm('4.', this)">4. SB vs BTN Limp</button>
+        <button class="nav-btn" onclick="sm('5.', this)">5. BB vs BTN</button>
+        <button class="nav-btn" onclick="sm('6.', this)">6. BB vs SB</button>
+        <button class="nav-btn" onclick="sm('7.', this)">7. BB vs SB Limp</button>
+        <button class="nav-btn" onclick="sm('8.', this)">8. BB vs BTN Iso</button>
+        <button class="nav-btn" onclick="sm('9.', this)">9. BB vs SB Iso</button>
+        <button class="nav-btn" onclick="sm('10.', this)">10. BB vs 2 PL</button>
 
-        <span class="cat-label" style="color: var(--accent); text-shadow: 0 0 8px rgba(0,255,135,0.4);">Heads-Up</span>
-        <button class="nav-btn" onclick="sm('11. HU IP Open', this)">11. HU IP Open</button>
-        <button class="nav-btn" onclick="sm('12. HU OOP vs Limp', this)">12. HU OOP vs Limp</button>
-        <button class="nav-btn" onclick="sm('13. HU OOP vs MR', this)">13. HU OOP vs MR</button>
-        <button class="nav-btn" onclick="sm('14. HU OOP vs Shove', this)">14. HU OOP vs Shove</button>
+        <span class="cat-label">Heads-Up</span>
+        <button class="nav-btn" onclick="sm('11.', this)">11. HU IP Open</button>
+        <button class="nav-btn" onclick="sm('12.', this)">12. HU OOP vs Limp</button>
+        <button class="nav-btn" onclick="sm('13.', this)">13. HU OOP vs MR</button>
+        <button class="nav-btn" onclick="sm('14.', this)">14. HU OOP vs Shove</button>
 
-        <span class="cat-label" style="color: var(--accent); text-shadow: 0 0 8px rgba(0,255,135,0.4);">Nash Equilibrium</span>
-        <button class="nav-btn" onclick="sm('15. Nash Push', this)">15. Nash Push</button>
-        <button class="nav-btn" onclick="sm('16. Nash Call', this)">16. Nash Call</button>
+        <span class="cat-label">Nash Equilibrium</span>
+        <button class="nav-btn" onclick="sm('15.', this)">15. Nash Push</button>
+        <button class="nav-btn" onclick="sm('16.', this)">16. Nash Call</button>
     </div>
 </aside>
 
@@ -98,14 +96,10 @@
 <aside id="right-panel">
     <div class="section-box" style="border-top: 3px solid var(--accent)">
         <h3 class="section-title" style="color:var(--accent)">Post-Flop Advisor</h3>
-        <select class="select-field" id="board-texture" onchange="updateGTO()">
+        <select class="select-field" id="board-texture">
             <option value="dry">Dry Board (A72r)</option>
             <option value="wet">Wet Board (987ss)</option>
             <option value="paired">Paired Board (KK4)</option>
-        </select>
-        <select class="select-field" id="villain-action" onchange="updateGTO()">
-            <option value="check">Villain Check</option>
-            <option value="bet">Villain Bet</option>
         </select>
         <div class="pf-grid">
             <button class="btn-pf" onclick="updateGTO('VALUE')">VALUE</button>
@@ -113,22 +107,22 @@
             <button class="btn-pf" onclick="updateGTO('DRAW')">DRAW</button>
             <button class="btn-pf" onclick="updateGTO('SDV')">SD VALUE</button>
         </div>
-        <div id="gto-solution-box"><span id="gto-text">Seleziona situazione o clicca una categoria...</span></div>
+        <div id="gto-solution-box"><span id="gto-text">Seleziona situazione...</span></div>
     </div>
 
     <div class="section-box" style="border-top: 3px solid var(--blue)">
-        <h3 class="section-title">Data & Backup</h3>
-        <button onclick="alert('Sessione salvata!')" class="btn-action" style="background:var(--blue); color:black; margin-bottom:10px;">SAVE SESSION</button>
+        <h3 class="section-title">Data Backup</h3>
+        <button onclick="alert('Salvataggio completato!')" class="btn-action" style="background:var(--blue); color:black; margin-bottom:10px;">SAVE DATA</button>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <button onclick="alert('Export JSON creato!')" class="btn-action" style="background:#111; color:var(--blue); border:1px solid #333; font-size:0.6rem">EXPORT DATA</button>
-            <button onclick="alert('Importa backup...')" class="btn-action" style="background:#111; color:var(--accent); border:1px solid #333; font-size:0.6rem">IMPORT DATA</button>
+            <button onclick="alert('Esportazione avviata!')" class="btn-action" style="background:#111; color:var(--blue); border:1px solid #333; font-size:0.6rem">EXPORT JSON</button>
+            <button onclick="alert('Seleziona file backup')" class="btn-action" style="background:#111; color:var(--accent); border:1px solid #333; font-size:0.6rem">IMPORT JSON</button>
         </div>
     </div>
 </aside>
 
 <script>
     let persistentFiles = []; 
-    let currentCategory = '1. BTN Open'; // Impostiamo la categoria iniziale corretta
+    let currentId = "1."; 
 
     function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
 
@@ -137,26 +131,24 @@
         render();
     });
 
-    function sm(path, btn) {
-        currentCategory = path;
+    function sm(id, btn) {
+        currentId = id;
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         render();
     }
 
-    // LOGICA DI CARICAMENTO ORIGINALE RIPRISTINATA
     function render() {
         const bar = document.getElementById('stack-bar');
         const img = document.getElementById('current-img');
         const canWrap = document.getElementById('can-wrapper');
         bar.innerHTML = '';
-        
         if (persistentFiles.length === 0) return;
 
-        // Filtro per cartella esatta: controlla se il percorso contiene il nome della categoria selezionata
+        // FILTRO BLINDATO: Cerca il numero iniziale della cartella nel percorso
         const filtered = persistentFiles.filter(f => {
-            const fullPath = f.webkitRelativePath;
-            return fullPath.includes(currentCategory);
+            const pathParts = f.webkitRelativePath.split('/');
+            return pathParts.some(part => part.startsWith(currentId));
         });
 
         if (filtered.length > 0) {
@@ -184,27 +176,16 @@
     }
 
     function updateGTO(type) {
-        const board = document.getElementById('board-texture').value;
-        const action = document.getElementById('villain-action').value;
         const gtoBox = document.getElementById('gto-text');
-        
-        if(!type) {
-            gtoBox.innerText = "Situazione aggiornata. Clicca il tipo di mano per la linea GTO.";
-            return;
-        }
-
+        if(!type) return;
         const responses = {
-            "VALUE": "LINEA GTO: Punta forte (66-75%). Se rilanciato, chiama o rilancia ancora. Punta per valore massimo.",
-            "AIR": "LINEA GTO: Check/Fold. Se hai blocker forti su board dry, puoi tentare un bluff piccolo (33%).",
-            "DRAW": "LINEA GTO: Semi-bluff aggressivo se >8 outs. Check/Call se hai draw deboli o se Villain punta molto.",
-            "SDV": "LINEA GTO: Check-call o Check-behind. Non trasformare la mano in bluff. Cerca lo showdown economico."
+            "VALUE": "LINEA GTO: Punta forte (66-75%). Value pura.",
+            "AIR": "LINEA GTO: Check/Fold. Bluff solo con blocker.",
+            "DRAW": "LINEA GTO: Aggressivo se >8 outs. Passivo se draw debole.",
+            "SDV": "LINEA GTO: Check-call. Mantieni il pot piccolo."
         };
-
         gtoBox.innerHTML = `<strong>${type}</strong><br>${responses[type]}`;
     }
-
-    // Inizializzazione Advisor
-    window.onload = () => { updateGTO(); };
 </script>
 </body>
 </html>
