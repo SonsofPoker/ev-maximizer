@@ -33,7 +33,6 @@
         .section-title { color: var(--blue); font-size: 0.9rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 15px; }
         .select-field { background: #111; color: var(--accent); border: 1px solid #333; padding: 10px; width: 100%; border-radius: 6px; margin-bottom: 10px; }
         
-        /* BOTTONI POST FLOP */
         .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
         .btn-pf { background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; font-weight: bold; }
         .btn-pf:hover { border-color: var(--accent); color: var(--accent); }
@@ -92,28 +91,22 @@
 <aside id="right-panel">
     <div class="section-box" style="border-top: 3px solid var(--accent)">
         <h3 class="section-title" style="color:var(--accent)">Post-Flop Advisor</h3>
-        
         <select class="select-field" id="board-texture" onchange="updateGTO()">
             <option value="dry">Dry Board (A72r)</option>
             <option value="wet">Wet Board (987ss)</option>
             <option value="paired">Paired Board (KK4)</option>
         </select>
-
         <select class="select-field" id="villain-action" onchange="updateGTO()">
             <option value="check">Villain Check</option>
             <option value="bet">Villain Bet</option>
         </select>
-
         <div class="pf-grid">
             <button class="btn-pf" onclick="updateGTO('VALUE')">VALUE</button>
             <button class="btn-pf" onclick="updateGTO('AIR')">AIR</button>
             <button class="btn-pf" onclick="updateGTO('DRAW')">DRAW</button>
             <button class="btn-pf" onclick="updateGTO('SDV')">SD VALUE</button>
         </div>
-
-        <div id="gto-solution-box">
-            <span id="gto-text">Seleziona situazione o clicca una categoria...</span>
-        </div>
+        <div id="gto-solution-box"><span id="gto-text">Seleziona situazione...</span></div>
     </div>
 
     <div class="section-box" style="border-top: 3px solid var(--blue)">
@@ -123,24 +116,27 @@
             <input type="number" id="log-ev" placeholder="EV/CHIP" class="inp-field">
         </div>
         <input type="number" id="log-profit" placeholder="PROFIT €" class="inp-field">
-        <button class="btn-action" style="background:var(--blue); color:black;">SAVE</button>
+        <button onclick="saveEVData()" class="btn-action" style="background:var(--blue); color:black;">SAVE DATA</button>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px">
+            <button onclick="exportData()" class="btn-action" style="background:#111; color:var(--blue); border:1px solid #333; font-size:0.6rem">EXPORT JSON</button>
+            <button onclick="importData()" class="btn-action" style="background:#111; color:var(--accent); border:1px solid #333; font-size:0.6rem">IMPORT JSON</button>
+        </div>
     </div>
 </aside>
 
 <script>
     let persistentFiles = []; 
-    let currentCategory = '1.';
+    let currentId = '1.'; // Usiamo il numero come identificatore
 
     function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
 
     document.getElementById('file-input').addEventListener('change', function(e) {
         persistentFiles = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.webp'));
-        console.log("File caricati:", persistentFiles.length);
         render();
     });
 
-    function sm(term, btn) {
-        currentCategory = term;
+    function sm(id, btn) {
+        currentId = id;
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         render();
@@ -153,10 +149,11 @@
         bar.innerHTML = '';
         if (persistentFiles.length === 0) return;
 
-        // Filtro semplificato: cerca se nel nome del file o della cartella c'è il numero della categoria (es. "1.")
+        // FILTRO REALE: Cerca il numero all'inizio del nome della cartella nel percorso
         const filtered = persistentFiles.filter(f => {
-            const path = f.webkitRelativePath.toLowerCase();
-            return path.includes(currentCategory.toLowerCase());
+            const pathParts = f.webkitRelativePath.split('/');
+            // Controlla se una delle cartelle nel percorso inizia con il numero selezionato (es. "1.")
+            return pathParts.some(part => part.startsWith(currentId));
         });
 
         if (filtered.length > 0) {
@@ -187,17 +184,52 @@
         const board = document.getElementById('board-texture').value;
         const action = document.getElementById('villain-action').value;
         const gtoBox = document.getElementById('gto-text');
-        
-        if(!type) { gtoBox.innerText = "Cambio situazione... seleziona il tipo di mano (Value/Air/Draw)"; return; }
-
+        if(!type) return;
         const responses = {
-            "VALUE": "LINEA GTO: Punta forte (66-75%). Se rilanciato, non foldare mai. Punta per protezione e valore.",
-            "AIR": "LINEA GTO: Check/Fold. Se hai Blocker importanti, puoi tentare un bluff piccolo (33%) su board Dry.",
-            "DRAW": "LINEA GTO: Semi-bluff aggressivo se hai >8 outs. Check/Call se hai draw deboli o se Villain punta forte.",
-            "SDV": "LINEA GTO: Check-call. Non trasformare in bluff. Cerca di arrivare allo showdown spendendo poco."
+            "VALUE": "LINEA GTO: Punta forte (66-75%). Value bet pura.",
+            "AIR": "LINEA GTO: Check/Fold. Bluffa solo con blocker pesanti.",
+            "DRAW": "LINEA GTO: Semi-bluff aggressivo (>8 outs). Check/Call draw deboli.",
+            "SDV": "LINEA GTO: Check-call. Non trasformare in bluff. Showdown economico."
         };
-
         gtoBox.innerHTML = `<strong>${type}</strong><br>${responses[type]}`;
+    }
+
+    function saveEVData() {
+        const data = {
+            games: document.getElementById('log-games').value,
+            ev: document.getElementById('log-ev').value,
+            profit: document.getElementById('log-profit').value
+        };
+        localStorage.setItem('ev_maximizer_backup', JSON.stringify(data));
+        alert("Dati salvati nel browser!");
+    }
+
+    function exportData() {
+        const data = localStorage.getItem('ev_maximizer_backup');
+        if(!data) return alert("Nessun dato da esportare");
+        const blob = new Blob([data], {type: "application/json"});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = "EV_Maximizer_Backup.json";
+        a.click();
+    }
+
+    function importData() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.onchange = e => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = event => {
+                const data = JSON.parse(event.target.result);
+                document.getElementById('log-games').value = data.games || "";
+                document.getElementById('log-ev').value = data.ev || "";
+                document.getElementById('log-profit').value = data.profit || "";
+                saveEVData();
+            };
+            reader.readAsText(file);
+        };
+        input.click();
     }
 </script>
 </body>
