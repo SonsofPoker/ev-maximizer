@@ -7,37 +7,37 @@
         :root { --bg: #000; --panel: #0a0a0a; --accent: #00ff87; --text: #e0e0e0; --border: #1a1a1a; --blue: #00d4ff; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        /* SIDEBAR SINISTRA: RANGE */
-        #sidebar-left { width: 260px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+        /* SIDEBAR SINISTRA: 16 CATEGORIE */
+        #sidebar-left { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
         .sidebar-brand-container { padding: 25px 15px; text-align: center; }
-        .brand-logo-main { width: 100%; max-width: 160px; filter: drop-shadow(0 0 10px var(--accent)); }
+        .brand-logo-main { width: 100%; max-width: 170px; filter: drop-shadow(0 0 10px var(--accent)); }
         .nav-group { padding: 10px 15px; }
-        .cat-label { font-size: 0.6rem; text-transform: uppercase; margin: 15px 0 8px; display: block; font-weight: 800; letter-spacing: 1.5px; color: var(--accent); opacity: 0.8; }
-        .nav-btn { width: 100%; padding: 10px; margin-bottom: 4px; background: #0d0d0d; border: 1px solid #222; color: #666; text-align: left; cursor: pointer; border-radius: 5px; font-size: 0.7rem; transition: 0.2s; }
+        .cat-label { font-size: 0.65rem; text-transform: uppercase; margin: 20px 0 8px; display: block; font-weight: 800; letter-spacing: 1.5px; color: var(--accent); text-shadow: 0 0 8px rgba(0,255,135,0.3); }
+        .nav-btn { width: 100%; padding: 10px; margin-bottom: 4px; background: #0d0d0d; border: 1px solid #222; color: #777; text-align: left; cursor: pointer; border-radius: 6px; font-size: 0.75rem; transition: 0.2s; }
         .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; font-weight: bold; border-color: var(--accent); }
 
-        /* AREA CENTRALE: VISUALIZZATORE */
-        #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; position: relative; }
-        #header { height: 65px; background: #0a0a0a; display: flex; align-items: center; justify-content: center; gap: 25px; border-bottom: 1px solid var(--border); }
-        #rng-box { font-family: 'Monaco', monospace; font-size: 2rem; color: var(--accent); background: #000; border: 1px solid var(--accent); padding: 5px 15px; border-radius: 6px; min-width: 70px; text-align: center; }
+        /* AREA CENTRALE */
+        #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; border-right: 1px solid var(--border); border-left: 1px solid var(--border); }
+        #header { height: 70px; background: #0a0a0a; display: flex; align-items: center; justify-content: center; gap: 30px; border-bottom: 1px solid var(--border); }
+        #rng-box { font-family: 'Monaco', monospace; font-size: 2.2rem; color: var(--accent); background: #000; border: 1px solid var(--accent); padding: 5px 20px; border-radius: 6px; min-width: 80px; text-align: center; }
         
-        #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; background: radial-gradient(circle, #0f0f0f 0%, #000 100%); }
-        #current-img { max-width: 95%; max-height: 92%; object-fit: contain; display: none; z-index: 5; }
-        .can-large { width: 350px; opacity: 0.4; filter: drop-shadow(0 0 30px rgba(0,255,135,0.2)); position: absolute; }
+        #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; background: radial-gradient(circle, #0a0a0a 0%, #000 100%); }
+        #current-img { max-width: 95%; max-height: 90%; object-fit: contain; display: none; z-index: 5; }
+        .can-large { width: 400px; opacity: 0.5; filter: drop-shadow(0 0 40px rgba(0,255,135,0.2)); position: absolute; }
 
-        #stack-bar { background: #050505; padding: 10px; display: flex; gap: 8px; overflow-x: auto; border-top: 1px solid var(--border); min-height: 50px; justify-content: center; align-items: center; }
-        .stk-btn { padding: 8px 18px; background: #111; border: 1px solid #333; color: #fff; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: bold; white-space: nowrap; }
+        #stack-bar { background: #050505; padding: 12px; display: flex; gap: 10px; overflow-x: auto; border-top: 1px solid var(--border); min-height: 55px; justify-content: center; }
+        .stk-btn { padding: 8px 20px; background: #111; border: 1px solid #333; color: #fff; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
         .stk-btn.active { background: var(--blue); color: #000; border-color: var(--blue); }
 
-        /* SIDEBAR DESTRA: ADVISOR & LOG */
-        #sidebar-right { width: 300px; background: var(--panel); border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; }
-        .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 8px; padding: 15px; margin-bottom: 20px; border-top: 2px solid var(--accent); }
-        .section-title { color: var(--blue); font-size: 0.8rem; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; display: block; border-bottom: 1px solid #222; padding-bottom: 8px; }
-        .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-        .btn-pf { background: #151515; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.65rem; cursor: pointer; font-weight: bold; }
-        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 12px; margin-top: 12px; text-align: center; min-height: 50px; display: flex; align-items: center; justify-content: center; }
-        #gto-text { color: var(--accent); font-size: 0.75rem; font-weight: bold; }
-        .btn-action { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.7rem; }
+        /* SIDEBAR DESTRA: ADVISOR & MANAGEMENT */
+        #sidebar-right { width: 320px; background: var(--panel); padding: 20px; overflow-y: auto; flex-shrink: 0; }
+        .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 8px; padding: 15px; margin-bottom: 20px; border-top: 3px solid var(--accent); }
+        .section-title { color: var(--blue); font-size: 0.85rem; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; display: block; border-bottom: 1px solid #222; padding-bottom: 8px; }
+        .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .btn-pf { background: #151515; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; font-weight: bold; }
+        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 15px; margin-top: 15px; text-align: center; min-height: 60px; display: flex; align-items: center; justify-content: center; }
+        #gto-text { color: var(--accent); font-size: 0.8rem; font-weight: bold; }
+        .btn-action { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.75rem; }
     </style>
 </head>
 <body>
@@ -53,22 +53,27 @@
         <button class="nav-btn" onclick="sm('5. BB vs BTN', 'bbvbt_', this)">5. BB vs BTN</button>
         <button class="nav-btn" onclick="sm('6. BB vs SB', 'bbvssb_', this)">6. BB vs SB</button>
         <button class="nav-btn" onclick="sm('7. BB vs SB Limp', 'bbvssblimp_', this)">7. BB vs SB Limp</button>
+        <button class="nav-btn" onclick="sm('8. BB vs BTN Iso', 'bbvsbtniso_', this)">8. BB vs BTN Iso</button>
+        <button class="nav-btn" onclick="sm('9. BB vs SB Iso', 'bbvssbiso_', this)">9. BB vs SB Iso</button>
         <button class="nav-btn" onclick="sm('10. BB vs 2 PL', 'bbvs2pl_', this)">10. BB vs 2 PL</button>
 
         <span class="cat-label">Heads-Up</span>
         <button class="nav-btn" onclick="sm('11. HU IP Open', 'huip_', this)">11. HU IP Open</button>
+        <button class="nav-btn" onclick="sm('12. HU OOP vs Limp', 'huooplimp_', this)">12. HU OOP vs Limp</button>
         <button class="nav-btn" onclick="sm('13. HU OOP vs MR', 'huoopmr_', this)">13. HU OOP vs MR</button>
+        <button class="nav-btn" onclick="sm('14. HU OOP vs Shove', 'huoopshove_', this)">14. HU OOP vs Shove</button>
 
-        <span class="cat-label">Shove / All-in</span>
-        <button class="nav-btn" onclick="sm('All-in Situations', 'shove_', this)">⚠️ Shove Ranges</button>
+        <span class="cat-label">Nash Equilibrium</span>
+        <button class="nav-btn" onclick="sm('15. Nash Push', 'nashpush_', this)">15. Nash Push</button>
+        <button class="nav-btn" onclick="sm('16. Nash Call', 'nashcall_', this)">16. Nash Call</button>
     </div>
 </aside>
 
 <main id="main-view">
     <header id="header">
         <div id="rng-box">--</div>
-        <button onclick="roll()" class="btn-action" style="background:var(--accent); color:black; width:auto; padding:0 30px; height:40px;">ROLL RNG</button>
-        <label class="btn-action" style="background:var(--blue); color:black; width:auto; padding:0 20px; height:40px; display:flex; align-items:center; cursor:pointer;">
+        <button onclick="roll()" class="btn-action" style="background:var(--accent); color:black; width:auto; padding:0 30px; height:45px;">ROLL RNG</button>
+        <label class="btn-action" style="background:var(--blue); color:black; width:auto; padding:0 20px; height:45px; display:flex; align-items:center; cursor:pointer;">
             📂 CARICA RANGE <input type="file" id="file-input" webkitdirectory directory multiple style="display:none">
         </label>
     </header>
@@ -88,11 +93,12 @@
             <button class="btn-pf" onclick="advise('DRAW')">DRAW</button>
             <button class="btn-pf" onclick="advise('SDV')">SD VALUE</button>
         </div>
-        <div id="gto-solution-box"><span id="gto-text">Seleziona azione...</span></div>
+        <div id="gto-solution-box"><span id="gto-text">Seleziona situazione...</span></div>
     </div>
     <div class="section-box" style="border-top-color: var(--blue);">
-        <span class="section-title" style="color:var(--blue)">Management</span>
-        <button onclick="alert('Sessione Salvata!')" class="btn-action" style="background:var(--blue); color:black;">SAVE DATA</button>
+        <span class="section-title" style="color:var(--blue)">Session Management</span>
+        <button onclick="alert('Dati Salvati!')" class="btn-action" style="background:var(--blue); color:black; margin-bottom:10px;">SAVE SESSION</button>
+        <button onclick="alert('Backup Esportato')" class="btn-action" style="background:#111; color:var(--blue); border:1px solid #333; font-size:0.6rem;">EXPORT LOG</button>
     </div>
 </aside>
 
@@ -145,12 +151,12 @@
             });
         } else {
             img.style.display = 'none';
-            logo.style.opacity = '0.4';
+            logo.style.opacity = '0.5';
         }
     }
 
     function advise(type) {
-        const lines = { 'VALUE': 'GTO: Punta 75%.', 'AIR': 'GTO: Check-Fold.', 'DRAW': 'GTO: Aggressivo.', 'SDV': 'GTO: Check-Call.' };
+        const lines = { 'VALUE': 'GTO: Bet 75%.', 'AIR': 'GTO: Check-Fold.', 'DRAW': 'GTO: Raise/Call.', 'SDV': 'GTO: Check-Call.' };
         document.getElementById('gto-text').innerHTML = lines[type];
     }
 </script>
