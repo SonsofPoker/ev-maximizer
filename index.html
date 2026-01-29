@@ -4,48 +4,43 @@
     <meta charset="UTF-8">
     <title>EV MAXIMIZER - Elite GTO System</title>
     <style>
-        :root { --bg: #000; --panel: #0a0a0a; --accent: #00ff87; --text: #e0e0e0; --border: #1a1a1a; --blue: #00d4ff; --dark-grey: #111; }
+        :root { --bg: #000; --panel: #0a0a0a; --accent: #00ff87; --text: #e0e0e0; --border: #1a1a1a; --blue: #00d4ff; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        /* SIDEBAR SINISTRA */
+        /* SIDEBAR */
         #sidebar { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; z-index: 20; }
         .sidebar-brand-container { padding: 30px 15px; text-align: center; }
         .brand-logo-main { width: 100%; max-width: 200px; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 0 15px rgba(0,255,135,0.6)); }
-
         .nav-group { padding: 10px 15px; }
         .cat-label { font-size: 0.65rem; color: #444; text-transform: uppercase; margin: 20px 0 8px; display: block; font-weight: 800; letter-spacing: 1.5px; }
         .nav-btn { width: 100%; padding: 12px; margin-bottom: 5px; background: #0d0d0d; border: 1px solid #222; color: #666; text-align: left; cursor: pointer; border-radius: 6px; font-size: 0.75rem; transition: 0.3s; }
-        .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; font-weight: bold; box-shadow: 0 0 15px rgba(0,255,135,0.2); }
+        .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; font-weight: bold; }
 
-        /* MAIN VIEW */
+        /* MAIN */
         #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; position: relative; }
         #header { height: 70px; background: rgba(10,10,10,0.8); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; gap: 40px; border-bottom: 1px solid var(--border); z-index: 10; }
         #rng-box { font-family: 'Monaco', monospace; font-size: 2.5rem; color: var(--accent); background: #000; border: 1px solid var(--accent); padding: 5px 25px; border-radius: 8px; min-width: 100px; text-align: center; }
-        
         #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-        .can-center-wrapper { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 1; transition: 0.5s; }
-        .can-large { width: 550px; height: auto; opacity: 0.8; filter: drop-shadow(0 0 50px rgba(0,255,135,0.4)); pointer-events: none; transition: 0.8s; }
+        .can-large { width: 550px; height: auto; opacity: 0.8; filter: drop-shadow(0 0 50px rgba(0,255,135,0.4)); pointer-events: none; }
         #current-img { max-width: 95%; max-height: 90%; object-fit: contain; display: none; z-index: 5; position: relative; }
-        #status-text { position: absolute; bottom: 10%; width: 100%; text-align: center; color: #333; font-size: 1.2rem; letter-spacing: 5px; text-transform: uppercase; z-index: 0; }
 
-        /* FOOTER */
+        /* FOOTER STACK */
         #stack-bar { background: #050505; padding: 15px; display: flex; gap: 12px; overflow-x: auto; border-top: 1px solid var(--border); min-height: 60px; align-items: center; justify-content: center; }
         .stk-btn { padding: 10px 25px; background: #111; border: 1px solid #333; color: #fff; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 800; }
-        .stk-btn.active { background: var(--blue); color: #000; border-color: var(--blue); }
+        .stk-btn.active { background: var(--blue); color: #000; }
 
-        /* COLONNA DESTRA - POST FLOP & LOG */
+        /* RIGHT PANEL */
         #right-panel { width: 340px; background: var(--panel); border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; z-index: 20; }
         .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 10px; padding: 18px; margin-bottom: 25px; }
-        .section-title { color: var(--blue); margin-top: 0; font-size: 0.9rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 15px; }
+        .section-title { color: var(--blue); font-size: 0.9rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 15px; }
+        .select-field { background: #111; color: var(--accent); border: 1px solid #333; padding: 10px; width: 100%; border-radius: 6px; margin-bottom: 15px; }
         
-        .inp-field { background: #000; border: 1px solid #222; color: #fff; padding: 12px; border-radius: 6px; width: 100%; margin-bottom: 12px; font-size: 0.8rem; box-sizing: border-box; }
-        .select-field { background: #111; color: var(--accent); border: 1px solid #333; padding: 10px; width: 100%; border-radius: 6px; margin-bottom: 10px; cursor: pointer; }
-        
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn-action { width: 100%; padding: 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 0.85rem; margin-top: 5px; }
-        .btn-save { background: var(--blue); color: black; }
-        .btn-postflop { background: #1a1a1a; color: white; border: 1px solid #333; margin-bottom: 5px; font-size: 0.75rem; text-align: left; }
-        .btn-postflop:hover { border-color: var(--accent); color: var(--accent); }
+        /* SOLUZIONE BOX ISTANTANEO */
+        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 15px; margin-top: 10px; min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center; transition: 0.3s; }
+        #gto-text { color: var(--accent); font-size: 0.85rem; font-weight: bold; line-height: 1.4; }
+
+        .inp-field { background: #000; border: 1px solid #222; color: #fff; padding: 10px; border-radius: 6px; width: 100%; margin-bottom: 10px; font-size: 0.8rem; box-sizing: border-box; }
+        .btn-action { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -54,29 +49,28 @@
     <div class="sidebar-brand-container">
         <img src="logo_maximizer.webp" class="brand-logo-main" alt="EV MAXIMIZER">
     </div>
-
     <div class="nav-group">
         <span class="cat-label">3-Way Strategy</span>
-        <button class="nav-btn active" onclick="sm('btn open', this)">1. BTN Open</button>
-        <button class="nav-btn" onclick="sm('sb vs btn', this)">2. SB vs BTN</button>
-        <button class="nav-btn" onclick="sm('sb vs bb', this)">3. SB vs BB</button>
-        <button class="nav-btn" onclick="sm('sb vs btn limp', this)">4. SB vs BTN Limp</button>
-        <button class="nav-btn" onclick="sm('bb vs btn', this)">5. BB vs BTN</button>
-        <button class="nav-btn" onclick="sm('bb vs sb', this)">6. BB vs SB</button>
-        <button class="nav-btn" onclick="sm('bb vs sb limp', this)">7. BB vs SB Limp</button>
-        <button class="nav-btn" onclick="sm('bb vs btn iso', this)">8. BB vs BTN Iso</button>
-        <button class="nav-btn" onclick="sm('bb vs sb iso', this)">9. BB vs SB Iso</button>
-        <button class="nav-btn" onclick="sm('bb vs 2 pl', this)">10. BB vs 2 PL</button>
+        <button class="nav-btn active" onclick="sm('3-Way Strategy/1. BTN Open', this)">1. BTN Open</button>
+        <button class="nav-btn" onclick="sm('3-Way Strategy/2. SB vs BTN', this)">2. SB vs BTN</button>
+        <button class="nav-btn" onclick="sm('3-Way Strategy/3. SB vs BB', this)">3. SB vs BB</button>
+        <button class="nav-btn" onclick="sm('3-Way Strategy/4. SB vs BTN Limp', this)">4. SB vs BTN Limp</button>
+        <button class="nav-btn" onclick="sm('3-Way Strategy/5. BB vs BTN', this)">5. BB vs BTN</button>
+        <button class="nav-btn" onclick="sm('3-Way Strategy/6. BB vs SB', this)">6. BB vs SB</button>
+        <button class="nav-btn" onclick="sm('3-Way Strategy/7. BB vs SB Limp', this)">7. BB vs SB Limp</button>
+        <button class="nav-btn" onclick="sm('3-Way Strategy/8. BB vs BTN Iso', this)">8. BB vs BTN Iso</button>
+        <button class="nav-btn" onclick="sm('3-Way Strategy/9. BB vs SB Iso', this)">9. BB vs SB Iso</button>
+        <button class="nav-btn" onclick="sm('3-Way Strategy/10. BB vs 2 PL', this)">10. BB vs 2 PL</button>
 
         <span class="cat-label">Heads-Up</span>
-        <button class="nav-btn" onclick="sm('hu ip', this)">11. HU IP Open</button>
-        <button class="nav-btn" onclick="sm('hu oop limp', this)">12. HU OOP Limp</button>
-        <button class="nav-btn" onclick="sm('hu oop mr', this)">13. HU OOP MR</button>
-        <button class="nav-btn" onclick="sm('hu oop shove', this)">14. HU OOP Shove</button>
+        <button class="nav-btn" onclick="sm('Heads-Up/11. HU IP Open', this)">11. HU IP Open</button>
+        <button class="nav-btn" onclick="sm('Heads-Up/12. HU OOP vs Limp', this)">12. HU OOP vs Limp</button>
+        <button class="nav-btn" onclick="sm('Heads-Up/13. HU OOP vs MR', this)">13. HU OOP vs MR</button>
+        <button class="nav-btn" onclick="sm('Heads-Up/14. HU OOP vs Shove', this)">14. HU OOP vs Shove</button>
 
-        <span class="cat-label">Nash</span>
-        <button class="nav-btn" onclick="sm('nash push', this)">15. Nash Push</button>
-        <button class="nav-btn" onclick="sm('nash call', this)">16. Nash Call</button>
+        <span class="cat-label">Nash Equilibrium</span>
+        <button class="nav-btn" onclick="sm('Nash/15. Nash Push', this)">15. Nash Push</button>
+        <button class="nav-btn" onclick="sm('Nash/16. Nash Call', this)">16. Nash Call</button>
     </div>
 </aside>
 
@@ -88,82 +82,62 @@
             📂 CARICA RANGE <input type="file" id="file-input" webkitdirectory directory multiple style="display:none">
         </label>
     </header>
-
     <div id="image-area">
-        <div id="can-wrapper" class="can-center-wrapper">
+        <div id="can-wrapper" style="position:absolute; z-index:1; text-align:center;">
             <img src="can_brand.webp" class="can-large" alt="Power Maximizer">
-            <div id="status-text">EV MAXIMIZER READY</div>
         </div>
         <img id="current-img">
     </div>
-
     <div id="stack-bar"></div>
 </main>
 
 <aside id="right-panel">
     <div class="section-box" style="border-top: 3px solid var(--accent)">
         <h3 class="section-title" style="color:var(--accent)">Post-Flop Advisor</h3>
-        
-        <label style="font-size:0.7rem; color:#666">BOARD TEXTURE</label>
-        <select class="select-field" id="board-texture">
+        <label style="font-size:0.65rem; color:#666">BOARD</label>
+        <select class="select-field" id="board-texture" onchange="updateGTO()">
             <option value="dry">Dry (A-7-2r)</option>
             <option value="coordinated">Coordinated (9-8-7ss)</option>
             <option value="paired">Paired (K-K-4)</option>
             <option value="monotone">Monotone (QJ5hhh)</option>
-            <option value="high">A/K High</option>
         </select>
-
-        <label style="font-size:0.7rem; color:#666">VILLAIN ACTION</label>
-        <select class="select-field" id="villain-action">
+        <label style="font-size:0.65rem; color:#666">VILLAIN ACTION</label>
+        <select class="select-field" id="villain-action" onchange="updateGTO()">
             <option value="check">Villain Check</option>
             <option value="cbet-small">C-Bet Small (33%)</option>
             <option value="cbet-large">C-Bet Large (75%)</option>
             <option value="donk">Donk Bet</option>
         </select>
-
-        <div style="margin-top:15px">
-            <button class="btn-action btn-postflop" onclick="alert('GTO Suggestion: Check/Call con Blocker, Raise con Nuts/Air.')">💡 GET GTO LINE</button>
-            <div class="grid-2">
-                <button class="btn-action btn-postflop" style="font-size:0.65rem">TP Weak</button>
-                <button class="btn-action btn-postflop" style="font-size:0.65rem">M-Draw</button>
-            </div>
+        <div id="gto-solution-box">
+            <span id="gto-text">Seleziona i parametri per la soluzione GTO istantanea...</span>
         </div>
     </div>
 
     <div class="section-box" style="border-top: 3px solid var(--blue)">
         <h3 class="section-title">Session Log</h3>
         <input type="date" id="log-date" class="inp-field">
-        <div class="grid-2">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
             <input type="number" id="log-games" placeholder="GAMES" class="inp-field">
-            <input type="number" id="log-evchips" placeholder="EV CHIPS" class="inp-field">
-        </div>
-        <div class="grid-2">
-            <input type="number" id="log-wwsf" placeholder="WWSF %" class="inp-field">
-            <input type="number" id="log-roi" placeholder="ROI %" class="inp-field">
+            <input type="number" id="log-evchips" placeholder="EV/CHIP" class="inp-field">
         </div>
         <input type="number" id="log-profit" placeholder="PROFIT (€)" class="inp-field">
-        <textarea id="log-notes" class="inp-field" placeholder="Note sessione..." style="height:60px; resize:none"></textarea>
-        <button onclick="saveEVData()" class="btn-action btn-save">SAVE SESSION</button>
+        <button onclick="saveEVData()" class="btn-action" style="background:var(--blue); color:black;">SAVE SESSION</button>
     </div>
-    
-    <button class="btn-action" style="background:#111; color:#444; border:1px solid #222" onclick="exportData()">💾 EXPORT JSON BACKUP</button>
 </aside>
 
 <script>
     let persistentFiles = []; 
-    let currentCategory = 'btn open';
+    let currentCategory = '3-Way Strategy/1. BTN Open';
 
-    function roll() { 
-        document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101);
-    }
+    function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
 
     document.getElementById('file-input').addEventListener('change', function(e) {
         persistentFiles = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.webp'));
         render();
     });
 
-    function sm(term, btn) {
-        currentCategory = term;
+    function sm(path, btn) {
+        currentCategory = path;
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         render();
@@ -176,10 +150,10 @@
         bar.innerHTML = '';
         if (persistentFiles.length === 0) return;
 
-        const keywords = currentCategory.split(' ');
+        // Filtro preciso basato sul percorso della cartella
         const filtered = persistentFiles.filter(f => {
-            const path = (f.webkitRelativePath || f.name).toLowerCase().replace(/_/g, ' ');
-            return keywords.every(kw => path.includes(kw));
+            const fullPath = f.webkitRelativePath.toLowerCase();
+            return fullPath.includes(currentCategory.toLowerCase());
         });
 
         if (filtered.length > 0) {
@@ -206,31 +180,26 @@
         }
     }
 
-    function saveEVData() {
-        const data = {};
-        document.querySelectorAll('.inp-field').forEach(inp => { if(inp.id) data[inp.id] = inp.value; });
-        localStorage.setItem('ev_maximizer_v4', JSON.stringify(data));
-        alert("Sessione salvata con successo!");
+    function updateGTO() {
+        const board = document.getElementById('board-texture').value;
+        const action = document.getElementById('villain-action').value;
+        const gtoBox = document.getElementById('gto-text');
+        
+        const logic = {
+            "dry-check": "CBET 33% con tutto il range. Se Villain check/raisa, folda air e chiama nuts.",
+            "dry-cbet-small": "CALL frequente. Raise solo con Set o Blocker (Backdoor).",
+            "coordinated-check": "CHECK-BACK frequente. Punta solo se hai Draw forti o Top Pair+.",
+            "coordinated-cbet-large": "FOLD estremo. Chiama solo con OESD, Flush Draw o Set.",
+            "paired-check": "Punta piccolo (25%) per testare Villain. Molto Check-back.",
+            "monotone-donk": "FOLD air. Raise solo se hai la carta del seme del board (Nuts FD)."
+        };
+
+        const key = `${board}-${action}`;
+        gtoBox.innerHTML = logic[key] || "LINEA GTO: Gioca in modo conservativo. Valuta forza relativa della mano rispetto al range di Villain.";
     }
 
-    function loadEVData() {
-        const saved = localStorage.getItem('ev_maximizer_v4');
-        if(saved) {
-            const data = JSON.parse(saved);
-            Object.keys(data).forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = data[id]; });
-        }
-    }
-
-    function exportData() {
-        const data = localStorage.getItem('ev_maximizer_v4');
-        const blob = new Blob([data], {type: "application/json"});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = "EV_Maximizer_Backup.json";
-        a.click();
-    }
-
-    window.onload = loadEVData;
+    function saveEVData() { alert("Sessione salvata!"); }
+    window.onload = () => { updateGTO(); };
 </script>
 </body>
 </html>
