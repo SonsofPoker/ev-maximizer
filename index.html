@@ -7,7 +7,7 @@
         :root { --bg: #050505; --panel: #0a0a0a; --accent: #00ff87; --text: #e0e0e0; --border: #222; --blue: #00d4ff; }
         body { font-family: 'Inter', sans-serif; background: #000; color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        /* Sidebar: 16 Posizioni esatte */
+        /* Sidebar */
         #sidebar { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
         .nav-group { padding: 10px 15px; }
         .cat-label { font-size: 0.65rem; color: #555; text-transform: uppercase; margin: 15px 0 5px; display: block; font-weight: bold; border-left: 2px solid var(--accent); padding-left: 8px; }
@@ -15,7 +15,14 @@
         .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; font-weight: bold; }
 
         #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; }
-        #header { height: 60px; background: #0a0a0a; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid var(--border); }
+        
+        /* Header con LOGO e LATTINA */
+        #header { height: 70px; background: #0a0a0a; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid var(--border); }
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+        .brand-logo { height: 45px; border-radius: 5px; } /* Qui caricheremo il logo EX Maximizer */
+        .energy-can { height: 50px; filter: drop-shadow(0 0 5px var(--accent)); transition: 0.3s; cursor: pointer; }
+        .energy-can:hover { transform: scale(1.1) rotate(5deg); }
+
         #rng-box { font-family: monospace; font-size: 1.8rem; color: var(--accent); border: 1px solid #333; padding: 4px 12px; border-radius: 4px; min-width: 60px; text-align: center; }
         
         #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; background: radial-gradient(circle, #111 0%, #000 100%); }
@@ -32,6 +39,9 @@
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .adv-btn { font-size: 0.65rem; padding: 8px; border: 1px solid #333; background: #111; color: #999; cursor: pointer; border-radius: 4px; }
         .adv-btn.active { background: var(--accent); color: #000; font-weight: bold; }
+        
+        /* Tasti Monetizzazione */
+        .pack-btn { background: #333; color: white; border: none; padding: 5px; font-size: 0.6rem; cursor: pointer; border-radius: 3px; width: 100%; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -59,21 +69,33 @@
         <span class="cat-label">Nash Equilibrium</span>
         <button class="nav-btn" onclick="sm('nash push', this)">15. Nash Push</button>
         <button class="nav-btn" onclick="sm('nash call', this)">16. Nash Call</button>
+        
+        <hr style="border:0; border-top:1px solid #222; margin:20px 0;">
+        <button class="pack-btn" onclick="exportData()">💾 ESPORTA PACCHETTO DATI</button>
+        <label class="pack-btn" style="display:block; text-align:center;">
+            📂 IMPORTA PACCHETTO <input type="file" id="import-file" style="display:none" onchange="importData(event)">
+        </label>
     </div>
 </aside>
 
 <main id="main-view">
     <header id="header">
+        <div class="logo-area">
+            <img src="images/logo_maximizer.webp" class="brand-logo" alt="EX">
+            <img src="images/can_brand.webp" class="energy-can" alt="Power" onclick="roll()">
+        </div>
         <div id="rng-box">--</div>
-        <button onclick="roll()" style="background:var(--accent); color:black; border:none; padding:8px 20px; cursor:pointer; font-weight:bold; border-radius:4px;">ROLL RNG</button>
         <label style="background:var(--blue); color:black; padding:8px 15px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">
-            📂 CARICA CARTELLA PRINCIPALE <input type="file" id="file-input" webkitdirectory directory multiple style="display:none">
+            📂 CARICA IMMAGINI <input type="file" id="file-input" webkitdirectory directory multiple style="display:none">
         </label>
     </header>
 
     <div id="image-area">
         <img id="current-img">
-        <div id="status-msg" style="color:#555; text-align:center;">Carica la cartella per visualizzare i range.</div>
+        <div id="status-msg" style="color:#555; text-align:center;">
+            <h1>EV MAXIMIZER</h1>
+            <p>Carica il tuo pacchetto immagini o importa un setup.</p>
+        </div>
     </div>
     <div id="stack-bar"></div>
 </main>
@@ -99,18 +121,18 @@
 
     <div class="section-box" style="border-top: 2px solid var(--blue)">
         <h3 style="color:var(--blue)">Session Log</h3>
-        <input type="date" id="s-date" class="inp-field">
+        <input type="date" id="log-date" class="inp-field">
         <div class="grid-2">
-            <input type="number" placeholder="GAMES" class="inp-field">
-            <input type="number" placeholder="EV CHIPS" class="inp-field">
+            <input type="number" id="log-games" placeholder="GAMES" class="inp-field">
+            <input type="number" id="log-evchips" placeholder="EV CHIPS" class="inp-field">
         </div>
         <div class="grid-2">
-            <input type="number" placeholder="WWSF %" class="inp-field">
-            <input type="number" placeholder="ROI %" class="inp-field">
+            <input type="number" id="log-wwsf" placeholder="WWSF %" class="inp-field">
+            <input type="number" id="log-roi" placeholder="ROI %" class="inp-field">
         </div>
-        <input type="number" placeholder="PROFIT (€)" class="inp-field">
-        <textarea class="inp-field" placeholder="Note sessione..." style="height:50px; resize:none;"></textarea>
-        <button class="nav-btn" style="background:var(--blue); color:black; border:none; width:100%; font-weight:bold;">SAVE SESSION</button>
+        <input type="number" id="log-profit" placeholder="PROFIT (€)" class="inp-field">
+        <textarea id="log-notes" class="inp-field" placeholder="Note sessione..." style="height:50px; resize:none;"></textarea>
+        <button onclick="saveEVData()" class="nav-btn" style="background:var(--blue); color:black; border:none; width:100%; font-weight:bold;">SAVE DATA</button>
     </div>
 </aside>
 
@@ -138,17 +160,13 @@
         const img = document.getElementById('current-img');
         const msg = document.getElementById('status-msg');
         bar.innerHTML = '';
-
         if (persistentFiles.length === 0) return;
-
         const keywords = currentCategory.split(' ');
         const filtered = persistentFiles.filter(f => {
             const path = (f.webkitRelativePath || f.name).toLowerCase().replace(/_/g, ' ');
             return keywords.every(kw => path.includes(kw));
         });
-
         filtered.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
-
         if (filtered.length > 0) {
             msg.style.display = 'none';
             img.style.display = 'block';
@@ -191,37 +209,48 @@
         };
         if(activeAdv) out.innerText = logic[activeAdv][board];
     }
-</script>
-// 1. Salva i dati ogni volta che scrivi qualcosa
-        function saveEVData() {
-            const inputs = document.querySelectorAll('input, select, textarea');
-            const data = {};
-            inputs.forEach(input => {
-                if (input.id) data[input.id] = input.value;
+
+    // --- SISTEMA SALVATAGGIO E MONETIZZAZIONE ---
+    function saveEVData() {
+        const inputs = document.querySelectorAll('.inp-field');
+        const data = {};
+        inputs.forEach(inp => { if(inp.id) data[inp.id] = inp.value; });
+        localStorage.setItem('ev_maximizer_pro', JSON.stringify(data));
+        alert("Dati salvati nel browser!");
+    }
+
+    function loadEVData() {
+        const saved = localStorage.getItem('ev_maximizer_pro');
+        if(saved) {
+            const data = JSON.parse(saved);
+            Object.keys(data).forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.value = data[id];
             });
-            localStorage.setItem('evMaximizerData', JSON.stringify(data));
         }
+    }
 
-        // 2. Carica i dati quando riapri la pagina
-        function loadEVData() {
-            const savedData = localStorage.getItem('evMaximizerData');
-            if (savedData) {
-                const data = JSON.parse(savedData);
-                Object.keys(data).forEach(id => {
-                    const element = document.getElementById(id);
-                    if (element) element.value = data[id];
-                });
-                // Se hai una funzione che calcola i totali, la richiamiamo qui
-                if (typeof calcolaTutto === "function") calcolaTutto();
-            }
-        }
+    function exportData() {
+        const data = localStorage.getItem('ev_maximizer_pro');
+        const blob = new Blob([data], {type: "application/json"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "pack_ev_maximizer.json";
+        a.click();
+    }
 
-        // Esegue il caricamento all'apertura
-        window.addEventListener('load', loadEVData);
-        // Esegue il salvataggio a ogni modifica
-        document.addEventListener('input', saveEVData);
+    function importData(event) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            localStorage.setItem('ev_maximizer_pro', e.target.result);
+            loadEVData();
+            alert("Pacchetto caricato con successo!");
+        };
+        reader.readAsText(event.target.files[0]);
+    }
 
-        // --- FINE CODICE ---
+    window.onload = loadEVData;
 </script>
 </body>
-</html>  
+</html>
