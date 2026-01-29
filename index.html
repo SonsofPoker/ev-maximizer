@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>EV MAXIMIZER - Elite GTO System</title>
+    <style>
+        :root { --bg: #050505; --panel: #0a0a0a; --accent: #00ff87; --text: #e0e0e0; --border: #222; --blue: #00d4ff; }
+        body { font-family: 'Inter', sans-serif; background: #000; color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Sidebar: 16 Posizioni esatte */
+        #sidebar { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+        .nav-group { padding: 10px 15px; }
+        .cat-label { font-size: 0.65rem; color: #555; text-transform: uppercase; margin: 15px 0 5px; display: block; font-weight: bold; border-left: 2px solid var(--accent); padding-left: 8px; }
+        .nav-btn { width: 100%; padding: 8px 10px; margin-bottom: 3px; background: #111; border: 1px solid #222; color: #888; text-align: left; cursor: pointer; border-radius: 4px; font-size: 0.72rem; }
+        .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; font-weight: bold; }
+
+        #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; }
+        #header { height: 60px; background: #0a0a0a; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid var(--border); }
+        #rng-box { font-family: monospace; font-size: 1.8rem; color: var(--accent); border: 1px solid #333; padding: 4px 12px; border-radius: 4px; min-width: 60px; text-align: center; }
+        
+        #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; background: radial-gradient(circle, #111 0%, #000 100%); }
+        #current-img { max-width: 98%; max-height: 98%; object-fit: contain; display: none; }
+        
+        #stack-bar { background: #050505; padding: 10px; display: flex; gap: 8px; overflow-x: auto; border-top: 1px solid var(--border); min-height: 55px; align-items: center; }
+        .stk-btn { padding: 8px 16px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 4px; cursor: pointer; font-size: 0.75rem; white-space: nowrap; font-weight: bold; }
+        .stk-btn.active { background: var(--blue); color: #000; }
+
+        #right-panel { width: 320px; background: var(--panel); border-left: 1px solid var(--border); padding: 15px; overflow-y: auto; }
+        .section-box { background: rgba(255,255,255,0.02); border-radius: 6px; padding: 12px; margin-bottom: 15px; border: 1px solid #222; }
+        h3 { font-size: 0.75rem; color: var(--accent); margin: 0 0 10px; text-transform: uppercase; }
+        .inp-field { background: #000; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px; width: 100%; margin-bottom: 8px; font-size: 0.75rem; box-sizing: border-box; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .adv-btn { font-size: 0.65rem; padding: 8px; border: 1px solid #333; background: #111; color: #999; cursor: pointer; border-radius: 4px; }
+        .adv-btn.active { background: var(--accent); color: #000; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<aside id="sidebar">
+    <div class="nav-group">
+        <span class="cat-label">3-Way Strategy</span>
+        <button class="nav-btn active" onclick="sm('btn open', this)">1. BTN Open</button>
+        <button class="nav-btn" onclick="sm('sb vs btn', this)">2. SB vs BTN</button>
+        <button class="nav-btn" onclick="sm('sb vs bb', this)">3. SB vs BB (BvB)</button>
+        <button class="nav-btn" onclick="sm('sb vs btn limp', this)">4. SB vs BTN Limp</button>
+        <button class="nav-btn" onclick="sm('bb vs btn', this)">5. BB vs BTN</button>
+        <button class="nav-btn" onclick="sm('bb vs sb', this)">6. BB vs SB</button>
+        <button class="nav-btn" onclick="sm('bb vs sb limp', this)">7. BB vs SB Limp</button>
+        <button class="nav-btn" onclick="sm('bb vs btn iso', this)">8. BB vs BTN Iso</button>
+        <button class="nav-btn" onclick="sm('bb vs sb iso', this)">9. BB vs SB Iso</button>
+        <button class="nav-btn" onclick="sm('bb vs 2 pl', this)">10. BB vs 2 PL</button>
+
+        <span class="cat-label">Heads-Up (HU)</span>
+        <button class="nav-btn" onclick="sm('hu ip', this)">11. HU IP Open</button>
+        <button class="nav-btn" onclick="sm('hu oop limp', this)">12. HU OOP vs Limp</button>
+        <button class="nav-btn" onclick="sm('hu oop mr', this)">13. HU OOP vs MR</button>
+        <button class="nav-btn" onclick="sm('hu oop shove', this)">14. HU OOP vs Shove</button>
+
+        <span class="cat-label">Nash Equilibrium</span>
+        <button class="nav-btn" onclick="sm('nash push', this)">15. Nash Push</button>
+        <button class="nav-btn" onclick="sm('nash call', this)">16. Nash Call</button>
+    </div>
+</aside>
+
+<main id="main-view">
+    <header id="header">
+        <div id="rng-box">--</div>
+        <button onclick="roll()" style="background:var(--accent); color:black; border:none; padding:8px 20px; cursor:pointer; font-weight:bold; border-radius:4px;">ROLL RNG</button>
+        <label style="background:var(--blue); color:black; padding:8px 15px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">
+            📂 CARICA CARTELLA PRINCIPALE <input type="file" id="file-input" webkitdirectory directory multiple style="display:none">
+        </label>
+    </header>
+
+    <div id="image-area">
+        <img id="current-img">
+        <div id="status-msg" style="color:#555; text-align:center;">Carica la cartella per visualizzare i range.</div>
+    </div>
+    <div id="stack-bar"></div>
+</main>
+
+<aside id="right-panel">
+    <div class="section-box">
+        <h3>Post-Flop Advisor</h3>
+        <select id="board-type" class="inp-field" onchange="updateAdv()">
+            <option value="dry">Dry (A-7-2r)</option>
+            <option value="coord">Coordinated (9-8-7s)</option>
+            <option value="pair">Paired (K-K-4)</option>
+        </select>
+        <div class="grid-2" style="margin-bottom:8px;">
+            <button class="adv-btn" id="adv-v" onclick="setAdv('v')">Value</button>
+            <button class="adv-btn" id="adv-w" onclick="setAdv('w')">TP Weak</button>
+        </div>
+        <div class="grid-2">
+            <button class="adv-btn" id="adv-d" onclick="setAdv('d')">M-Draw</button>
+            <button class="adv-btn" id="adv-a" onclick="setAdv('a')">Air</button>
+        </div>
+        <div id="adv-out" style="font-size:0.7rem; color:#888; margin-top:10px;">Seleziona parametri...</div>
+    </div>
+
+    <div class="section-box" style="border-top: 2px solid var(--blue)">
+        <h3 style="color:var(--blue)">Session Log</h3>
+        <input type="date" id="s-date" class="inp-field">
+        <div class="grid-2">
+            <input type="number" placeholder="GAMES" class="inp-field">
+            <input type="number" placeholder="EV CHIPS" class="inp-field">
+        </div>
+        <div class="grid-2">
+            <input type="number" placeholder="WWSF %" class="inp-field">
+            <input type="number" placeholder="ROI %" class="inp-field">
+        </div>
+        <input type="number" placeholder="PROFIT (€)" class="inp-field">
+        <textarea class="inp-field" placeholder="Note sessione..." style="height:50px; resize:none;"></textarea>
+        <button class="nav-btn" style="background:var(--blue); color:black; border:none; width:100%; font-weight:bold;">SAVE SESSION</button>
+    </div>
+</aside>
+
+<script>
+    let persistentFiles = []; 
+    let currentCategory = 'btn open';
+    let activeAdv = '';
+
+    function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
+
+    document.getElementById('file-input').addEventListener('change', function(e) {
+        persistentFiles = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.webp'));
+        render();
+    });
+
+    function sm(term, btn) {
+        currentCategory = term;
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        render();
+    }
+
+    function render() {
+        const bar = document.getElementById('stack-bar');
+        const img = document.getElementById('current-img');
+        const msg = document.getElementById('status-msg');
+        bar.innerHTML = '';
+
+        if (persistentFiles.length === 0) return;
+
+        const keywords = currentCategory.split(' ');
+        const filtered = persistentFiles.filter(f => {
+            const path = (f.webkitRelativePath || f.name).toLowerCase().replace(/_/g, ' ');
+            return keywords.every(kw => path.includes(kw));
+        });
+
+        filtered.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
+
+        if (filtered.length > 0) {
+            msg.style.display = 'none';
+            img.style.display = 'block';
+            filtered.forEach((f, i) => {
+                const b = document.createElement('button');
+                b.className = 'stk-btn';
+                b.innerText = f.name.replace('.webp', '').replace(/_/g, ' ');
+                b.onclick = () => {
+                    const r = new FileReader();
+                    r.onload = (e) => { img.src = e.target.result; };
+                    r.readAsDataURL(f);
+                    document.querySelectorAll('.stk-btn').forEach(x => x.classList.remove('active'));
+                    b.classList.add('active');
+                };
+                bar.appendChild(b);
+                if(i === 0) b.click();
+            });
+        } else {
+            img.style.display = 'none';
+            msg.style.display = 'block';
+            msg.innerHTML = "Nessun file trovato per: <b>" + currentCategory + "</b>";
+        }
+    }
+
+    function setAdv(id) {
+        activeAdv = id;
+        document.querySelectorAll('.adv-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('adv-' + id).classList.add('active');
+        updateAdv();
+    }
+
+    function updateAdv() {
+        const board = document.getElementById('board-type').value;
+        const out = document.getElementById('adv-out');
+        const logic = {
+            v: { dry: "Bet 33% valore.", coord: "Bet 75%+. Proteggi.", pair: "Slowplay induced." },
+            w: { dry: "Check/Call.", coord: "Check/Fold vs aggression.", pair: "Check/Call." },
+            d: { dry: "C-bet bluff 25%.", coord: "Aggr semi-bluff.", pair: "Call odds." },
+            a: { dry: "Give up.", coord: "Give up.", pair: "1 barrel small." }
+        };
+        if(activeAdv) out.innerText = logic[activeAdv][board];
+    }
+</script>
+// 1. Salva i dati ogni volta che scrivi qualcosa
+        function saveEVData() {
+            const inputs = document.querySelectorAll('input, select, textarea');
+            const data = {};
+            inputs.forEach(input => {
+                if (input.id) data[input.id] = input.value;
+            });
+            localStorage.setItem('evMaximizerData', JSON.stringify(data));
+        }
+
+        // 2. Carica i dati quando riapri la pagina
+        function loadEVData() {
+            const savedData = localStorage.getItem('evMaximizerData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                Object.keys(data).forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) element.value = data[id];
+                });
+                // Se hai una funzione che calcola i totali, la richiamiamo qui
+                if (typeof calcolaTutto === "function") calcolaTutto();
+            }
+        }
+
+        // Esegue il caricamento all'apertura
+        window.addEventListener('load', loadEVData);
+        // Esegue il salvataggio a ogni modifica
+        document.addEventListener('input', saveEVData);
+
+        // --- FINE CODICE ---
+</script>
+</body>
+</html>  
