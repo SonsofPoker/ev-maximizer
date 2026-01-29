@@ -35,14 +35,12 @@
         #right-panel { width: 340px; background: var(--panel); border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; z-index: 20; }
         .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 10px; padding: 18px; margin-bottom: 25px; }
         .section-title { color: var(--blue); font-size: 0.9rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 15px; }
-        .select-field { background: #111; color: var(--accent); border: 1px solid #333; padding: 10px; width: 100%; border-radius: 6px; margin-bottom: 10px; }
+        .btn-action { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
         
-        .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .btn-pf { background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; font-weight: bold; }
         #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 15px; min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center; }
         #gto-text { color: var(--accent); font-size: 0.85rem; font-weight: bold; line-height: 1.4; }
-
-        .btn-action { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
+        .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .btn-pf { background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -80,7 +78,7 @@
     <header id="header">
         <div id="rng-box">--</div>
         <button onclick="roll()" class="btn-action" style="background:var(--accent); color:black; width:auto; padding:10px 40px;">ROLL RNG</button>
-        <label class="btn-action" style="background:var(--blue); color:black; width:auto; padding:10px 25px; text-align:center;">
+        <label class="btn-action" style="background:var(--blue); color:black; width:auto; padding:10px 25px; text-align:center; cursor:pointer;">
             📂 CARICA RANGE <input type="file" id="file-input" webkitdirectory directory multiple style="display:none">
         </label>
     </header>
@@ -96,11 +94,6 @@
 <aside id="right-panel">
     <div class="section-box" style="border-top: 3px solid var(--accent)">
         <h3 class="section-title" style="color:var(--accent)">Post-Flop Advisor</h3>
-        <select class="select-field" id="board-texture">
-            <option value="dry">Dry Board (A72r)</option>
-            <option value="wet">Wet Board (987ss)</option>
-            <option value="paired">Paired Board (KK4)</option>
-        </select>
         <div class="pf-grid">
             <button class="btn-pf" onclick="updateGTO('VALUE')">VALUE</button>
             <button class="btn-pf" onclick="updateGTO('AIR')">AIR</button>
@@ -109,14 +102,10 @@
         </div>
         <div id="gto-solution-box"><span id="gto-text">Seleziona situazione...</span></div>
     </div>
-
+    
     <div class="section-box" style="border-top: 3px solid var(--blue)">
         <h3 class="section-title">Data Backup</h3>
-        <button onclick="alert('Salvataggio completato!')" class="btn-action" style="background:var(--blue); color:black; margin-bottom:10px;">SAVE DATA</button>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <button onclick="alert('Esportazione avviata!')" class="btn-action" style="background:#111; color:var(--blue); border:1px solid #333; font-size:0.6rem">EXPORT JSON</button>
-            <button onclick="alert('Seleziona file backup')" class="btn-action" style="background:#111; color:var(--accent); border:1px solid #333; font-size:0.6rem">IMPORT JSON</button>
-        </div>
+        <button onclick="alert('Dati Sessione Salvati!')" class="btn-action" style="background:var(--blue); color:black;">SAVE SESSION</button>
     </div>
 </aside>
 
@@ -127,7 +116,9 @@
     function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
 
     document.getElementById('file-input').addEventListener('change', function(e) {
+        // Filtriamo rigorosamente per .webp
         persistentFiles = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.webp'));
+        console.log("File .webp trovati:", persistentFiles.length);
         render();
     });
 
@@ -143,22 +134,25 @@
         const img = document.getElementById('current-img');
         const canWrap = document.getElementById('can-wrapper');
         bar.innerHTML = '';
+        
         if (persistentFiles.length === 0) return;
 
-        // FILTRO BLINDATO: Cerca il numero iniziale della cartella nel percorso
-        const filtered = persistentFiles.filter(f => {
-            const pathParts = f.webkitRelativePath.split('/');
-            return pathParts.some(part => part.startsWith(currentId));
-        });
+        // Cerchiamo il numero della categoria all'interno del percorso completo
+        const filtered = persistentFiles.filter(f => f.webkitRelativePath.includes(currentId));
 
         if (filtered.length > 0) {
             canWrap.style.opacity = '0.05';
             img.style.display = 'block';
+            
+            // Ordiniamo i file (es. 10bb, 20bb)
             filtered.sort((a,b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
+            
             filtered.forEach((f, i) => {
                 const b = document.createElement('button');
                 b.className = 'stk-btn';
-                b.innerText = f.name.replace('.webp', '').replace(/_/g, ' ').toUpperCase();
+                // Mostra il nome del file senza .webp e pulito
+                b.innerText = f.name.toLowerCase().replace('.webp', '').replace(/_/g, ' ').toUpperCase();
+                
                 b.onclick = () => {
                     const r = new FileReader();
                     r.onload = (e) => { img.src = e.target.result; };
@@ -176,15 +170,13 @@
     }
 
     function updateGTO(type) {
-        const gtoBox = document.getElementById('gto-text');
-        if(!type) return;
         const responses = {
-            "VALUE": "LINEA GTO: Punta forte (66-75%). Value pura.",
-            "AIR": "LINEA GTO: Check/Fold. Bluff solo con blocker.",
-            "DRAW": "LINEA GTO: Aggressivo se >8 outs. Passivo se draw debole.",
-            "SDV": "LINEA GTO: Check-call. Mantieni il pot piccolo."
+            "VALUE": "Punta forte (66-75%). Estrai massimo valore.",
+            "AIR": "Check/Fold. Non investire chip senza blocker.",
+            "DRAW": "Aggressivo con combo-draw. Passivo con draw deboli.",
+            "SDV": "Check-call. Tieni il piatto basso per lo showdown."
         };
-        gtoBox.innerHTML = `<strong>${type}</strong><br>${responses[type]}`;
+        document.getElementById('gto-text').innerHTML = `<strong>${type}</strong><br>${responses[type]}`;
     }
 </script>
 </body>
