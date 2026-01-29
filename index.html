@@ -7,46 +7,49 @@
         :root { --bg: #050505; --panel: #0a0a0a; --accent: #00ff87; --text: #e0e0e0; --border: #222; --blue: #00d4ff; }
         body { font-family: 'Inter', sans-serif; background: #000; color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        /* Sidebar */
+        /* Sidebar con LOGO GRANDE a sinistra */
         #sidebar { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+        .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid var(--border); }
+        .brand-logo { width: 100%; max-width: 200px; filter: drop-shadow(0 0 10px var(--accent)); }
+
         .nav-group { padding: 10px 15px; }
         .cat-label { font-size: 0.65rem; color: #555; text-transform: uppercase; margin: 15px 0 5px; display: block; font-weight: bold; border-left: 2px solid var(--accent); padding-left: 8px; }
         .nav-btn { width: 100%; padding: 8px 10px; margin-bottom: 3px; background: #111; border: 1px solid #222; color: #888; text-align: left; cursor: pointer; border-radius: 4px; font-size: 0.72rem; }
         .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; font-weight: bold; }
 
-        #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; }
+        #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; position: relative; }
         
-        /* Header con LOGO e LATTINA */
-        #header { height: 70px; background: #0a0a0a; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid var(--border); }
-        .logo-area { display: flex; align-items: center; gap: 15px; }
-        .brand-logo { height: 45px; border-radius: 5px; } /* Qui caricheremo il logo EX Maximizer */
-        .energy-can { height: 50px; filter: drop-shadow(0 0 5px var(--accent)); transition: 0.3s; cursor: pointer; }
-        .energy-can:hover { transform: scale(1.1) rotate(5deg); }
-
+        /* Header pulito con solo RNG */
+        #header { height: 60px; background: #0a0a0a; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid var(--border); }
         #rng-box { font-family: monospace; font-size: 1.8rem; color: var(--accent); border: 1px solid #333; padding: 4px 12px; border-radius: 4px; min-width: 60px; text-align: center; }
         
-        #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; background: radial-gradient(circle, #111 0%, #000 100%); }
-        #current-img { max-width: 98%; max-height: 98%; object-fit: contain; display: none; }
+        /* Area centrale con LATTINA */
+        #image-area { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; background: radial-gradient(circle, #111 0%, #000 100%); position: relative; }
+        #current-img { max-width: 98%; max-height: 98%; object-fit: contain; display: none; z-index: 2; }
         
+        .central-can { width: 250px; cursor: pointer; transition: 0.4s; z-index: 1; filter: drop-shadow(0 0 20px rgba(0,255,135,0.2)); }
+        .central-can:hover { transform: scale(1.05); filter: drop-shadow(0 0 30px var(--accent)); }
+        
+        #status-msg { margin-top: 20px; color: #555; font-weight: bold; z-index: 1; }
+
         #stack-bar { background: #050505; padding: 10px; display: flex; gap: 8px; overflow-x: auto; border-top: 1px solid var(--border); min-height: 55px; align-items: center; }
         .stk-btn { padding: 8px 16px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 4px; cursor: pointer; font-size: 0.75rem; white-space: nowrap; font-weight: bold; }
         .stk-btn.active { background: var(--blue); color: #000; }
 
         #right-panel { width: 320px; background: var(--panel); border-left: 1px solid var(--border); padding: 15px; overflow-y: auto; }
         .section-box { background: rgba(255,255,255,0.02); border-radius: 6px; padding: 12px; margin-bottom: 15px; border: 1px solid #222; }
-        h3 { font-size: 0.75rem; color: var(--accent); margin: 0 0 10px; text-transform: uppercase; }
         .inp-field { background: #000; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px; width: 100%; margin-bottom: 8px; font-size: 0.75rem; box-sizing: border-box; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .adv-btn { font-size: 0.65rem; padding: 8px; border: 1px solid #333; background: #111; color: #999; cursor: pointer; border-radius: 4px; }
-        .adv-btn.active { background: var(--accent); color: #000; font-weight: bold; }
-        
-        /* Tasti Monetizzazione */
-        .pack-btn { background: #333; color: white; border: none; padding: 5px; font-size: 0.6rem; cursor: pointer; border-radius: 3px; width: 100%; margin-top: 5px; }
+        .pack-btn { background: #333; color: white; border: none; padding: 8px; font-size: 0.65rem; cursor: pointer; border-radius: 3px; width: 100%; margin-top: 5px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <aside id="sidebar">
+    <div class="sidebar-header">
+        <img src="logo_maximizer.webp" class="brand-logo" alt="EV MAXIMIZER">
+    </div>
+
     <div class="nav-group">
         <span class="cat-label">3-Way Strategy</span>
         <button class="nav-btn active" onclick="sm('btn open', this)">1. BTN Open</button>
@@ -71,7 +74,7 @@
         <button class="nav-btn" onclick="sm('nash call', this)">16. Nash Call</button>
         
         <hr style="border:0; border-top:1px solid #222; margin:20px 0;">
-        <button class="pack-btn" onclick="exportData()">💾 ESPORTA PACCHETTO DATI</button>
+        <button class="pack-btn" onclick="exportData()">💾 ESPORTA PACCHETTO</button>
         <label class="pack-btn" style="display:block; text-align:center;">
             📂 IMPORTA PACCHETTO <input type="file" id="import-file" style="display:none" onchange="importData(event)">
         </label>
@@ -80,55 +83,29 @@
 
 <main id="main-view">
     <header id="header">
-        <div class="logo-area">
-            <img src="logo_maximizer.webp" class="brand-logo" alt="EX">
-            <img src="can_brand.webp" class="energy-can" alt="Power" onclick="roll()">
-        </div>
         <div id="rng-box">--</div>
+        <button onclick="roll()" style="background:var(--accent); color:black; border:none; padding:8px 20px; cursor:pointer; font-weight:bold; border-radius:4px;">ROLL RNG</button>
         <label style="background:var(--blue); color:black; padding:8px 15px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">
-            📂 CARICA IMMAGINI <input type="file" id="file-input" webkitdirectory directory multiple style="display:none">
+            📂 CARICA RANGE <input type="file" id="file-input" webkitdirectory directory multiple style="display:none">
         </label>
     </header>
 
     <div id="image-area">
+        <img src="can_brand.webp" id="central-can" class="central-can" alt="Power" onclick="roll()">
+        
         <img id="current-img">
-        <div id="status-msg" style="color:#555; text-align:center;">
-            <h1>EV MAXIMIZER</h1>
-            <p>Carica il tuo pacchetto immagini o importa un setup.</p>
-        </div>
+        <div id="status-msg">EV MAXIMIZER - PRONTO AL CALCOLO</div>
     </div>
     <div id="stack-bar"></div>
 </main>
 
 <aside id="right-panel">
-    <div class="section-box">
-        <h3>Post-Flop Advisor</h3>
-        <select id="board-type" class="inp-field" onchange="updateAdv()">
-            <option value="dry">Dry (A-7-2r)</option>
-            <option value="coord">Coordinated (9-8-7s)</option>
-            <option value="pair">Paired (K-K-4)</option>
-        </select>
-        <div class="grid-2" style="margin-bottom:8px;">
-            <button class="adv-btn" id="adv-v" onclick="setAdv('v')">Value</button>
-            <button class="adv-btn" id="adv-w" onclick="setAdv('w')">TP Weak</button>
-        </div>
-        <div class="grid-2">
-            <button class="adv-btn" id="adv-d" onclick="setAdv('d')">M-Draw</button>
-            <button class="adv-btn" id="adv-a" onclick="setAdv('a')">Air</button>
-        </div>
-        <div id="adv-out" style="font-size:0.7rem; color:#888; margin-top:10px;">Seleziona parametri...</div>
-    </div>
-
     <div class="section-box" style="border-top: 2px solid var(--blue)">
         <h3 style="color:var(--blue)">Session Log</h3>
         <input type="date" id="log-date" class="inp-field">
         <div class="grid-2">
             <input type="number" id="log-games" placeholder="GAMES" class="inp-field">
             <input type="number" id="log-evchips" placeholder="EV CHIPS" class="inp-field">
-        </div>
-        <div class="grid-2">
-            <input type="number" id="log-wwsf" placeholder="WWSF %" class="inp-field">
-            <input type="number" id="log-roi" placeholder="ROI %" class="inp-field">
         </div>
         <input type="number" id="log-profit" placeholder="PROFIT (€)" class="inp-field">
         <textarea id="log-notes" class="inp-field" placeholder="Note sessione..." style="height:50px; resize:none;"></textarea>
@@ -139,7 +116,6 @@
 <script>
     let persistentFiles = []; 
     let currentCategory = 'btn open';
-    let activeAdv = '';
 
     function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
 
@@ -158,16 +134,19 @@
     function render() {
         const bar = document.getElementById('stack-bar');
         const img = document.getElementById('current-img');
+        const can = document.getElementById('central-can');
         const msg = document.getElementById('status-msg');
         bar.innerHTML = '';
         if (persistentFiles.length === 0) return;
+
         const keywords = currentCategory.split(' ');
         const filtered = persistentFiles.filter(f => {
             const path = (f.webkitRelativePath || f.name).toLowerCase().replace(/_/g, ' ');
             return keywords.every(kw => path.includes(kw));
         });
-        filtered.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
+
         if (filtered.length > 0) {
+            can.style.display = 'none'; // Nasconde la lattina quando appare un range
             msg.style.display = 'none';
             img.style.display = 'block';
             filtered.forEach((f, i) => {
@@ -186,37 +165,18 @@
             });
         } else {
             img.style.display = 'none';
+            can.style.display = 'block'; // Mostra la lattina se non ci sono range
             msg.style.display = 'block';
-            msg.innerHTML = "Nessun file trovato per: <b>" + currentCategory + "</b>";
+            msg.innerHTML = "Nessun file trovato.";
         }
     }
 
-    function setAdv(id) {
-        activeAdv = id;
-        document.querySelectorAll('.adv-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('adv-' + id).classList.add('active');
-        updateAdv();
-    }
-
-    function updateAdv() {
-        const board = document.getElementById('board-type').value;
-        const out = document.getElementById('adv-out');
-        const logic = {
-            v: { dry: "Bet 33% valore.", coord: "Bet 75%+. Proteggi.", pair: "Slowplay induced." },
-            w: { dry: "Check/Call.", coord: "Check/Fold vs aggression.", pair: "Check/Call." },
-            d: { dry: "C-bet bluff 25%.", coord: "Aggr semi-bluff.", pair: "Call odds." },
-            a: { dry: "Give up.", coord: "Give up.", pair: "1 barrel small." }
-        };
-        if(activeAdv) out.innerText = logic[activeAdv][board];
-    }
-
-    // --- SISTEMA SALVATAGGIO E MONETIZZAZIONE ---
     function saveEVData() {
         const inputs = document.querySelectorAll('.inp-field');
         const data = {};
         inputs.forEach(inp => { if(inp.id) data[inp.id] = inp.value; });
         localStorage.setItem('ev_maximizer_pro', JSON.stringify(data));
-        alert("Dati salvati nel browser!");
+        alert("Dati salvati!");
     }
 
     function loadEVData() {
@@ -233,20 +193,15 @@
     function exportData() {
         const data = localStorage.getItem('ev_maximizer_pro');
         const blob = new Blob([data], {type: "application/json"});
-        const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url;
+        a.href = URL.createObjectURL(blob);
         a.download = "pack_ev_maximizer.json";
         a.click();
     }
 
     function importData(event) {
         const reader = new FileReader();
-        reader.onload = function(e) {
-            localStorage.setItem('ev_maximizer_pro', e.target.result);
-            loadEVData();
-            alert("Pacchetto caricato con successo!");
-        };
+        reader.onload = (e) => { localStorage.setItem('ev_maximizer_pro', e.target.result); loadEVData(); alert("Importato!"); };
         reader.readAsText(event.target.files[0]);
     }
 
