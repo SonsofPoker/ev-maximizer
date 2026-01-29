@@ -23,31 +23,30 @@
         
         #workspace { display: flex; flex-grow: 1; overflow: hidden; }
 
-        /* STACK BAR VERTICALE */
+        /* STACK BAR VERTICALE (ORDINE DECRESCENTE) */
         #stack-bar { width: 110px; background: #050505; display: flex; flex-direction: column; gap: 8px; padding: 15px 10px; overflow-y: auto; border-right: 1px solid var(--border); }
         .stk-btn { width: 100%; padding: 12px 5px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; cursor: pointer; font-size: 0.75rem; font-weight: bold; text-align: center; }
         .stk-btn.active { background: var(--blue); color: #000; border-color: var(--blue); }
 
-        /* AREA IMMAGINE CENTRALE */
-        #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; background: radial-gradient(circle, #0a0a0a 0%, #000 100%); padding: 20px; }
+        #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 20px; }
         #current-img { max-width: 100%; max-height: 100%; object-fit: contain; display: none; z-index: 5; }
 
-        /* SIDEBAR DESTRA: SESSION MANAGEMENT */
-        #sidebar-right { width: 340px; background: var(--panel); border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; flex-shrink: 0; }
+        /* SIDEBAR DESTRA: ADVISOR & REGISTRO */
+        #sidebar-right { width: 360px; background: var(--panel); border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; flex-shrink: 0; }
         .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 8px; padding: 15px; margin-bottom: 20px; border-top: 3px solid var(--accent); }
         .section-title { color: var(--blue); font-size: 0.85rem; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; display: block; border-bottom: 1px solid #222; padding-bottom: 8px; }
         
         .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .btn-pf { background: #151515; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.65rem; cursor: pointer; font-weight: bold; text-transform: uppercase; }
         
-        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 15px; margin-top: 15px; text-align: center; min-height: 70px; display: flex; align-items: center; justify-content: center; }
-        #gto-text { color: var(--accent); font-size: 0.85rem; font-weight: bold; }
+        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 12px; margin-top: 15px; text-align: left; min-height: 100px; display: flex; flex-direction: column; justify-content: center; }
+        #gto-text { color: var(--accent); font-size: 0.8rem; line-height: 1.4; white-space: pre-line; }
 
-        /* INPUT SESSIONE */
-        .session-form { display: flex; flex-direction: column; gap: 10px; }
+        /* REGISTRO SESSIONE FORM */
+        .session-form { display: flex; flex-direction: column; gap: 8px; }
         .input-group { display: flex; justify-content: space-between; align-items: center; }
         .input-group label { font-size: 0.7rem; color: #888; text-transform: uppercase; }
-        .input-group input { background: #000; border: 1px solid #333; color: var(--accent); padding: 6px; border-radius: 4px; width: 100px; text-align: right; }
+        .input-group input { background: #000; border: 1px solid #333; color: var(--accent); padding: 6px; border-radius: 4px; width: 110px; text-align: right; font-weight: bold; }
         
         .btn-action { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.75rem; transition: 0.2s; }
     </style>
@@ -100,30 +99,40 @@
             <div class="section-box">
                 <span class="section-title">GTO Advisor Elite</span>
                 <div class="pf-grid">
-                    <button class="btn-pf" onclick="advise('CBET')">C-Bet</button>
-                    <button class="btn-pf" onclick="advise('XRC')">Check/Raise</button>
-                    <button class="btn-pf" onclick="advise('DONK')">Donk Bet</button>
-                    <button class="btn-pf" onclick="advise('FVCB')">vs C-Bet</button>
+                    <button class="btn-pf" onclick="advise('IP_AGG')">IP Aggressore</button>
+                    <button class="btn-pf" onclick="advise('IP_VS_AGG')">IP vs Aggr.</button>
+                    <button class="btn-pf" onclick="advise('OOP_AGG')">OOP Aggressore</button>
+                    <button class="btn-pf" onclick="advise('OOP_VS_AGG')">OOP vs Aggr.</button>
+                    <button class="btn-pf" onclick="advise('BTN_VS_2')">BTN vs 2 PL</button>
+                    <button class="btn-pf" onclick="advise('HU_VS_ISO')">HU vs ISO</button>
                 </div>
-                <div id="gto-solution-box"><span id="gto-text">In attesa di azione...</span></div>
+                <div id="gto-solution-box"><span id="gto-text">Seleziona situazione post-flop...</span></div>
             </div>
 
             <div class="section-box" style="border-top-color: var(--blue);">
-                <span class="section-title" style="color:var(--blue)">Session Management</span>
+                <span class="section-title" style="color:var(--blue)">Registro Sessione</span>
                 <div class="session-form">
                     <div class="input-group">
-                        <label>Buy-in (€)</label>
-                        <input type="number" id="buyin" placeholder="0.00">
+                        <label>Buy-in Totale (€)</label>
+                        <input type="number" id="buyin" oninput="calcSession()" placeholder="0.00">
                     </div>
                     <div class="input-group">
                         <label>Cash Out (€)</label>
-                        <input type="number" id="cashout" placeholder="0.00">
+                        <input type="number" id="cashout" oninput="calcSession()" placeholder="0.00">
                     </div>
                     <div class="input-group">
-                        <label>Net Amount</label>
-                        <input type="text" id="net-amount" readonly placeholder="€ 0.00">
+                        <label>Net Amount (€)</label>
+                        <input type="text" id="net-amount" readonly style="color: var(--blue);">
                     </div>
-                    <button onclick="saveSession()" class="btn-action" style="background:var(--blue); color:black;">SAVE SESSION</button>
+                    <div class="input-group">
+                        <label>Quota Azienda (50%)</label>
+                        <input type="text" id="azienda-share" readonly>
+                    </div>
+                    <div class="input-group">
+                        <label>Quota Driver</label>
+                        <input type="text" id="driver-share" readonly>
+                    </div>
+                    <button onclick="alert('Inviato al Registro Google Sheets')" class="btn-action" style="background:var(--blue); color:black;">AGGIORNA FOGLIO</button>
                 </div>
             </div>
         </aside>
@@ -159,7 +168,7 @@
         if (filtered.length > 0) {
             img.style.display = 'block';
             
-            // ORDINAMENTO DECRESCENTE (Dal più grande al più piccolo)
+            // ORDINAMENTO DECRESCENTE (Più grande -> Più piccolo)
             filtered.sort((a,b) => {
                 let valA = parseInt(a.name.match(/\d+/)) || 0;
                 let valB = parseInt(b.name.match(/\d+/)) || 0;
@@ -187,21 +196,26 @@
     }
 
     function advise(type) {
-        const lines = { 
-            'CBET': 'GTO: 33% Pot su Board Dry. 75% su Board coordinati.', 
-            'XRC': 'GTO: Raise con Flush/Straight Draw. Call con marginali.', 
-            'DONK': 'GTO: Solo se la carta del Turn cambia il vantaggio di range.', 
-            'FVCB': 'GTO: Difendi 60% del range contro C-Bet standard.' 
+        const data = { 
+            'IP_AGG': 'FLOP Dry: bet 50% Pot\nFLOP Coord: bet 100% Pot\nTURN post-bet: bet 75%\nRIVER: All-in (Polarized)', 
+            'IP_VS_AGG': 'TP Kicker 8+: Raise 3x\nMonster Draw: Call fino a 200% pot\nMarginali: Check/Call 1 strada', 
+            'OOP_AGG': 'Value: Bet 75% (Flop/Turn)\nBluff/Air: Bet 25% Flop\nMarginali: Check/Call', 
+            'OOP_VS_AGG': 'TP Kicker 8+: Raise 3x o Probe 100%\nMonster Draw: Lead Turn 100%\n3rd Pair: Probe 75% Turn',
+            'BTN_VS_2': 'Value: Bet 75% Multiway\nTop Pair: Check Flop / Bet 50% Turn\nFrequenza: C-bet ridotta del 20%',
+            'HU_VS_ISO': 'TP Kicker 8+: Raise 3x\nDraw Forti: Check-Raise 4x\nAir: Delay C-bet 50% vs Check'
         };
-        document.getElementById('gto-text').innerHTML = lines[type] || "Seleziona azione...";
+        document.getElementById('gto-text').innerText = data[type] || "Seleziona situazione...";
     }
 
-    function saveSession() {
+    function calcSession() {
         const buyin = parseFloat(document.getElementById('buyin').value) || 0;
         const cashout = parseFloat(document.getElementById('cashout').value) || 0;
         const net = cashout - buyin;
+        const quota = net > 0 ? (net * 0.5) : 0;
+        
         document.getElementById('net-amount').value = "€ " + net.toFixed(2);
-        alert("Sessione salvata con profitto netto di € " + net.toFixed(2));
+        document.getElementById('azienda-share').value = "€ " + quota.toFixed(2);
+        document.getElementById('driver-share').value = "€ " + (net > 0 ? quota.toFixed(2) : net.toFixed(2));
     }
 </script>
 </body>
