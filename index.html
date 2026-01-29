@@ -7,7 +7,7 @@
         :root { --bg: #000; --panel: #0a0a0a; --accent: #00ff87; --text: #e0e0e0; --border: #1a1a1a; --blue: #00d4ff; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        /* SIDEBAR SINISTRA: 16 CATEGORIE */
+        /* SIDEBAR SINISTRA (BLINDATA) */
         #sidebar-left { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
         .sidebar-brand-container { padding: 25px 15px; text-align: center; }
         .brand-logo-main { width: 100%; max-width: 170px; filter: drop-shadow(0 0 10px var(--accent)); }
@@ -16,27 +16,34 @@
         .nav-btn { width: 100%; padding: 10px; margin-bottom: 4px; background: #0d0d0d; border: 1px solid #222; color: #777; text-align: left; cursor: pointer; border-radius: 6px; font-size: 0.75rem; transition: 0.2s; }
         .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; font-weight: bold; border-color: var(--accent); }
 
-        /* AREA CENTRALE */
-        #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; border-right: 1px solid var(--border); border-left: 1px solid var(--border); }
-        #header { height: 70px; background: #0a0a0a; display: flex; align-items: center; justify-content: center; gap: 30px; border-bottom: 1px solid var(--border); }
+        /* AREA CENTRALE E LAYOUT COCKPIT */
+        #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; overflow: hidden; }
+        #header { height: 70px; background: #0a0a0a; display: flex; align-items: center; justify-content: center; gap: 30px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
         #rng-box { font-family: 'Monaco', monospace; font-size: 2.2rem; color: var(--accent); background: #000; border: 1px solid var(--accent); padding: 5px 20px; border-radius: 6px; min-width: 80px; text-align: center; }
         
-        #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; background: radial-gradient(circle, #0a0a0a 0%, #000 100%); }
-        #current-img { max-width: 95%; max-height: 90%; object-fit: contain; display: none; z-index: 5; }
-        .can-large { width: 400px; opacity: 0.5; filter: drop-shadow(0 0 40px rgba(0,255,135,0.2)); position: absolute; }
+        #workspace { display: flex; flex-grow: 1; overflow: hidden; }
 
-        #stack-bar { background: #050505; padding: 12px; display: flex; gap: 10px; overflow-x: auto; border-top: 1px solid var(--border); min-height: 55px; justify-content: center; }
-        .stk-btn { padding: 8px 20px; background: #111; border: 1px solid #333; color: #fff; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
+        /* NUOVA BARRA STACK VERTICALE (ACCANTO ALLA TABELLA) */
+        #stack-bar { width: 110px; background: #050505; display: flex; flex-direction: column; gap: 8px; padding: 15px 10px; overflow-y: auto; border-right: 1px solid var(--border); }
+        .stk-btn { width: 100%; padding: 12px 5px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; cursor: pointer; font-size: 0.75rem; font-weight: bold; text-align: center; transition: 0.2s; }
+        .stk-btn:hover { border-color: var(--blue); }
         .stk-btn.active { background: var(--blue); color: #000; border-color: var(--blue); }
 
-        /* SIDEBAR DESTRA: ADVISOR & MANAGEMENT */
-        #sidebar-right { width: 320px; background: var(--panel); padding: 20px; overflow-y: auto; flex-shrink: 0; }
+        /* AREA IMMAGINE CENTRALE */
+        #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; background: radial-gradient(circle, #0a0a0a 0%, #000 100%); padding: 20px; }
+        #current-img { max-width: 100%; max-height: 100%; object-fit: contain; display: none; z-index: 5; }
+        .can-large { width: 350px; opacity: 0.3; filter: drop-shadow(0 0 40px rgba(0,255,135,0.2)); position: absolute; }
+
+        /* SIDEBAR DESTRA: ADVISOR ESPANSO (FIXED WIDTH) */
+        #sidebar-right { width: 320px; background: var(--panel); border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; flex-shrink: 0; }
         .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 8px; padding: 15px; margin-bottom: 20px; border-top: 3px solid var(--accent); }
         .section-title { color: var(--blue); font-size: 0.85rem; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; display: block; border-bottom: 1px solid #222; padding-bottom: 8px; }
         .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .btn-pf { background: #151515; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; font-weight: bold; }
-        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 15px; margin-top: 15px; text-align: center; min-height: 60px; display: flex; align-items: center; justify-content: center; }
-        #gto-text { color: var(--accent); font-size: 0.8rem; font-weight: bold; }
+        .btn-pf { background: #151515; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.65rem; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.2s; }
+        .btn-pf:hover { border-color: var(--accent); color: var(--accent); }
+        
+        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 15px; margin-top: 15px; text-align: center; min-height: 70px; display: flex; align-items: center; justify-content: center; }
+        #gto-text { color: var(--accent); font-size: 0.85rem; font-weight: bold; line-height: 1.4; }
         .btn-action { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.75rem; }
     </style>
 </head>
@@ -77,30 +84,39 @@
             📂 CARICA RANGE <input type="file" id="file-input" webkitdirectory directory multiple style="display:none">
         </label>
     </header>
-    <div id="image-area">
-        <img src="can_brand.webp" class="can-large" id="placeholder-logo">
-        <img id="current-img">
-    </div>
-    <div id="stack-bar"></div>
-</main>
 
-<aside id="sidebar-right">
-    <div class="section-box">
-        <span class="section-title">Post-Flop Advisor</span>
-        <div class="pf-grid">
-            <button class="btn-pf" onclick="advise('VALUE')">VALUE</button>
-            <button class="btn-pf" onclick="advise('AIR')">AIR</button>
-            <button class="btn-pf" onclick="advise('DRAW')">DRAW</button>
-            <button class="btn-pf" onclick="advise('SDV')">SD VALUE</button>
+    <div id="workspace">
+        <div id="stack-bar">
+            </div>
+
+        <div id="image-area">
+            <img src="can_brand.webp" class="can-large" id="placeholder-logo">
+            <img id="current-img">
         </div>
-        <div id="gto-solution-box"><span id="gto-text">Seleziona situazione...</span></div>
+
+        <aside id="sidebar-right">
+            <div class="section-box">
+                <span class="section-title">GTO Advisor Elite</span>
+                <div class="pf-grid">
+                    <button class="btn-pf" onclick="advise('CBET')">C-Bet</button>
+                    <button class="btn-pf" onclick="advise('XRC')">Check/Raise</button>
+                    <button class="btn-pf" onclick="advise('DONK')">Donk Bet</button>
+                    <button class="btn-pf" onclick="advise('FVCB')">vs C-Bet</button>
+                    <button class="btn-pf" onclick="advise('VALUE')">Value Bet</button>
+                    <button class="btn-pf" onclick="advise('BLUFF')">Bluff</button>
+                </div>
+                <div id="gto-solution-box"><span id="gto-text">In attesa di azione...</span></div>
+            </div>
+
+            <div class="section-box" style="border-top-color: var(--blue);">
+                <span class="section-title" style="color:var(--blue)">Management & Fleet</span>
+                <button onclick="alert('Dati Salvati!')" class="btn-action" style="background:var(--blue); color:black; margin-bottom:10px;">SAVE SESSION</button>
+                <button onclick="alert('ZTL Roma: Varco Attivo')" class="btn-action" style="background:#111; color:var(--blue); border:1px solid #333; font-size:0.6rem; margin-bottom:5px;">CHECK ZTL ROMA</button>
+                <button onclick="alert('ZTL Milano: Area C OK')" class="btn-action" style="background:#111; color:var(--blue); border:1px solid #333; font-size:0.6rem;">CHECK ZTL MILANO</button>
+            </div>
+        </aside>
     </div>
-    <div class="section-box" style="border-top-color: var(--blue);">
-        <span class="section-title" style="color:var(--blue)">Session Management</span>
-        <button onclick="alert('Dati Salvati!')" class="btn-action" style="background:var(--blue); color:black; margin-bottom:10px;">SAVE SESSION</button>
-        <button onclick="alert('Backup Esportato')" class="btn-action" style="background:#111; color:var(--blue); border:1px solid #333; font-size:0.6rem;">EXPORT LOG</button>
-    </div>
-</aside>
+</main>
 
 <script>
     let persistentFiles = []; 
@@ -151,13 +167,20 @@
             });
         } else {
             img.style.display = 'none';
-            logo.style.opacity = '0.5';
+            logo.style.opacity = '0.3';
         }
     }
 
     function advise(type) {
-        const lines = { 'VALUE': 'GTO: Bet 75%.', 'AIR': 'GTO: Check-Fold.', 'DRAW': 'GTO: Raise/Call.', 'SDV': 'GTO: Check-Call.' };
-        document.getElementById('gto-text').innerHTML = lines[type];
+        const lines = { 
+            'CBET': 'GTO: Punta 33% su board dry. Aumenta a 75% su board coordinati.', 
+            'XRC': 'GTO: Check-Raise con progetti forti o nut. Check-Call con showdown value.', 
+            'DONK': 'GTO: Utilizza Donk Bet solo se la carta del turn cambia il vantaggio di range.', 
+            'FVCB': 'GTO: Difendi 60% del range. Folda le mani senza backdoor o coppie.',
+            'VALUE': 'GTO: Punta grande per massimizzare il valore contro il range di bluff-catch.',
+            'BLUFF': 'GTO: Scegli combo con blocker per i nuts avversari.'
+        };
+        document.getElementById('gto-text').innerHTML = lines[type] || "Seleziona situazione...";
     }
 </script>
 </body>
