@@ -8,68 +8,60 @@
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
         /* SIDEBAR */
-        #sidebar { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; z-index: 20; }
+        #sidebar { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
         .sidebar-brand-container { padding: 30px 15px; text-align: center; }
-        .brand-logo-main { width: 100%; max-width: 200px; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 0 15px rgba(0,255,135,0.6)); }
+        .brand-logo-main { width: 100%; max-width: 200px; filter: drop-shadow(0 0 15px rgba(0,255,135,0.6)); }
         
         .nav-group { padding: 10px 15px; }
         .cat-label { font-size: 0.65rem; text-transform: uppercase; margin: 20px 0 8px; display: block; font-weight: 800; letter-spacing: 1.5px; color: var(--accent); text-shadow: 0 0 8px rgba(0,255,135,0.4); }
         .nav-btn { width: 100%; padding: 12px; margin-bottom: 5px; background: #0d0d0d; border: 1px solid #222; color: #666; text-align: left; cursor: pointer; border-radius: 6px; font-size: 0.75rem; transition: 0.3s; }
         .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; font-weight: bold; }
 
-        /* MAIN AREA */
-        #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; position: relative; }
-        #header { height: 70px; background: rgba(10,10,10,0.8); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; gap: 40px; border-bottom: 1px solid var(--border); z-index: 10; }
+        /* MAIN VIEW */
+        #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; }
+        #header { height: 70px; background: rgba(10,10,10,0.8); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; gap: 40px; border-bottom: 1px solid var(--border); }
         #rng-box { font-family: 'Monaco', monospace; font-size: 2.5rem; color: var(--accent); background: #000; border: 1px solid var(--accent); padding: 5px 25px; border-radius: 8px; min-width: 100px; text-align: center; }
         
-        #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-        .can-large { width: 550px; height: auto; opacity: 0.8; filter: drop-shadow(0 0 50px rgba(0,255,135,0.4)); pointer-events: none; }
-        #current-img { max-width: 95%; max-height: 90%; object-fit: contain; display: none; z-index: 5; position: relative; }
+        #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; }
+        #current-img { max-width: 95%; max-height: 90%; object-fit: contain; display: none; z-index: 5; }
+        .can-large { width: 450px; opacity: 0.8; filter: drop-shadow(0 0 50px rgba(0,255,135,0.4)); }
 
-        /* STACK BAR */
-        #stack-bar { background: #050505; padding: 15px; display: flex; gap: 12px; overflow-x: auto; border-top: 1px solid var(--border); min-height: 60px; align-items: center; justify-content: center; }
+        /* BOTTOM BAR */
+        #stack-bar { background: #050505; padding: 15px; display: flex; gap: 12px; overflow-x: auto; border-top: 1px solid var(--border); min-height: 60px; justify-content: center; }
         .stk-btn { padding: 10px 25px; background: #111; border: 1px solid #333; color: #fff; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 800; white-space: nowrap; }
         .stk-btn.active { background: var(--blue); color: #000; }
+
+        /* RIGHT PANEL REBUILD */
+        #right-panel { width: 340px; background: var(--panel); border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; }
+        .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 10px; padding: 18px; margin-bottom: 25px; border-top: 3px solid var(--accent); }
+        .section-title { color: var(--blue); font-size: 0.9rem; font-weight: 800; text-transform: uppercase; margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .select-field { background: #111; color: var(--accent); border: 1px solid #333; padding: 10px; width: 100%; border-radius: 6px; margin-bottom: 10px; font-weight: bold; }
         
-        /* RIGHT PANEL */
-        #right-panel { width: 340px; background: var(--panel); border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; z-index: 20; }
-        .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 10px; padding: 18px; margin-bottom: 25px; }
-        .section-title { color: var(--blue); font-size: 0.9rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 15px; }
-        .btn-action { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
-        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 15px; min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center; }
+        .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .btn-pf { background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-pf:hover { border-color: var(--accent); color: var(--accent); }
+        
+        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 15px; min-height: 80px; margin-top: 15px; display: flex; align-items: center; justify-content: center; text-align: center; }
         #gto-text { color: var(--accent); font-size: 0.85rem; font-weight: bold; line-height: 1.4; }
-        .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .btn-pf { background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; font-weight: bold; }
+
+        .btn-action { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
 <aside id="sidebar">
-    <div class="sidebar-brand-container">
-        <img src="logo_maximizer.webp" class="brand-logo-main">
-    </div>
+    <div class="sidebar-brand-container"><img src="logo_maximizer.webp" class="brand-logo-main"></div>
     <div class="nav-group">
         <span class="cat-label">3-Way Strategy</span>
-        <button class="nav-btn active" onclick="sm('1. BTN Open', this)">1. BTN Open</button>
-        <button class="nav-btn" onclick="sm('2. SB vs BTN', this)">2. SB vs BTN</button>
-        <button class="nav-btn" onclick="sm('3. SB vs BB', this)">3. SB vs BB</button>
-        <button class="nav-btn" onclick="sm('4. SB vs BTN Limp', this)">4. SB vs BTN Limp</button>
-        <button class="nav-btn" onclick="sm('5. BB vs BTN', this)">5. BB vs BTN</button>
-        <button class="nav-btn" onclick="sm('6. BB vs SB', this)">6. BB vs SB</button>
-        <button class="nav-btn" onclick="sm('7. BB vs SB Limp', this)">7. BB vs SB Limp</button>
-        <button class="nav-btn" onclick="sm('8. BB vs BTN Iso', this)">8. BB vs BTN Iso</button>
-        <button class="nav-btn" onclick="sm('9. BB vs SB Iso', this)">9. BB vs SB Iso</button>
-        <button class="nav-btn" onclick="sm('10. BB vs 2 PL', this)">10. BB vs 2 PL</button>
-
-        <span class="cat-label">Heads-Up</span>
-        <button class="nav-btn" onclick="sm('11. HU IP Open', this)">11. HU IP Open</button>
-        <button class="nav-btn" onclick="sm('12. HU OOP vs Limp', this)">12. HU OOP vs Limp</button>
-        <button class="nav-btn" onclick="sm('13. HU OOP vs MR', this)">13. HU OOP vs MR</button>
-        <button class="nav-btn" onclick="sm('14. HU OOP vs Shove', this)">14. HU OOP vs Shove</button>
-
+        <button class="nav-btn active" onclick="sm('1. BTN Open', 'BTN', this)">1. BTN Open</button>
+        <button class="nav-btn" onclick="sm('2. SB vs BTN', 'SB vs BTN', this)">2. SB vs BTN</button>
+        <button class="nav-btn" onclick="sm('3. SB vs BB', 'SB vs BB', this)">3. SB vs BB</button>
+        <button class="nav-btn" onclick="sm('4. SB vs BTN Limp', 'BTN Limp', this)">4. SB vs BTN Limp</button>
+        <button class="nav-btn" onclick="sm('5. BB vs BTN', 'BB vs BTN', this)">5. BB vs BTN</button>
+        <button class="nav-btn" onclick="sm('6. BB vs SB', 'BB vs SB', this)">6. BB vs SB</button>
         <span class="cat-label">Nash Equilibrium</span>
-        <button class="nav-btn" onclick="sm('15. Nash Push', this)">15. Nash Push</button>
-        <button class="nav-btn" onclick="sm('16. Nash Call', this)">16. Nash Call</button>
+        <button class="nav-btn" onclick="sm('15. Nash Push', 'Push', this)">15. Nash Push</button>
+        <button class="nav-btn" onclick="sm('16. Nash Call', 'Call', this)">16. Nash Call</button>
     </div>
 </aside>
 
@@ -82,41 +74,50 @@
         </label>
     </header>
     <div id="image-area">
-        <div id="can-wrapper" style="position:absolute; z-index:1;">
-            <img src="can_brand.webp" class="can-large">
-        </div>
+        <div id="can-wrapper" style="position:absolute; z-index:1;"><img src="can_brand.webp" class="can-large"></div>
         <img id="current-img">
     </div>
     <div id="stack-bar"></div>
 </main>
 
 <aside id="right-panel">
-    <div class="section-box" style="border-top: 3px solid var(--accent)">
-        <h3 class="section-title" style="color:var(--accent)">Post-Flop Advisor</h3>
+    <div class="section-box">
+        <h3 class="section-title">Post-Flop Advisor</h3>
+        <select class="select-field" id="board-type">
+            <option value="Dry">Dry (A72r)</option>
+            <option value="Wet">Wet (987ss)</option>
+            <option value="Paired">Paired (KK4)</option>
+        </select>
         <div class="pf-grid">
-            <button class="btn-pf" onclick="updateGTO('VALUE')">VALUE</button>
-            <button class="btn-pf" onclick="updateGTO('AIR')">AIR</button>
-            <button class="btn-pf" onclick="updateGTO('DRAW')">DRAW</button>
-            <button class="btn-pf" onclick="updateGTO('SDV')">SD VALUE</button>
+            <button class="btn-pf" onclick="advise('VALUE')">VALUE</button>
+            <button class="btn-pf" onclick="advise('AIR')">AIR</button>
+            <button class="btn-pf" onclick="advise('DRAW')">DRAW</button>
+            <button class="btn-pf" onclick="advise('SDV')">SD VALUE</button>
         </div>
-        <div id="gto-solution-box"><span id="gto-text">Seleziona situazione...</span></div>
+        <div id="gto-solution-box"><span id="gto-text">Scegli una categoria...</span></div>
+    </div>
+
+    <div class="section-box" style="border-top-color: var(--blue);">
+        <h3 class="section-title" style="color:var(--blue)">Management</h3>
+        <button onclick="alert('Sessione salvata!')" class="btn-action" style="background:var(--blue); color:black;">SAVE SESSION</button>
+        <button onclick="alert('Export JSON pronto!')" class="btn-action" style="background:#111; color:var(--blue); border:1px solid #333; margin-top:10px; font-size:0.7rem;">EXPORT DATA</button>
     </div>
 </aside>
 
 <script>
     let persistentFiles = []; 
-    let currentFolderName = "1. BTN Open"; 
+    let currentKey = "BTN"; // Chiave di ricerca iniziale
 
     function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
 
     document.getElementById('file-input').addEventListener('change', function(e) {
         persistentFiles = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.webp'));
-        console.log("Totale file caricati:", persistentFiles.length);
+        console.log("File caricati:", persistentFiles.length);
         render();
     });
 
-    function sm(name, btn) {
-        currentFolderName = name;
+    function sm(fullName, key, btn) {
+        currentKey = key; // Usiamo la parola chiave (es. 'BTN') per filtrare
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         render();
@@ -125,27 +126,24 @@
     function render() {
         const bar = document.getElementById('stack-bar');
         const img = document.getElementById('current-img');
-        const canWrap = document.getElementById('can-wrapper');
         bar.innerHTML = '';
-        
         if (persistentFiles.length === 0) return;
 
-        // FILTRO DI PRECISIONE: Il percorso deve contenere ESATTAMENTE il nome della cartella tra due slash o all'inizio
+        // FILTRO SMART: Cerca la parola chiave nel percorso del file
         const filtered = persistentFiles.filter(f => {
-            const path = f.webkitRelativePath;
-            // Verifichiamo che il nome della cartella sia presente nel percorso come segmento isolato
-            return path.split('/').some(segment => segment === currentFolderName);
+            const path = f.webkitRelativePath.toUpperCase();
+            return path.includes(currentKey.toUpperCase());
         });
 
         if (filtered.length > 0) {
-            canWrap.style.opacity = '0.05';
+            document.getElementById('can-wrapper').style.opacity = '0.05';
             img.style.display = 'block';
             filtered.sort((a,b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
             
             filtered.forEach((f, i) => {
                 const b = document.createElement('button');
                 b.className = 'stk-btn';
-                b.innerText = f.name.replace('.webp', '').replace(/_/g, ' ').toUpperCase();
+                b.innerText = f.name.replace('.webp', '').toUpperCase();
                 b.onclick = () => {
                     const r = new FileReader();
                     r.onload = (e) => { img.src = e.target.result; };
@@ -158,16 +156,16 @@
             });
         } else {
             img.style.display = 'none';
-            canWrap.style.opacity = '0.8';
+            document.getElementById('can-wrapper').style.opacity = '0.8';
         }
     }
 
-    function updateGTO(type) {
+    function advise(type) {
         const responses = {
-            "VALUE": "Punta forte (66-75%). Value pura.",
-            "AIR": "Check/Fold. Bluff solo con blocker.",
-            "DRAW": "Aggressivo con combo-draw. Passivo con draw deboli.",
-            "SDV": "Check-call. Showdown economico."
+            "VALUE": "GTO: Punta 75% pot. Proteggi l'equity.",
+            "AIR": "GTO: Check-Fold. Non bluffare senza equity.",
+            "DRAW": "GTO: Rilancia se >8 outs, altrimenti chiama.",
+            "SDV": "GTO: Check-call. Porta la mano allo showdown."
         };
         document.getElementById('gto-text').innerHTML = `<strong>${type}</strong><br>${responses[type]}`;
     }
