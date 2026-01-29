@@ -7,15 +7,17 @@
         :root { --bg: #000; --panel: #0a0a0a; --accent: #00ff87; --text: #e0e0e0; --border: #1a1a1a; --blue: #00d4ff; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
+        /* SIDEBAR */
         #sidebar { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; z-index: 20; }
         .sidebar-brand-container { padding: 30px 15px; text-align: center; }
         .brand-logo-main { width: 100%; max-width: 200px; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 0 15px rgba(0,255,135,0.6)); }
         
         .nav-group { padding: 10px 15px; }
-        .cat-label { font-size: 0.65rem; color: #444; text-transform: uppercase; margin: 20px 0 8px; display: block; font-weight: 800; letter-spacing: 1.5px; }
+        .cat-label { font-size: 0.65rem; text-transform: uppercase; margin: 20px 0 8px; display: block; font-weight: 800; letter-spacing: 1.5px; }
         .nav-btn { width: 100%; padding: 12px; margin-bottom: 5px; background: #0d0d0d; border: 1px solid #222; color: #666; text-align: left; cursor: pointer; border-radius: 6px; font-size: 0.75rem; transition: 0.3s; }
         .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; font-weight: bold; }
 
+        /* MAIN VIEW */
         #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; position: relative; }
         #header { height: 70px; background: rgba(10,10,10,0.8); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; gap: 40px; border-bottom: 1px solid var(--border); z-index: 10; }
         #rng-box { font-family: 'Monaco', monospace; font-size: 2.5rem; color: var(--accent); background: #000; border: 1px solid var(--accent); padding: 5px 25px; border-radius: 8px; min-width: 100px; text-align: center; }
@@ -24,10 +26,12 @@
         .can-large { width: 550px; height: auto; opacity: 0.8; filter: drop-shadow(0 0 50px rgba(0,255,135,0.4)); pointer-events: none; }
         #current-img { max-width: 95%; max-height: 90%; object-fit: contain; display: none; z-index: 5; position: relative; }
 
+        /* STACK BAR FOOTER */
         #stack-bar { background: #050505; padding: 15px; display: flex; gap: 12px; overflow-x: auto; border-top: 1px solid var(--border); min-height: 60px; align-items: center; justify-content: center; }
         .stk-btn { padding: 10px 25px; background: #111; border: 1px solid #333; color: #fff; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 800; }
         .stk-btn.active { background: var(--blue); color: #000; }
 
+        /* RIGHT PANEL */
         #right-panel { width: 340px; background: var(--panel); border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; z-index: 20; }
         .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 10px; padding: 18px; margin-bottom: 25px; }
         .section-title { color: var(--blue); font-size: 0.9rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 15px; }
@@ -51,23 +55,27 @@
         <img src="logo_maximizer.webp" class="brand-logo-main" alt="EV MAXIMIZER">
     </div>
     <div class="nav-group">
-        <span class="cat-label">3-Way Strategy</span>
-        <button class="nav-btn active" onclick="sm('1.', this)">1. BTN Open</button>
-        <button class="nav-btn" onclick="sm('2.', this)">2. SB vs BTN</button>
-        <button class="nav-btn" onclick="sm('3.', this)">3. SB vs BB</button>
-        <button class="nav-btn" onclick="sm('4.', this)">4. SB vs BTN Limp</button>
-        <button class="nav-btn" onclick="sm('5.', this)">5. BB vs BTN</button>
-        <button class="nav-btn" onclick="sm('6.', this)">6. BB vs SB</button>
-        <button class="nav-btn" onclick="sm('7.', this)">7. BB vs SB Limp</button>
-        <button class="nav-btn" onclick="sm('8.', this)">8. BB vs BTN Iso</button>
-        <button class="nav-btn" onclick="sm('9.', this)">9. BB vs SB Iso</button>
-        <button class="nav-btn" onclick="sm('10.', this)">10. BB vs 2 PL</button>
+        <span class="cat-label" style="color: var(--accent); text-shadow: 0 0 5px rgba(0,255,135,0.3);">3-Way Strategy</span>
+        <button class="nav-btn active" onclick="sm('1. BTN Open', this)">1. BTN Open</button>
+        <button class="nav-btn" onclick="sm('2. SB vs BTN', this)">2. SB vs BTN</button>
+        <button class="nav-btn" onclick="sm('3. SB vs BB', this)">3. SB vs BB</button>
+        <button class="nav-btn" onclick="sm('4. SB vs BTN Limp', this)">4. SB vs BTN Limp</button>
+        <button class="nav-btn" onclick="sm('5. BB vs BTN', this)">5. BB vs BTN</button>
+        <button class="nav-btn" onclick="sm('6. BB vs SB', this)">6. BB vs SB</button>
+        <button class="nav-btn" onclick="sm('7. BB vs SB Limp', this)">7. BB vs SB Limp</button>
+        <button class="nav-btn" onclick="sm('8. BB vs BTN Iso', this)">8. BB vs BTN Iso</button>
+        <button class="nav-btn" onclick="sm('9. BB vs SB Iso', this)">9. BB vs SB Iso</button>
+        <button class="nav-btn" onclick="sm('10. BB vs 2 PL', this)">10. BB vs 2 PL</button>
 
-        <span class="cat-label">Heads-Up</span>
-        <button class="nav-btn" onclick="sm('11.', this)">11. HU IP Open</button>
-        <button class="nav-btn" onclick="sm('12.', this)">12. HU OOP vs Limp</button>
-        <button class="nav-btn" onclick="sm('13.', this)">13. HU OOP vs MR</button>
-        <button class="nav-btn" onclick="sm('14.', this)">14. HU OOP vs Shove</button>
+        <span class="cat-label" style="color: var(--accent); text-shadow: 0 0 5px rgba(0,255,135,0.3);">Heads-Up</span>
+        <button class="nav-btn" onclick="sm('11. HU IP Open', this)">11. HU IP Open</button>
+        <button class="nav-btn" onclick="sm('12. HU OOP vs Limp', this)">12. HU OOP vs Limp</button>
+        <button class="nav-btn" onclick="sm('13. HU OOP vs MR', this)">13. HU OOP vs MR</button>
+        <button class="nav-btn" onclick="sm('14. HU OOP vs Shove', this)">14. HU OOP vs Shove</button>
+
+        <span class="cat-label" style="color: var(--accent); text-shadow: 0 0 5px rgba(0,255,135,0.3);">Nash Equilibrium</span>
+        <button class="nav-btn" onclick="sm('15. Nash Push', this)">15. Nash Push</button>
+        <button class="nav-btn" onclick="sm('16. Nash Call', this)">16. Nash Call</button>
     </div>
 </aside>
 
@@ -126,7 +134,7 @@
 
 <script>
     let persistentFiles = []; 
-    let currentId = '1.'; // Usiamo il numero come identificatore
+    let currentId = '1. BTN Open'; 
 
     function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
 
@@ -149,11 +157,10 @@
         bar.innerHTML = '';
         if (persistentFiles.length === 0) return;
 
-        // FILTRO REALE: Cerca il numero all'inizio del nome della cartella nel percorso
         const filtered = persistentFiles.filter(f => {
-            const pathParts = f.webkitRelativePath.split('/');
-            // Controlla se una delle cartelle nel percorso inizia con il numero selezionato (es. "1.")
-            return pathParts.some(part => part.startsWith(currentId));
+            const path = f.webkitRelativePath.toLowerCase();
+            const category = currentId.toLowerCase();
+            return path.includes(category);
         });
 
         if (filtered.length > 0) {
