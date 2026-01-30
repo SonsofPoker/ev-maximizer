@@ -2,175 +2,220 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EV Maximizer | Pro Suite</title>
+    <title>EV MAXIMIZER - Elite GTO System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
-        .glass-card { background: rgba(23, 32, 51, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; }
-        .gradient-text { background: linear-gradient(90deg, #2ecc71, #27ae60); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hidden { display: none !important; }
-        input { background: #1a2234 !important; border: 1px solid #2d3748 !important; color: white !important; }
-        .tech-section { background: rgba(15, 23, 42, 0.95); border: 2px solid #2ecc71; }
+        :root { --bg: #000; --panel: #0a0a0a; --accent: #00ff87; --text: #e0e0e0; --border: #1a1a1a; --blue: #00d4ff; }
         
-        /* Stile pulsante speciale */
-        .btn-launch {
-            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-            box-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .btn-launch:hover { transform: scale(1.05) translateY(-5px); box-shadow: 0 0 40px rgba(46, 204, 113, 0.5); }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        .hidden { display: none !important; }
+        
+        /* LOGIN & DASHBOARD STYLE */
+        .glass-card { background: rgba(23, 32, 51, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; }
+        .gradient-text { background: linear-gradient(90deg, #00ff87, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* SIDEBAR SINISTRA (LAYOUT ORIGINALE) */
+        #sidebar-left { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+        .sidebar-brand-container { padding: 25px 15px; text-align: center; }
+        .brand-logo-main { width: 100%; max-width: 170px; filter: drop-shadow(0 0 10px var(--accent)); }
+        .nav-group { padding: 10px 15px; }
+        .cat-label { font-size: 0.65rem; text-transform: uppercase; margin: 20px 0 8px; display: block; font-weight: 800; letter-spacing: 1.5px; color: var(--accent); }
+        .nav-btn { width: 100%; padding: 10px; margin-bottom: 4px; background: #0d0d0d; border: 1px solid #222; color: #777; text-align: left; cursor: pointer; border-radius: 6px; font-size: 0.75rem; transition: 0.2s; }
+        .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; font-weight: bold; border-color: var(--accent); }
+
+        /* AREA CENTRALE */
+        #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; overflow: hidden; }
+        #header-tech { height: 70px; background: #0a0a0a; display: flex; align-items: center; justify-content: center; gap: 30px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+        #rng-box { font-family: 'Monaco', monospace; font-size: 2.2rem; color: var(--accent); background: #000; border: 1px solid var(--accent); padding: 5px 20px; border-radius: 6px; min-width: 80px; text-align: center; }
+        
+        #workspace { display: flex; flex-grow: 1; overflow: hidden; }
+        #stack-bar { width: 110px; background: #050505; display: flex; flex-direction: column; gap: 8px; padding: 15px 10px; overflow-y: auto; border-right: 1px solid var(--border); }
+        .stk-btn { width: 100%; padding: 12px 5px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; cursor: pointer; font-size: 0.75rem; font-weight: bold; text-align: center; }
+        .stk-btn.active { background: var(--blue); color: #000; border-color: var(--blue); }
+        #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 20px; }
+        #current-img { max-width: 100%; max-height: 100%; object-fit: contain; display: none; z-index: 5; }
+
+        /* SIDEBAR DESTRA */
+        #sidebar-right { width: 360px; background: var(--panel); border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; flex-shrink: 0; }
+        .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 8px; padding: 15px; margin-bottom: 20px; border-top: 3px solid var(--accent); }
+        .section-title { color: var(--blue); font-size: 0.85rem; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; display: block; border-bottom: 1px solid #222; padding-bottom: 8px; }
+        .can-brand-container { text-align: center; margin-top: 10px; }
+        .can-brand-img { width: 100%; max-width: 220px; height: auto; filter: drop-shadow(0 0 15px rgba(0, 255, 135, 0.2)); }
+        
+        /* GTO COMPONENTS */
+        .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .btn-pf { background: #151515; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.65rem; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 15px; margin-top: 15px; text-align: left; min-height: 200px; }
+        .gto-line { margin-bottom: 10px; border-left: 2px solid var(--accent); padding-left: 10px; }
+        .gto-label { color: var(--blue); font-size: 0.65rem; font-weight: bold; text-transform: uppercase; display: block; }
+        .gto-val { color: var(--accent); font-size: 0.85rem; font-weight: bold; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
+<body class="flex items-center justify-center min-h-screen">
 
     <div id="authBox" class="glass-card p-10 w-full max-w-md shadow-2xl">
         <div class="text-center mb-10">
             <h1 class="text-4xl font-black tracking-tighter gradient-text uppercase">EV Maximizer</h1>
-            <p class="text-slate-400 text-[10px] mt-2 font-bold tracking-[0.2em] uppercase">Premium Analysis Suite</p>
+            <p class="text-slate-500 text-[10px] mt-2 font-bold tracking-widest uppercase">Premium Strategy Suite</p>
         </div>
         <div class="space-y-4">
-            <input type="text" id="user" placeholder="Username ID" class="w-full px-4 py-4 rounded-xl outline-none focus:border-green-500">
-            <input type="password" id="pass" placeholder="Password" class="w-full px-4 py-4 rounded-xl outline-none focus:border-green-500">
-            <button onclick="handleLogin()" class="w-full bg-[#2ecc71] text-[#0b0f1a] font-black py-4 rounded-xl uppercase hover:opacity-90 transition-all">Accedi</button>
+            <input type="text" id="userId" placeholder="Username" class="w-full px-4 py-4 rounded-xl outline-none bg-slate-900 border border-slate-800 text-white">
+            <input type="password" id="userPass" placeholder="Password" class="w-full px-4 py-4 rounded-xl outline-none bg-slate-900 border border-slate-800 text-white">
+            <button onclick="handleLogin()" class="w-full bg-[#00ff87] text-black font-black py-4 rounded-xl uppercase hover:scale-[1.02] transition-transform">Accedi</button>
         </div>
         <p id="msg" class="mt-6 text-center text-sm font-bold text-yellow-500"></p>
     </div>
 
-    <div id="dashboard" class="hidden w-full max-w-6xl">
-        <header class="flex justify-between items-center mb-8 bg-slate-900/50 p-6 rounded-3xl border border-white/5 shadow-xl">
-            <div class="flex items-center gap-4">
-                <div class="h-12 w-12 bg-[#2ecc71] rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/20">
-                    <i class="fa-solid fa-chart-line text-[#0b0f1a] text-xl"></i>
-                </div>
-                <h2 class="text-2xl font-black italic">DASHBOARD <span class="text-[#2ecc71]">PRO</span></h2>
-            </div>
-            <button onclick="logout()" class="text-red-500 font-bold bg-red-500/10 px-6 py-2 rounded-xl border border-red-500/20">ESCI</button>
+    <div id="dashboard" class="hidden w-full max-w-5xl p-6">
+        <header class="flex justify-between items-center mb-10 bg-slate-900/50 p-6 rounded-3xl border border-white/5">
+            <h2 class="text-2xl font-black italic">DASHBOARD <span class="text-[#00ff87]">PRO</span></h2>
+            <button onclick="logout()" class="text-red-500 font-bold text-xs bg-red-500/10 px-4 py-2 rounded-lg">LOGOUT</button>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="glass-card p-6 border-l-4 border-green-500 text-center">
-                <p class="text-slate-500 text-[10px] font-bold uppercase">Chip EV Totale</p>
-                <h3 class="text-3xl font-black text-white">+2,450</h3>
-            </div>
-            <div class="glass-card p-6 border-l-4 border-blue-500 text-center">
-                <p class="text-slate-500 text-[10px] font-bold uppercase">Sessioni</p>
-                <h3 class="text-3xl font-black text-white">142</h3>
-            </div>
-            <div class="glass-card p-6 border-l-4 border-purple-500 text-center">
-                <p class="text-slate-500 text-[10px] font-bold uppercase">ROI</p>
-                <h3 class="text-3xl font-black text-white">12.4%</h3>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="glass-card p-6 border-l-4 border-[#00ff87]"><p class="text-slate-500 text-[10px] font-bold uppercase">Chip EV Totale</p><h3 class="text-3xl font-black">+2,450</h3></div>
+            <div class="glass-card p-6 border-l-4 border-[#00d4ff]"><p class="text-slate-500 text-[10px] font-bold uppercase">Sessioni Mese</p><h3 class="text-3xl font-black">142</h3></div>
+            <div class="glass-card p-6 border-l-4 border-purple-500"><p class="text-slate-500 text-[10px] font-bold uppercase">ROI Stimato</p><h3 class="text-3xl font-black">12.4%</h3></div>
         </div>
 
-        <div class="glass-card p-12 text-center mb-8 bg-gradient-to-b from-slate-800/50 to-transparent">
-            <i class="fa-solid fa-microchip text-6xl text-[#2ecc71] mb-6"></i>
-            <h3 class="text-3xl font-black mb-4">ANALISI TECNICA AVANZATA</h3>
-            <p class="text-slate-400 mb-8 max-w-2xl mx-auto text-lg">Pronto per la sessione? Accedi all'interfaccia completa con caricamento tabelle, calcolo GTO e post-flop tracker.</p>
-            <button onclick="switchView('tech')" class="btn-launch px-12 py-5 rounded-2xl text-slate-900 font-black text-xl uppercase tracking-tighter">
-                Lancia Interfaccia Analisi <i class="fa-solid fa-arrow-right ml-2"></i>
+        <div class="glass-card p-12 text-center bg-gradient-to-br from-slate-800/30 to-transparent border-2 border-[#00ff87]/20">
+            <i class="fa-solid fa-rocket text-5xl text-[#00ff87] mb-6"></i>
+            <h3 class="text-3xl font-black mb-4 uppercase">Sincronizzazione Pronta</h3>
+            <p class="text-slate-400 mb-8 max-w-xl mx-auto">L'interfaccia tecnica è configurata con i tuoi range e il GTO Advisor. Clicca sotto per iniziare la sessione.</p>
+            <button onclick="showTech()" class="bg-[#00ff87] text-black px-12 py-5 rounded-2xl font-black text-xl shadow-lg shadow-[#00ff87]/20 hover:scale-105 transition-all">
+                LANCIA INTERFACCIA ANALISI <i class="fa-solid fa-chevron-right ml-2"></i>
             </button>
         </div>
     </div>
 
-    <div id="techInterface" class="hidden w-full max-w-[1400px]">
-        <nav class="flex justify-between items-center mb-6">
-            <button onclick="switchView('dash')" class="text-[#2ecc71] font-bold uppercase text-sm"><i class="fa-solid fa-chevron-left mr-2"></i> Torna alla Dash</button>
-            <div class="text-center">
-                <h2 class="text-3xl font-black gradient-text italic">EV MAXIMIZER <span class="text-white text-sm not-italic ml-2 opacity-50">v2.0 PRO</span></h2>
+    <div id="techInterface" class="hidden w-full h-screen flex">
+        <aside id="sidebar-left">
+            <div class="sidebar-brand-container">
+                <button onclick="showDash()" class="text-[10px] text-slate-500 mb-4 block hover:text-[#00ff87] uppercase font-bold"><i class="fa-solid fa-arrow-left"></i> Dashboard</button>
+                <img src="logo_maximizer.webp" class="brand-logo-main">
             </div>
-            <div class="w-24"></div> </nav>
-
-        <div class="grid grid-cols-12 gap-6">
-            <div class="col-span-12 lg:col-span-4 space-y-6">
-                <div class="glass-card p-6 border-2 border-[#2ecc71]">
-                    <div class="flex items-center gap-4 mb-4">
-                        <img src="https://img.icons8.com/color/48/energy-drink.png" alt="lattina" class="w-10 h-10">
-                        <h4 class="font-black text-xl uppercase">Sincronizzatore</h4>
-                    </div>
-                    <p class="text-xs text-slate-400 mb-4 font-bold">CARICA FILE XML IPCHIP</p>
-                    <div class="border-2 border-dashed border-slate-700 rounded-xl p-8 text-center bg-black/30">
-                        <i class="fa-solid fa-cloud-arrow-up text-3xl mb-3 text-[#2ecc71]"></i>
-                        <p class="text-xs">Trascina qui i file o clicca per caricare</p>
-                    </div>
-                </div>
-
-                <div class="glass-card p-6">
-                    <h4 class="font-bold text-sm mb-4 uppercase tracking-widest">Tabella Mani Recenti</h4>
-                    <div class="overflow-hidden rounded-xl bg-black/40">
-                        <table class="w-full text-xs">
-                            <thead class="bg-white/5"><tr><th class="p-3">Data</th><th class="p-3">EV</th><th class="p-3">Chip</th></tr></thead>
-                            <tbody>
-                                <tr class="border-b border-white/5"><td class="p-3">30/01</td><td class="p-3 text-green-400">+1.2</td><td class="p-3">450</td></tr>
-                                <tr class="border-b border-white/5"><td class="p-3">30/01</td><td class="p-3 text-red-400">-0.5</td><td class="p-3">120</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div class="nav-group">
+                <span class="cat-label">3-Way Strategy</span>
+                <button class="nav-btn active" onclick="sm('1. BTN Open', 'btnopen_', this)">1. BTN Open</button>
+                <button class="nav-btn" onclick="sm('2. SB vs BTN', 'sbvsbtn_', this)">2. SB vs BTN</button>
+                <button class="nav-btn" onclick="sm('3. SB vs BB', 'sbvsbb_', this)">3. SB vs BB</button>
+                <button class="nav-btn" onclick="sm('4. SB vs BTN Limp', 'sbvslimp_', this)">4. SB vs BTN Limp</button>
+                <button class="nav-btn" onclick="sm('5. BB vs BTN', 'bbvbt_', this)">5. BB vs BTN</button>
+                <button class="nav-btn" onclick="sm('6. BB vs SB', 'bbvssb_', this)">6. BB vs SB</button>
+                <button class="nav-btn" onclick="sm('7. BB vs SB Limp', 'bbvssblimp_', this)">7. BB vs SB Limp</button>
+                <button class="nav-btn" onclick="sm('8. BB vs BTN Iso', 'bbvsbtniso_', this)">8. BB vs BTN Iso</button>
+                <button class="nav-btn" onclick="sm('9. BB vs SB Iso', 'bbvssbiso_', this)">9. BB vs SB Iso</button>
+                <button class="nav-btn" onclick="sm('10. BB vs 2 PL', 'bbvs2pl_', this)">10. BB vs 2 PL</button>
+                <span class="cat-label">Heads-Up</span>
+                <button class="nav-btn" onclick="sm('11. HU IP Open', 'huip_', this)">11. HU IP Open</button>
+                <button class="nav-btn" onclick="sm('12. HU OOP vs Limp', 'huooplimp_', this)">12. HU OOP vs Limp</button>
+                <button class="nav-btn" onclick="sm('13. HU OOP vs MR', 'huoopmr_', this)">13. HU OOP vs MR</button>
+                <button class="nav-btn" onclick="sm('14. HU OOP vs Shove', 'huoopshove_', this)">14. HU OOP vs Shove</button>
+                <span class="cat-label">Nash Equilibrium</span>
+                <button class="nav-btn" onclick="sm('15. Nash Push', 'nashpush_', this)">15. Nash Push</button>
+                <button class="nav-btn" onclick="sm('16. Nash Call', 'nashcall_', this)">16. Nash Call</button>
             </div>
+        </aside>
 
-            <div class="col-span-12 lg:col-span-8 space-y-6">
-                <div class="grid grid-cols-2 gap-6">
-                    <div class="glass-card p-8 min-h-[300px] border-t-4 border-blue-500">
-                        <h4 class="text-2xl font-black mb-4 italic">POST-FLOP <span class="text-blue-500">TRACKER</span></h4>
-                        <div class="space-y-4">
-                            <div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div class="w-2/3 h-full bg-blue-500"></div></div>
-                            <p class="text-xs text-slate-400 uppercase font-bold">Aggressività: 65%</p>
+        <main id="main-view">
+            <header id="header-tech">
+                <div id="rng-box">--</div>
+                <button onclick="roll()" class="bg-[#00ff87] text-black font-bold px-8 h-[45px] rounded-md uppercase text-xs">ROLL RNG</button>
+                <label class="bg-[#00d4ff] text-black font-bold px-8 h-[45px] rounded-md uppercase text-xs flex items-center cursor-pointer">
+                    📂 CARICA RANGE <input type="file" id="file-input" webkitdirectory directory multiple style="display:none">
+                </label>
+            </header>
+            <div id="workspace">
+                <div id="stack-bar"></div>
+                <div id="image-area"><img id="current-img"></div>
+                <aside id="sidebar-right">
+                    <div class="section-box">
+                        <span class="section-title">GTO Advisor Elite</span>
+                        <div class="pf-grid">
+                            <button class="btn-pf" onclick="advise('IP_AGG')">IP Aggressore</button>
+                            <button class="btn-pf" onclick="advise('IP_VS_AGG')">IP vs Aggr.</button>
+                            <button class="btn-pf" onclick="advise('OOP_AGG')">OOP Aggressore</button>
+                            <button class="btn-pf" onclick="advise('OOP_VS_AGG')">OOP vs Aggr.</button>
+                            <button class="btn-pf" onclick="advise('MW_POT')">Multiway Pot</button>
+                            <button class="btn-pf" onclick="advise('HU_ISO')">HU vs ISO</button>
                         </div>
+                        <div id="gto-solution-box"><div id="gto-content">Seleziona situazione post-flop...</div></div>
                     </div>
-                    <div class="glass-card p-8 min-h-[300px] border-t-4 border-purple-500">
-                        <h4 class="text-2xl font-black mb-4 italic">GTO <span class="text-purple-500">ENGINE</span></h4>
-                        <div class="flex items-center justify-center h-32 bg-black/40 rounded-2xl border border-white/5 italic text-slate-500 text-sm">
-                            In attesa di dati partita...
-                        </div>
-                    </div>
-                </div>
-                <div class="glass-card p-8 flex-grow">
-                    <h4 class="text-xl font-bold mb-6 italic"><i class="fa-solid fa-microscope mr-2 text-[#2ecc71]"></i> ANALISI DETTAGLIATA RANGE</h4>
-                    <div class="grid grid-cols-6 gap-2 opacity-30">
-                        <script>for(let i=0; i<36; i++) document.write('<div class="aspect-square bg-slate-800 rounded-sm"></div>');</script>
-                    </div>
-                </div>
+                    <div class="can-brand-container"><img src="can_brand.webp" class="can-brand-img"></div>
+                </aside>
             </div>
-        </div>
+        </main>
     </div>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiPPRE0vPKvbpcD8vWS69A08Nx9w-9Zr1aUc2S3BxKycoBUQcSLpVkSzAljzhCbwD-0w/exec";
+        let persistentFiles = []; let currentKey = "btnopen_";
 
+        // LOGIC: AUTH & NAVIGATION
         function handleLogin() {
-            const u = document.getElementById('user').value;
-            const p = document.getElementById('pass').value;
-            if (!u || !p) return alert("Dati mancanti");
-            
-            document.getElementById('msg').innerText = "VERIFICA IN CORSO...";
+            const u = document.getElementById('userId').value;
+            const p = document.getElementById('userPass').value;
+            if(!u || !p) return;
+            document.getElementById('msg').innerText = "VERIFICA ACCOUNT...";
             fetch(`${SCRIPT_URL}?id=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&action=login`, { mode: 'no-cors' });
-
-            setTimeout(() => {
-                localStorage.setItem('ev_logged', 'true');
-                switchView('dash');
-            }, 800);
+            setTimeout(() => { localStorage.setItem('ev_logged', 'true'); showDash(); }, 800);
         }
 
-        function switchView(view) {
+        function showDash() {
             document.getElementById('authBox').classList.add('hidden');
-            document.getElementById('dashboard').classList.add('hidden');
             document.getElementById('techInterface').classList.add('hidden');
-            document.body.classList.replace('items-center', 'items-start');
-            document.body.classList.add('pt-10');
-
-            if(view === 'dash') document.getElementById('dashboard').classList.remove('hidden');
-            if(view === 'tech') document.getElementById('techInterface').classList.remove('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            document.body.className = "flex items-center justify-center min-h-screen p-4";
         }
 
-        function logout() {
-            localStorage.removeItem('ev_logged');
-            location.reload();
+        function showTech() {
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('techInterface').classList.remove('hidden');
+            document.body.className = ""; // Reset body for full screen tech layout
         }
 
-        if (localStorage.getItem('ev_logged') === 'true') switchView('dash');
+        function logout() { localStorage.removeItem('ev_logged'); location.reload(); }
+
+        // LOGIC: TECH INTERFACE (YOUR ORIGINAL CODE)
+        function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            persistentFiles = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.webp'));
+            render();
+        });
+        function sm(name, key, btn) {
+            currentKey = key;
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            render();
+        }
+        function render() {
+            const bar = document.getElementById('stack-bar'); const img = document.getElementById('current-img');
+            bar.innerHTML = ''; if (persistentFiles.length === 0) return;
+            const filtered = persistentFiles.filter(f => f.name.toLowerCase().startsWith(currentKey.toLowerCase()));
+            if (filtered.length > 0) {
+                img.style.display = 'block';
+                filtered.sort((a,b) => (parseInt(b.name.match(/\d+/)) || 0) - (parseInt(a.name.match(/\d+/)) || 0));
+                filtered.forEach((f, i) => {
+                    const b = document.createElement('button'); b.className = 'stk-btn';
+                    b.innerText = f.name.split('_')[1]?.replace('.webp', '').toUpperCase() || "RANGE";
+                    b.onclick = () => {
+                        const r = new FileReader(); r.onload = (e) => { img.src = e.target.result; }; r.readAsDataURL(f);
+                        document.querySelectorAll('.stk-btn').forEach(x => x.classList.remove('active')); b.classList.add('active');
+                    };
+                    bar.appendChild(b); if(i === 0) b.click();
+                });
+            } else { img.style.display = 'none'; }
+        }
+        function advise(type) {
+            const box = document.getElementById('gto-content');
+            const data = { 'IP_AGG': [{l: 'Flop Dry', v: 'Bet 33% Pot'}, {l: 'Flop Coord', v: 'Bet 75% Pot'}], 'IP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x / Shove'}], 'OOP_AGG': [{l: 'Value (TP+)', v: 'Check-Raise'}], 'OOP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x'}], 'MW_POT': [{l: 'Value', v: 'Bet 75% / 100%'}], 'HU_ISO': [{l: 'TP Kicker 8+', v: 'Raise 3x'}] };
+            let html = ''; data[type]?.forEach(item => { html += `<div class="gto-line"><span class="gto-label">${item.l}</span><span class="gto-val">${item.v}</span></div>`; });
+            box.innerHTML = html || "Situazione in aggiornamento...";
+        }
+
+        if (localStorage.getItem('ev_logged') === 'true') showDash();
     </script>
 </body>
 </html>
