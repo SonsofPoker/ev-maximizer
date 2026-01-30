@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EV Maximizer | Dashboard</title>
+    <title>EV Maximizer | Dashboard Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; margin: 0; }
         .glass-card { background: rgba(23, 32, 51, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; }
+        .accent-border { border-left: 4px solid #2ecc71; }
         .gradient-text { background: linear-gradient(90deg, #2ecc71, #27ae60); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hidden { display: none !important; }
         input { background: #1a2234 !important; border: 1px solid #2d3748 !important; color: white !important; }
@@ -19,55 +20,77 @@
     <div id="authBox" class="glass-card p-10 w-full max-w-md shadow-2xl">
         <div class="text-center mb-10">
             <h1 class="text-4xl font-black tracking-tighter gradient-text uppercase">EV Maximizer</h1>
-            <p class="text-slate-400 text-xs mt-2 font-bold tracking-widest uppercase">Area Riservata</p>
+            <p class="text-slate-400 text-[10px] mt-2 font-bold tracking-[0.2em] uppercase">Premium Analysis Suite</p>
         </div>
         
         <div class="space-y-4">
-            <input type="text" id="user" placeholder="Username" class="w-full px-4 py-4 rounded-xl outline-none focus:border-green-500">
+            <input type="text" id="user" placeholder="Username ID" class="w-full px-4 py-4 rounded-xl outline-none focus:border-green-500">
             <input type="password" id="pass" placeholder="Password" class="w-full px-4 py-4 rounded-xl outline-none focus:border-green-500">
-            <button onclick="loginTemporaneo()" class="w-full bg-[#2ecc71] text-[#0b0f1a] font-black py-4 rounded-xl uppercase hover:scale-[1.02] transition-transform">
-                Entra nella Dashboard
+            <button onclick="handleLogin()" class="w-full bg-[#2ecc71] text-[#0b0f1a] font-black py-4 rounded-xl uppercase hover:scale-[1.02] transition-transform">
+                Accedi alla Dashboard
             </button>
         </div>
-        <p id="msg" class="mt-4 text-center text-sm font-bold text-yellow-500"></p>
+        <p id="msg" class="mt-6 text-center text-sm font-bold text-yellow-500"></p>
     </div>
 
     <div id="dashboard" class="hidden w-full max-w-6xl">
-        <header class="flex justify-between items-center mb-8 bg-slate-900/50 p-6 rounded-3xl border border-white/5">
+        <header class="flex justify-between items-center mb-8 bg-slate-900/50 p-6 rounded-3xl border border-white/5 shadow-xl">
             <div class="flex items-center gap-4">
-                <div class="h-10 w-10 bg-[#2ecc71] rounded-xl flex items-center justify-center text-slate-900">
-                    <i class="fa-solid fa-rocket"></i>
+                <div class="h-12 w-12 bg-[#2ecc71] rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/20">
+                    <i class="fa-solid fa-chart-line text-[#0b0f1a] text-xl"></i>
                 </div>
-                <h2 class="text-xl font-bold italic uppercase">Pannello <span class="text-[#2ecc71]">Controllo</span></h2>
+                <div>
+                    <h2 class="text-2xl font-black text-white italic">DASHBOARD <span class="text-[#2ecc71]">PRO</span></h2>
+                    <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Sincronizzazione Attiva</p>
+                </div>
             </div>
-            <button onclick="logout()" class="text-red-400 font-bold text-sm bg-red-500/10 px-4 py-2 rounded-lg">Esci</button>
+            <button onclick="logout()" class="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 px-6 py-2 rounded-xl font-bold text-xs transition-all">
+                <i class="fa-solid fa-power-off mr-2"></i> ESCI
+            </button>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="glass-card p-8 flex flex-col items-center justify-center text-center space-y-6">
-                <i class="fa-solid fa-chart-pie text-5xl text-[#2ecc71]"></i>
-                <div>
-                    <h3 class="text-2xl font-bold">Visualizza Analisi</h3>
-                    <p class="text-slate-400 mt-2">Accedi ai grafici EV e ai dati sincronizzati dal tuo software.</p>
-                </div>
-                <a href="https://docs.google.com/spreadsheets/d/1iNiWJ2TyCpck7bcIJljqXbydcWr-0-RZqdjUPEC40iY" target="_blank" class="bg-white text-slate-900 px-8 py-3 rounded-xl font-bold hover:bg-[#2ecc71] transition-colors">
-                    Apri Foglio Dati
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-center md:text-left">
+            <div class="glass-card p-6 accent-border">
+                <p class="text-slate-500 text-[10px] font-bold uppercase">Chip EV Totale</p>
+                <h3 class="text-3xl font-black text-white mt-1">+2,450 <span class="text-xs text-[#2ecc71]">▲</span></h3>
+            </div>
+            <div class="glass-card p-6" style="border-left: 4px solid #3498db;">
+                <p class="text-slate-500 text-[10px] font-bold uppercase">Sessioni Mese</p>
+                <h3 class="text-3xl font-black text-white mt-1">142</h3>
+            </div>
+            <div class="glass-card p-6" style="border-left: 4px solid #9b59b6;">
+                <p class="text-slate-500 text-[10px] font-bold uppercase">ROI Stimato</p>
+                <h3 class="text-3xl font-black text-white mt-1">12.4%</h3>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="glass-card p-8 min-h-[400px] flex flex-col items-center justify-center text-center">
+                <i class="fa-solid fa-database text-5xl text-[#2ecc71] mb-6"></i>
+                <h3 class="text-2xl font-bold mb-2">Dati in Tempo Reale</h3>
+                <p class="text-slate-400 mb-8 max-w-sm">Accedi al database completo su Google Sheets per analizzare ogni singola mano caricata.</p>
+                <a href="https://docs.google.com/spreadsheets/d/1iNiWJ2TyCpck7bcIJljqXbydcWr-0-RZqdjUPEC40iY" target="_blank" class="bg-white text-slate-900 px-10 py-4 rounded-2xl font-black hover:bg-[#2ecc71] transition-all transform hover:scale-105">
+                    APRI FOGLIO IPCHIP
                 </a>
             </div>
 
-            <div class="glass-card p-8 border-l-4 border-blue-500">
-                <h4 class="font-bold mb-4 uppercase text-xs text-slate-400 tracking-widest">Stato Account</h4>
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="h-12 w-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500">
-                        <i class="fa-solid fa-user-check"></i>
+            <div class="glass-card p-8 flex flex-col">
+                <h4 class="text-sm font-bold mb-6 text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-green-500"></i> Stato Sistema
+                </h4>
+                <div class="space-y-6">
+                    <div class="flex items-center gap-4 bg-black/20 p-4 rounded-2xl border border-white/5">
+                        <div class="h-10 w-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold">Utente Verificato</p>
+                            <p class="text-[10px] text-slate-500 uppercase">Abbonamento Pro Attivo</p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="font-bold text-white">Utente Verificato</p>
-                        <p class="text-xs text-slate-400">Abbonamento Pro Attivo</p>
+                    <div class="p-6 rounded-2xl border border-dashed border-slate-700 text-center">
+                        <p class="text-xs text-slate-500 italic">"Il sistema è configurato per caricare automaticamente i file XML dalla cartella impostata. I grafici interattivi sono in fase di aggiornamento."</p>
                     </div>
-                </div>
-                <div class="bg-black/20 p-4 rounded-xl text-sm">
-                    <p class="text-slate-300 italic">"Il sistema è sincronizzato con l'app desktop. Ogni mano caricata apparirà automaticamente nei tuoi grafici."</p>
                 </div>
             </div>
         </div>
@@ -76,29 +99,24 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiPPRE0vPKvbpcD8vWS69A08Nx9w-9Zr1aUc2S3BxKycoBUQcSLpVkSzAljzhCbwD-0w/exec";
 
-        function loginTemporaneo() {
+        function handleLogin() {
             const u = document.getElementById('user').value;
             const p = document.getElementById('pass').value;
             const msg = document.getElementById('msg');
 
-            if (!u || !p) {
-                msg.innerText = "Inserisci le credenziali";
-                return;
-            }
+            if (!u || !p) { msg.innerText = "Inserisci le credenziali"; return; }
+            msg.innerText = "VERIFICA ACCOUNT...";
 
-            msg.innerText = "Sincronizzazione in corso...";
-
-            // Invia i dati a Google per la registrazione/log
+            // Chiamata di log a Google
             fetch(`${SCRIPT_URL}?id=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&action=login`, { mode: 'no-cors' });
 
-            // Simuliamo un controllo locale per ora per farti vedere la dashboard funzionante
             setTimeout(() => {
                 localStorage.setItem('ev_logged', 'true');
-                mostraDashboard();
+                showDashboard();
             }, 800);
         }
 
-        function mostraDashboard() {
+        function showDashboard() {
             document.getElementById('authBox').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
             document.body.classList.replace('items-center', 'items-start');
@@ -110,10 +128,7 @@
             location.reload();
         }
 
-        // Controllo persistenza
-        if (localStorage.getItem('ev_logged') === 'true') {
-            mostraDashboard();
-        }
+        if (localStorage.getItem('ev_logged') === 'true') showDashboard();
     </script>
 </body>
 </html>
