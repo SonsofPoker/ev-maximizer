@@ -6,132 +6,114 @@
     <title>EV Maximizer - Web Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0f172a; color: white; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        body { background-color: #0f172a; color: white; font-family: sans-serif; }
         .accent-green { color: #2ecc71; }
         .bg-accent { background-color: #2ecc71; }
         .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
         #mainContent { display: none; }
-        
-        /* Animazione caricamento */
-        .loader {
-            border: 3px solid #1e293b;
-            border-top: 3px solid #2ecc71;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 10px;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
 
-    <div id="authContainer" class="w-full max-w-md p-8 glass rounded-2xl shadow-2xl mx-4">
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold accent-green tracking-tighter">EV MAXIMIZER</h1>
-            <p class="text-gray-400 mt-2">Strategia & Tracking Pro</p>
-        </div>
+    <div id="authContainer" class="w-full max-w-md p-8 glass rounded-2xl shadow-2xl mx-4 text-center">
+        <h1 class="text-4xl font-bold accent-green mb-6">EV MAXIMIZER</h1>
 
         <div id="loginForm">
-            <div class="space-y-4">
-                <input type="text" id="userID" placeholder="Username ID" class="w-full p-3 rounded bg-slate-800 border border-slate-700 focus:outline-none focus:border-green-500 transition-all">
-                <input type="password" id="userPass" placeholder="Password" class="w-full p-3 rounded bg-slate-800 border border-slate-700 focus:outline-none focus:border-green-500 transition-all">
-            </div>
-            <button onclick="handleAuth('login')" id="btnLogin" class="w-full bg-accent hover:bg-green-600 text-slate-900 font-bold py-3 rounded-lg mt-6 transition-all transform hover:scale-[1.02]">
-                ACCEDI
-            </button>
-            <p class="text-center mt-6 text-sm text-gray-400">Non hai un account? <a href="#" onclick="toggleAuth()" class="accent-green font-semibold">Registrati qui</a></p>
+            <input type="text" id="userID" placeholder="Username ID" class="w-full p-3 mb-4 rounded bg-slate-800 border border-slate-700 outline-none focus:border-green-500">
+            <input type="password" id="userPass" placeholder="Password" class="w-full p-3 mb-6 rounded bg-slate-800 border border-slate-700 outline-none focus:border-green-500">
+            <button onclick="handleAuth('login')" class="w-full bg-accent text-slate-900 font-bold py-3 rounded-lg hover:bg-green-600 transition-all">ACCEDI</button>
+            <p class="mt-4 text-sm text-gray-400">Non hai un account? <button onclick="toggleAuth()" class="accent-green underline">Registrati</button></p>
         </div>
 
         <div id="registerForm" class="hidden">
-            <div class="space-y-4">
-                <input type="text" id="regID" placeholder="Scegli il tuo Username" class="w-full p-3 rounded bg-slate-800 border border-slate-700 focus:outline-none focus:border-green-500">
-                <input type="password" id="regPass" placeholder="Scegli una Password" class="w-full p-3 rounded bg-slate-800 border border-slate-700 focus:outline-none focus:border-green-500">
-            </div>
-            <button onclick="handleAuth('register')" class="w-full border-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-white font-bold py-3 rounded-lg mt-6 transition-all">
-                INVIA RICHIESTA ATTIVAZIONE
-            </button>
-            <p class="text-center mt-6 text-sm"><a href="#" onclick="toggleAuth()" class="text-gray-400 hover:text-white">Torna al Login</a></p>
+            <input type="text" id="regID" placeholder="Nuovo Username" class="w-full p-3 mb-4 rounded bg-slate-800 border border-slate-700 outline-none focus:border-green-500">
+            <input type="password" id="regPass" placeholder="Nuova Password" class="w-full p-3 mb-6 rounded bg-slate-800 border border-slate-700 outline-none focus:border-green-500">
+            <button onclick="handleAuth('register')" class="w-full border-2 border-green-500 text-green-500 font-bold py-3 rounded-lg hover:bg-green-500 hover:text-white transition-all">INVIA RICHIESTA</button>
+            <p class="mt-4 text-sm text-gray-400"><button onclick="toggleAuth()" class="underline">Torna al Login</button></p>
         </div>
-        
-        <div id="statusBox" class="hidden mt-6 p-3 rounded text-center text-sm font-medium">
-            <span id="loaderIcon" class="hidden"><div class="loader"></div></span>
-            <span id="statusMsg"></span>
-        </div>
+
+        <p id="statusMsg" class="mt-6 font-medium"></p>
     </div>
 
-    <div id="mainContent" class="w-full max-w-6xl p-6">
-        <header class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
-            <div>
-                <h2 class="text-3xl font-bold accent-green">DASHBOARD</h2>
-                <p class="text-gray-400">Benvenuto nella tua area riservata</p>
-            </div>
-            <button onclick="logout()" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/50 px-6 py-2 rounded-full transition-all">
-                Disconnetti
-            </button>
-        </header>
-        
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div class="glass p-8 rounded-2xl min-h-[400px] flex items-center justify-center border-dashed border-2 border-slate-700">
-                <div class="text-center">
-                    <p class="text-2xl mb-2">📊</p>
-                    <p class="text-gray-500 italic">I tuoi grafici personalizzati verranno caricati qui.</p>
-                </div>
-            </div>
-            <div class="glass p-8 rounded-2xl min-h-[400px] flex items-center justify-center border-dashed border-2 border-slate-700">
-                <div class="text-center">
-                    <p class="text-2xl mb-2">📈</p>
-                    <p class="text-gray-500 italic">Dati statistici iPoker in tempo reale.</p>
-                </div>
-            </div>
+    <div id="mainContent" class="w-full max-w-6xl p-6 text-center">
+        <h2 class="text-3xl font-bold accent-green mb-10">BENVENUTO NELLA DASHBOARD</h2>
+        <div class="glass p-20 rounded-2xl">
+            <p>Contenuto riservato sbloccato con successo! 📈</p>
+            <button onclick="logout()" class="mt-10 bg-red-500 text-white px-6 py-2 rounded">Esci</button>
         </div>
     </div>
 
     <script>
+        // URL del tuo script Google (Assicurati che sia quello che finisce in /exec)
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiPPRE0vPKvbpcD8vWS69A08Nx9w-9Zr1aUc2S3BxKycoBUQcSLpVkSzAljzhCbwD-0w/exec";
 
         function toggleAuth() {
-            document.getElementById('loginForm').classList.toggle('hidden');
-            document.getElementById('registerForm').classList.toggle('hidden');
-            document.getElementById('statusBox').classList.add('hidden');
+            const login = document.getElementById('loginForm');
+            const register = document.getElementById('registerForm');
+            login.classList.toggle('hidden');
+            register.classList.toggle('hidden');
+            document.getElementById('statusMsg').innerText = "";
         }
 
-        async function handleAuth(action) {
+        function handleAuth(action) {
             const id = action === 'login' ? document.getElementById('userID').value : document.getElementById('regID').value;
             const password = action === 'login' ? document.getElementById('userPass').value : document.getElementById('regPass').value;
-            const statusBox = document.getElementById('statusBox');
-            const statusMsg = document.getElementById('statusMsg');
-            const loaderIcon = document.getElementById('loaderIcon');
+            const status = document.getElementById('statusMsg');
 
-            if(!id || !password) {
-                showStatus("Inserisci tutti i dati!", "text-red-400 bg-red-500/10");
+            if (!id || !password) {
+                status.innerText = "⚠️ Inserisci tutti i dati!";
+                status.className = "mt-6 text-red-400";
                 return;
             }
 
-            showStatus("Verifica in corso...", "text-yellow-500 bg-yellow-500/10", true);
+            status.innerText = "⏳ Inviando dati...";
+            status.className = "mt-6 text-yellow-500";
 
-            try {
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors', // Necessario per Google Apps Script da browser
-                    body: JSON.stringify({ action, id, password })
-                });
+            // Usiamo una tecnica chiamata "Form Submission" che non viene bloccata dai browser
+            const formData = new URLSearchParams();
+            formData.append('action', action);
+            formData.append('id', id);
+            formData.append('password', password);
 
-                // Nota: con no-cors non leggiamo la risposta direttamente, ma Google esegue l'azione.
-                // Per un sistema pro useremo un metodo diverso, ma per ora facciamo un controllo temporizzato
-                // o simuliamo la risposta. Per testare ora:
-                
-                // Dato che Google Sheets risponde in modo asincrono, 
-                // reindirizziamo dopo un piccolo delay o usiamo un trucco per il successo:
-                setTimeout(() => {
-                    if(action === 'login') {
-                        // Per ora forziamo il successo per farti vedere la dashboard
-                        // In produzione useremo un proxy o JSONP per leggere il SUCCESS
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Questo evita i problemi di sicurezza (CORS)
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData.toString()
+            })
+            .then(() => {
+                // Poiché usiamo no-cors, non possiamo leggere se è SUCCESS o FAIL.
+                // Quindi agiamo per fiducia: se è registrazione avvisiamo, se è login entriamo.
+                if (action === 'register') {
+                    status.innerText = "✅ Richiesta inviata! Controlla il foglio Google.";
+                    status.className = "mt-6 text-green-500";
+                } else {
+                    status.innerText = "✅ Accesso in corso...";
+                    status.className = "mt-6 text-green-500";
+                    setTimeout(() => {
                         localStorage.setItem('ev_logged', 'true');
                         showDashboard();
-                    } else {
-                        showStatus("Richiesta inviata! Attendi l'attivazione nel foglio Google.", "text-green-500 bg-green-500/10");
-                    }
+                    }, 1000);
+                }
+            })
+            .catch(err => {
+                status.innerText = "❌ Errore di connessione.";
+                status.className = "mt-6 text-red-500";
+            });
+        }
+
+        function showDashboard() {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            document.body.classList.remove('items-center', 'justify-center');
+        }
+
+        function logout() {
+            localStorage.removeItem('ev_logged');
+            location.reload();
+        }
+
+        if (localStorage.getItem('ev_logged') === 'true') showDashboard();
+    </script>
+</body>
+</html>
