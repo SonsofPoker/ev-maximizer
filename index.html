@@ -7,14 +7,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        :root { --bg: #000; --panel: #0a0a0a; --accent: #00ff87; --text: #e0e0e0; --border: #1a1a1a; --blue: #00d4ff; }
+        :root { --bg: #000; --panel: #0a0a0a; --accent: #00ff87; --text: #e0e0e0; --border: #1a1a1a; --blue: #00d4ff; --nash: #ff4444; }
         
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         .hidden { display: none !important; }
-        
-        /* LOGIN & DASHBOARD */
-        .glass-card { background: rgba(23, 32, 51, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; }
-        .gradient-text { background: linear-gradient(90deg, #00ff87, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
         /* SIDEBAR SINISTRA */
         #sidebar-left { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
@@ -39,164 +35,125 @@
 
         /* SIDEBAR DESTRA - REFINED */
         #sidebar-right { width: 360px; background: var(--panel); border-left: 1px solid var(--border); padding: 15px; overflow-y: auto; flex-shrink: 0; display: flex; flex-direction: column; gap: 15px; }
-        .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 8px; padding: 15px; border-top: 3px solid var(--accent); }
-        .section-title { color: var(--blue); font-size: 0.85rem; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; display: block; border-bottom: 1px solid #222; padding-bottom: 8px; }
+        .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 8px; padding: 12px; border-top: 3px solid var(--accent); }
+        .section-title { color: var(--blue); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; display: block; border-bottom: 1px solid #222; padding-bottom: 5px; }
         
-        /* SINCRONIZZATORE BOX */
-        .sync-card { background: #0f172a; border: 1px solid #2ecc71; border-radius: 12px; padding: 15px; text-align: center; }
-        .drop-zone { border: 1px dashed #2ecc71; border-radius: 8px; padding: 20px; margin-top: 10px; cursor: pointer; transition: 0.3s; }
-        .drop-zone:hover { background: rgba(46, 204, 113, 0.1); }
+        /* NASH BOX - LED EFFECT */
+        .nash-box { background: #0a0505; border: 1px solid var(--nash); border-radius: 12px; padding: 15px; box-shadow: 0 0 15px rgba(255, 68, 68, 0.15); }
+        .nash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .btn-nash { padding: 15px; border-radius: 8px; font-weight: 900; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; transition: 0.2s; border: 2px solid transparent; }
+        .btn-call { background: #1a0000; color: var(--nash); border-color: var(--nash); }
+        .btn-call:hover { background: var(--nash); color: #000; box-shadow: 0 0 20px var(--nash); }
+        .btn-push { background: #1a1a00; color: #ffcc00; border-color: #ffcc00; }
+        .btn-push:hover { background: #ffcc00; color: #000; box-shadow: 0 0 20px #ffcc00; }
 
-        /* TABELLA MANI */
+        /* SINCRONIZZATORE & TABELLA */
+        .sync-card { background: #0f172a; border: 1px solid var(--accent); border-radius: 12px; padding: 12px; text-align: center; }
+        .drop-zone { border: 1px dashed var(--accent); border-radius: 8px; padding: 15px; margin-top: 8px; cursor: pointer; }
         .table-container { background: #0f172a; border-radius: 12px; padding: 10px; border: 1px solid #1e293b; }
-        table { width: 100%; font-size: 0.7rem; border-collapse: collapse; }
-        th { color: #64748b; text-transform: uppercase; padding: 8px; text-align: left; border-bottom: 1px solid #1e293b; }
-        td { padding: 8px; border-bottom: 1px solid #1e293b; font-weight: bold; }
+        table { width: 100%; font-size: 0.65rem; border-collapse: collapse; }
+        th { color: #64748b; text-transform: uppercase; padding: 6px; text-align: left; border-bottom: 1px solid #1e293b; }
+        td { padding: 6px; border-bottom: 1px solid #1e293b; font-weight: bold; }
 
-        .btn-pf { background: #151515; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.65rem; cursor: pointer; font-weight: bold; text-transform: uppercase; width: 100%; }
-        .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 12px; margin-top: 10px; min-height: 120px; }
-        .gto-line { margin-bottom: 8px; border-left: 2px solid var(--accent); padding-left: 8px; }
-        .gto-label { color: var(--blue); font-size: 0.6rem; font-weight: bold; text-transform: uppercase; display: block; }
-        .gto-val { color: var(--accent); font-size: 0.75rem; font-weight: bold; }
+        .btn-pf { background: #151515; color: #fff; border: 1px solid #333; padding: 8px; border-radius: 4px; font-size: 0.6rem; cursor: pointer; font-weight: bold; text-transform: uppercase; width: 100%; }
+        .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 10px; margin-top: 8px; min-height: 100px; }
+        .gto-line { margin-bottom: 6px; border-left: 2px solid var(--accent); padding-left: 8px; }
+        .gto-label { color: var(--blue); font-size: 0.55rem; font-weight: bold; text-transform: uppercase; display: block; }
+        .gto-val { color: var(--accent); font-size: 0.7rem; font-weight: bold; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
+<body>
 
-    <div id="authBox" class="glass-card p-10 w-full max-w-md shadow-2xl">
-        <div class="text-center mb-10">
-            <h1 class="text-4xl font-black tracking-tighter gradient-text uppercase">EV Maximizer</h1>
-            <p class="text-slate-500 text-[10px] mt-2 font-bold tracking-widest uppercase">Premium Strategy Suite</p>
+    <aside id="sidebar-left">
+        <div class="sidebar-brand-container">
+            <img src="logo_maximizer.webp" class="brand-logo-main">
         </div>
-        <div class="space-y-4">
-            <input type="text" id="userId" placeholder="Username" class="w-full px-4 py-4 rounded-xl outline-none bg-slate-900 border border-slate-800 text-white">
-            <input type="password" id="userPass" placeholder="Password" class="w-full px-4 py-4 rounded-xl outline-none bg-slate-900 border border-slate-800 text-white">
-            <button onclick="handleLogin()" class="w-full bg-[#00ff87] text-black font-black py-4 rounded-xl uppercase hover:scale-[1.02] transition-transform">Accedi</button>
+        <div class="nav-group">
+            <span class="cat-label">3-Way Strategy</span>
+            <button class="nav-btn active" onclick="sm('1. BTN Open', 'btnopen_', this)">1. BTN Open</button>
+            <button class="nav-btn" onclick="sm('2. SB vs BTN', 'sbvsbtn_', this)">2. SB vs BTN</button>
+            <button class="nav-btn" onclick="sm('3. SB vs BB', 'sbvsbb_', this)">3. SB vs BB</button>
+            <button class="nav-btn" onclick="sm('4. SB vs BTN Limp', 'sbvslimp_', this)">4. SB vs BTN Limp</button>
+            <button class="nav-btn" onclick="sm('5. BB vs BTN', 'bbvbt_', this)">5. BB vs BTN</button>
+            <button class="nav-btn" onclick="sm('6. BB vs SB', 'bbvssb_', this)">6. BB vs SB</button>
+            <button class="nav-btn" onclick="sm('7. BB vs SB Limp', 'bbvssblimp_', this)">7. BB vs SB Limp</button>
+            <button class="nav-btn" onclick="sm('8. BB vs BTN Iso', 'bbvsbtniso_', this)">8. BB vs BTN Iso</button>
+            <button class="nav-btn" onclick="sm('9. BB vs SB Iso', 'bbvssbiso_', this)">9. BB vs SB Iso</button>
+            <button class="nav-btn" onclick="sm('10. BB vs 2 PL', 'bbvs2pl_', this)">10. BB vs 2 PL</button>
+            <span class="cat-label">Heads-Up</span>
+            <button class="nav-btn" onclick="sm('11. HU IP Open', 'huip_', this)">11. HU IP Open</button>
+            <button class="nav-btn" onclick="sm('12. HU OOP vs Limp', 'huooplimp_', this)">12. HU OOP vs Limp</button>
+            <button class="nav-btn" onclick="sm('13. HU OOP vs MR', 'huoopmr_', this)">13. HU OOP vs MR</button>
+            <button class="nav-btn" onclick="sm('14. HU OOP vs Shove', 'huoopshove_', this)">14. HU OOP vs Shove</button>
         </div>
-        <p id="msg" class="mt-6 text-center text-sm font-bold text-yellow-500"></p>
-    </div>
+    </aside>
 
-    <div id="dashboard" class="hidden w-full max-w-5xl p-6">
-        <header class="flex justify-between items-center mb-10 bg-slate-900/50 p-6 rounded-3xl border border-white/5">
-            <h2 class="text-2xl font-black italic">DASHBOARD <span class="text-[#00ff87]">PRO</span></h2>
-            <button onclick="logout()" class="text-red-500 font-bold text-xs bg-red-500/10 px-4 py-2 rounded-lg">LOGOUT</button>
+    <main id="main-view">
+        <header id="header-tech">
+            <div id="rng-box">--</div>
+            <button onclick="roll()" class="bg-[#00ff87] text-black font-black px-12 h-[45px] rounded-md uppercase text-xs shadow-[0_0_15px_rgba(0,255,135,0.3)]">ROLL RNG</button>
         </header>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <div class="glass-card p-6 border-l-4 border-[#00ff87]"><p class="text-slate-500 text-[10px] font-bold uppercase">Chip EV Totale</p><h3 class="text-3xl font-black">+2,450</h3></div>
-            <div class="glass-card p-6 border-l-4 border-[#00d4ff]"><p class="text-slate-500 text-[10px] font-bold uppercase">Sessioni Mese</p><h3 class="text-3xl font-black">142</h3></div>
-            <div class="glass-card p-6 border-l-4 border-purple-500"><p class="text-slate-500 text-[10px] font-bold uppercase">ROI Stimato</p><h3 class="text-3xl font-black">12.4%</h3></div>
+        
+        <div id="workspace">
+            <div id="stack-bar"></div>
+            <div id="image-area"><img id="current-img"></div>
+            
+            <aside id="sidebar-right">
+                <div class="section-box">
+                    <span class="section-title">GTO Advisor Elite</span>
+                    <div class="pf-grid">
+                        <button class="btn-pf" onclick="advise('IP_AGG')">IP Aggressore</button>
+                        <button class="btn-pf" onclick="advise('IP_VS_AGG')">IP vs Aggr.</button>
+                        <button class="btn-pf" onclick="advise('OOP_AGG')">OOP Aggressore</button>
+                        <button class="btn-pf" onclick="advise('OOP_VS_AGG')">OOP vs Aggr.</button>
+                        <button class="btn-pf" onclick="advise('MW_POT')">Multiway Pot</button>
+                        <button class="btn-pf" onclick="advise('HU_ISO')">HU vs ISO</button>
+                    </div>
+                    <div id="gto-solution-box"><div id="gto-content" class="text-[0.6rem] text-slate-500">Seleziona post-flop...</div></div>
+                </div>
+
+                <div class="nash-box">
+                    <div class="flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-skull-crossbones text-red-500 text-xs"></i>
+                        <span class="text-[0.7rem] font-black uppercase text-white tracking-widest">Nash Equilibrium</span>
+                    </div>
+                    <div class="nash-grid">
+                        <button class="btn-nash btn-call" onclick="sm('Nash Call', 'nashcall_', this)">CALL</button>
+                        <button class="btn-nash btn-push" onclick="sm('Nash Push', 'nashpush_', this)">PUSH</button>
+                    </div>
+                </div>
+
+                <div class="sync-card">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-sync fa-spin text-blue-400 text-[10px]"></i>
+                        <span class="text-[0.65rem] font-black uppercase text-white">Sincronizzatore</span>
+                    </div>
+                    <label class="drop-zone block">
+                        <i class="fa-solid fa-folder-open text-[#00ff87] text-xl mb-1"></i>
+                        <p class="text-[0.5rem] text-slate-400 uppercase">Carica Range WebP</p>
+                        <input type="file" id="file-input" webkitdirectory directory multiple class="hidden">
+                    </label>
+                </div>
+
+                <div class="table-container">
+                    <p class="text-[0.6rem] font-bold text-slate-500 uppercase mb-2 flex justify-between">
+                        Mani Recenti <span class="text-[#00ff87]">Live</span>
+                    </p>
+                    <table>
+                        <thead><tr><th>Data</th><th>EV</th><th>Chip</th></tr></thead>
+                        <tbody>
+                            <tr><td>30/01</td><td class="text-[#00ff87]">+1.2</td><td>450</td></tr>
+                            <tr><td>30/01</td><td class="text-red-500">-0.5</td><td>120</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </aside>
         </div>
-        <div class="glass-card p-12 text-center bg-gradient-to-br from-slate-800/30 to-transparent border-2 border-[#00ff87]/20">
-            <i class="fa-solid fa-rocket text-5xl text-[#00ff87] mb-6"></i>
-            <h3 class="text-3xl font-black mb-4 uppercase">Sincronizzazione Pronta</h3>
-            <button onclick="showTech()" class="bg-[#00ff87] text-black px-12 py-5 rounded-2xl font-black text-xl shadow-lg hover:scale-105 transition-all uppercase">Lancia Interfaccia Analisi</button>
-        </div>
-    </div>
-
-    <div id="techInterface" class="hidden w-full h-screen flex">
-        <aside id="sidebar-left">
-            <div class="sidebar-brand-container">
-                <button onclick="showDash()" class="text-[10px] text-slate-500 mb-4 block hover:text-[#00ff87] uppercase font-bold"><i class="fa-solid fa-arrow-left"></i> Dashboard</button>
-                <img src="logo_maximizer.webp" class="brand-logo-main">
-            </div>
-            <div class="nav-group">
-                <span class="cat-label">3-Way Strategy</span>
-                <button class="nav-btn active" onclick="sm('1. BTN Open', 'btnopen_', this)">1. BTN Open</button>
-                <button class="nav-btn" onclick="sm('2. SB vs BTN', 'sbvsbtn_', this)">2. SB vs BTN</button>
-                <button class="nav-btn" onclick="sm('3. SB vs BB', 'sbvsbb_', this)">3. SB vs BB</button>
-                <button class="nav-btn" onclick="sm('4. SB vs BTN Limp', 'sbvslimp_', this)">4. SB vs BTN Limp</button>
-                <button class="nav-btn" onclick="sm('5. BB vs BTN', 'bbvbt_', this)">5. BB vs BTN</button>
-                <button class="nav-btn" onclick="sm('6. BB vs SB', 'bbvssb_', this)">6. BB vs SB</button>
-                <button class="nav-btn" onclick="sm('7. BB vs SB Limp', 'bbvssblimp_', this)">7. BB vs SB Limp</button>
-                <button class="nav-btn" onclick="sm('8. BB vs BTN Iso', 'bbvsbtniso_', this)">8. BB vs BTN Iso</button>
-                <button class="nav-btn" onclick="sm('9. BB vs SB Iso', 'bbvssbiso_', this)">9. BB vs SB Iso</button>
-                <button class="nav-btn" onclick="sm('10. BB vs 2 PL', 'bbvs2pl_', this)">10. BB vs 2 PL</button>
-                <span class="cat-label">Heads-Up</span>
-                <button class="nav-btn" onclick="sm('11. HU IP Open', 'huip_', this)">11. HU IP Open</button>
-                <button class="nav-btn" onclick="sm('12. HU OOP vs Limp', 'huooplimp_', this)">12. HU OOP vs Limp</button>
-                <button class="nav-btn" onclick="sm('13. HU OOP vs MR', 'huoopmr_', this)">13. HU OOP vs MR</button>
-                <button class="nav-btn" onclick="sm('14. HU OOP vs Shove', 'huoopshove_', this)">14. HU OOP vs Shove</button>
-            </div>
-        </aside>
-
-        <main id="main-view">
-            <header id="header-tech">
-                <div id="rng-box">--</div>
-                <button onclick="roll()" class="bg-[#00ff87] text-black font-bold px-12 h-[45px] rounded-md uppercase text-xs">ROLL RNG</button>
-                </header>
-            <div id="workspace">
-                <div id="stack-bar"></div>
-                <div id="image-area"><img id="current-img"></div>
-                
-                <aside id="sidebar-right">
-                    <div class="section-box">
-                        <span class="section-title">GTO Advisor Elite</span>
-                        <div class="pf-grid">
-                            <button class="btn-pf" onclick="advise('IP_AGG')">IP Aggressore</button>
-                            <button class="btn-pf" onclick="advise('IP_VS_AGG')">IP vs Aggr.</button>
-                            <button class="btn-pf" onclick="advise('OOP_AGG')">OOP Aggressore</button>
-                            <button class="btn-pf" onclick="advise('OOP_VS_AGG')">OOP vs Aggr.</button>
-                            <button class="btn-pf" onclick="advise('MW_POT')">Multiway Pot</button>
-                            <button class="btn-pf" onclick="advise('HU_ISO')">HU vs ISO</button>
-                        </div>
-                        <div id="gto-solution-box"><div id="gto-content" class="text-[0.65rem] text-slate-500 italic">Seleziona situazione post-flop...</div></div>
-                    </div>
-
-                    <div class="sync-card">
-                        <div class="flex items-center gap-2 mb-2">
-                            <i class="fa-solid fa-bolt text-yellow-400 text-xs"></i>
-                            <span class="text-[0.7rem] font-black uppercase text-white">Sincronizzatore</span>
-                        </div>
-                        <p class="text-[0.55rem] text-slate-400 mb-2 uppercase">Carica File XML IPCHIP</p>
-                        <label class="drop-zone block">
-                            <i class="fa-solid fa-cloud-arrow-up text-[#00ff87] text-xl mb-1"></i>
-                            <p class="text-[0.5rem] text-slate-400">Trascina o clicca per caricare</p>
-                            <input type="file" id="file-input" webkitdirectory directory multiple class="hidden">
-                        </label>
-                    </div>
-
-                    <div class="table-container">
-                        <p class="text-[0.6rem] font-bold text-slate-500 uppercase mb-2">Tabella Mani Recenti</p>
-                        <table>
-                            <thead><tr><th>Data</th><th>EV</th><th>Chip</th></tr></thead>
-                            <tbody>
-                                <tr><td>30/01</td><td class="text-[#00ff87]">+1.2</td><td>450</td></tr>
-                                <tr><td>30/01</td><td class="text-red-500">-0.5</td><td>120</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </aside>
-            </div>
-        </main>
-    </div>
+    </main>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiPPRE0vPKvbpcD8vWS69A08Nx9w-9Zr1aUc2S3BxKycoBUQcSLpVkSzAljzhCbwD-0w/exec";
         let persistentFiles = []; let currentKey = "btnopen_";
-
-        function handleLogin() {
-            const u = document.getElementById('userId').value;
-            const p = document.getElementById('userPass').value;
-            if(!u || !p) return;
-            document.getElementById('msg').innerText = "VERIFICA ACCOUNT...";
-            fetch(`${SCRIPT_URL}?id=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&action=login`, { mode: 'no-cors' });
-            setTimeout(() => { localStorage.setItem('ev_logged', 'true'); showDash(); }, 800);
-        }
-
-        function showDash() {
-            document.getElementById('authBox').classList.add('hidden');
-            document.getElementById('techInterface').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            document.body.className = "flex items-center justify-center min-h-screen p-4";
-        }
-
-        function showTech() {
-            document.getElementById('dashboard').classList.add('hidden');
-            document.getElementById('techInterface').classList.remove('hidden');
-            document.body.className = ""; 
-        }
-
-        function logout() { localStorage.removeItem('ev_logged'); location.reload(); }
 
         function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
 
@@ -207,7 +164,7 @@
 
         function sm(name, key, btn) {
             currentKey = key;
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.nav-btn, .btn-nash').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             render();
         }
@@ -233,12 +190,10 @@
 
         function advise(type) {
             const box = document.getElementById('gto-content');
-            const data = { 'IP_AGG': [{l: 'Flop Dry', v: 'Bet 33% Pot'}, {l: 'Board A-high', v: 'Bet 25%'}], 'IP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x / Shove'}], 'OOP_AGG': [{l: 'Value (TP+)', v: 'Check-Raise'}], 'OOP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x'}], 'MW_POT': [{l: 'Value', v: 'Bet 75% / 100%'}], 'HU_ISO': [{l: 'TP Kicker 8+', v: 'Raise 3x'}] };
+            const data = { 'IP_AGG': [{l: 'Flop Dry', v: 'Bet 33% Pot'}, {l: 'Flop Coord', v: 'Bet 75% Pot'}], 'IP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x / Shove'}], 'OOP_AGG': [{l: 'Value (TP+)', v: 'Check-Raise'}], 'OOP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x'}], 'MW_POT': [{l: 'Value', v: 'Bet 75% / 100%'}], 'HU_ISO': [{l: 'TP Kicker 8+', v: 'Raise 3x'}] };
             let html = ''; data[type]?.forEach(item => { html += `<div class="gto-line"><span class="gto-label">${item.l}</span><span class="gto-val">${item.v}</span></div>`; });
-            box.innerHTML = html || "In attesa di dati...";
+            box.innerHTML = html || "Dati non disponibili";
         }
-
-        if (localStorage.getItem('ev_logged') === 'true') showDash();
     </script>
 </body>
 </html>
