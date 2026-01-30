@@ -3,16 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EV Maximizer | Dashboard Pro</title>
+    <title>EV Maximizer | Pro Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; margin: 0; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
         .glass-card { background: rgba(23, 32, 51, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; }
-        .accent-border { border-left: 4px solid #2ecc71; }
         .gradient-text { background: linear-gradient(90deg, #2ecc71, #27ae60); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hidden { display: none !important; }
         input { background: #1a2234 !important; border: 1px solid #2d3748 !important; color: white !important; }
+        .tech-section { background: rgba(15, 23, 42, 0.95); border: 2px solid #2ecc71; }
+        
+        /* Stile pulsante speciale */
+        .btn-launch {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .btn-launch:hover { transform: scale(1.05) translateY(-5px); box-shadow: 0 0 40px rgba(46, 204, 113, 0.5); }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
@@ -22,13 +31,10 @@
             <h1 class="text-4xl font-black tracking-tighter gradient-text uppercase">EV Maximizer</h1>
             <p class="text-slate-400 text-[10px] mt-2 font-bold tracking-[0.2em] uppercase">Premium Analysis Suite</p>
         </div>
-        
         <div class="space-y-4">
             <input type="text" id="user" placeholder="Username ID" class="w-full px-4 py-4 rounded-xl outline-none focus:border-green-500">
             <input type="password" id="pass" placeholder="Password" class="w-full px-4 py-4 rounded-xl outline-none focus:border-green-500">
-            <button onclick="handleLogin()" class="w-full bg-[#2ecc71] text-[#0b0f1a] font-black py-4 rounded-xl uppercase hover:scale-[1.02] transition-transform">
-                Accedi alla Dashboard
-            </button>
+            <button onclick="handleLogin()" class="w-full bg-[#2ecc71] text-[#0b0f1a] font-black py-4 rounded-xl uppercase hover:opacity-90 transition-all">Accedi</button>
         </div>
         <p id="msg" class="mt-6 text-center text-sm font-bold text-yellow-500"></p>
     </div>
@@ -39,57 +45,92 @@
                 <div class="h-12 w-12 bg-[#2ecc71] rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/20">
                     <i class="fa-solid fa-chart-line text-[#0b0f1a] text-xl"></i>
                 </div>
-                <div>
-                    <h2 class="text-2xl font-black text-white italic">DASHBOARD <span class="text-[#2ecc71]">PRO</span></h2>
-                    <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Sincronizzazione Attiva</p>
-                </div>
+                <h2 class="text-2xl font-black italic">DASHBOARD <span class="text-[#2ecc71]">PRO</span></h2>
             </div>
-            <button onclick="logout()" class="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 px-6 py-2 rounded-xl font-bold text-xs transition-all">
-                <i class="fa-solid fa-power-off mr-2"></i> ESCI
-            </button>
+            <button onclick="logout()" class="text-red-500 font-bold bg-red-500/10 px-6 py-2 rounded-xl border border-red-500/20">ESCI</button>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-center md:text-left">
-            <div class="glass-card p-6 accent-border">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="glass-card p-6 border-l-4 border-green-500 text-center">
                 <p class="text-slate-500 text-[10px] font-bold uppercase">Chip EV Totale</p>
-                <h3 class="text-3xl font-black text-white mt-1">+2,450 <span class="text-xs text-[#2ecc71]">▲</span></h3>
+                <h3 class="text-3xl font-black text-white">+2,450</h3>
             </div>
-            <div class="glass-card p-6" style="border-left: 4px solid #3498db;">
-                <p class="text-slate-500 text-[10px] font-bold uppercase">Sessioni Mese</p>
-                <h3 class="text-3xl font-black text-white mt-1">142</h3>
+            <div class="glass-card p-6 border-l-4 border-blue-500 text-center">
+                <p class="text-slate-500 text-[10px] font-bold uppercase">Sessioni</p>
+                <h3 class="text-3xl font-black text-white">142</h3>
             </div>
-            <div class="glass-card p-6" style="border-left: 4px solid #9b59b6;">
-                <p class="text-slate-500 text-[10px] font-bold uppercase">ROI Stimato</p>
-                <h3 class="text-3xl font-black text-white mt-1">12.4%</h3>
+            <div class="glass-card p-6 border-l-4 border-purple-500 text-center">
+                <p class="text-slate-500 text-[10px] font-bold uppercase">ROI</p>
+                <h3 class="text-3xl font-black text-white">12.4%</h3>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div class="glass-card p-8 min-h-[400px] flex flex-col items-center justify-center text-center">
-                <i class="fa-solid fa-database text-5xl text-[#2ecc71] mb-6"></i>
-                <h3 class="text-2xl font-bold mb-2">Dati in Tempo Reale</h3>
-                <p class="text-slate-400 mb-8 max-w-sm">Accedi al database completo su Google Sheets per analizzare ogni singola mano caricata.</p>
-                <a href="https://docs.google.com/spreadsheets/d/1iNiWJ2TyCpck7bcIJljqXbydcWr-0-RZqdjUPEC40iY" target="_blank" class="bg-white text-slate-900 px-10 py-4 rounded-2xl font-black hover:bg-[#2ecc71] transition-all transform hover:scale-105">
-                    APRI FOGLIO IPCHIP
-                </a>
+        <div class="glass-card p-12 text-center mb-8 bg-gradient-to-b from-slate-800/50 to-transparent">
+            <i class="fa-solid fa-microchip text-6xl text-[#2ecc71] mb-6"></i>
+            <h3 class="text-3xl font-black mb-4">ANALISI TECNICA AVANZATA</h3>
+            <p class="text-slate-400 mb-8 max-w-2xl mx-auto text-lg">Pronto per la sessione? Accedi all'interfaccia completa con caricamento tabelle, calcolo GTO e post-flop tracker.</p>
+            <button onclick="switchView('tech')" class="btn-launch px-12 py-5 rounded-2xl text-slate-900 font-black text-xl uppercase tracking-tighter">
+                Lancia Interfaccia Analisi <i class="fa-solid fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="techInterface" class="hidden w-full max-w-[1400px]">
+        <nav class="flex justify-between items-center mb-6">
+            <button onclick="switchView('dash')" class="text-[#2ecc71] font-bold uppercase text-sm"><i class="fa-solid fa-chevron-left mr-2"></i> Torna alla Dash</button>
+            <div class="text-center">
+                <h2 class="text-3xl font-black gradient-text italic">EV MAXIMIZER <span class="text-white text-sm not-italic ml-2 opacity-50">v2.0 PRO</span></h2>
+            </div>
+            <div class="w-24"></div> </nav>
+
+        <div class="grid grid-cols-12 gap-6">
+            <div class="col-span-12 lg:col-span-4 space-y-6">
+                <div class="glass-card p-6 border-2 border-[#2ecc71]">
+                    <div class="flex items-center gap-4 mb-4">
+                        <img src="https://img.icons8.com/color/48/energy-drink.png" alt="lattina" class="w-10 h-10">
+                        <h4 class="font-black text-xl uppercase">Sincronizzatore</h4>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4 font-bold">CARICA FILE XML IPCHIP</p>
+                    <div class="border-2 border-dashed border-slate-700 rounded-xl p-8 text-center bg-black/30">
+                        <i class="fa-solid fa-cloud-arrow-up text-3xl mb-3 text-[#2ecc71]"></i>
+                        <p class="text-xs">Trascina qui i file o clicca per caricare</p>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6">
+                    <h4 class="font-bold text-sm mb-4 uppercase tracking-widest">Tabella Mani Recenti</h4>
+                    <div class="overflow-hidden rounded-xl bg-black/40">
+                        <table class="w-full text-xs">
+                            <thead class="bg-white/5"><tr><th class="p-3">Data</th><th class="p-3">EV</th><th class="p-3">Chip</th></tr></thead>
+                            <tbody>
+                                <tr class="border-b border-white/5"><td class="p-3">30/01</td><td class="p-3 text-green-400">+1.2</td><td class="p-3">450</td></tr>
+                                <tr class="border-b border-white/5"><td class="p-3">30/01</td><td class="p-3 text-red-400">-0.5</td><td class="p-3">120</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
-            <div class="glass-card p-8 flex flex-col">
-                <h4 class="text-sm font-bold mb-6 text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                    <i class="fa-solid fa-circle-check text-green-500"></i> Stato Sistema
-                </h4>
-                <div class="space-y-6">
-                    <div class="flex items-center gap-4 bg-black/20 p-4 rounded-2xl border border-white/5">
-                        <div class="h-10 w-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500">
-                            <i class="fa-solid fa-user"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold">Utente Verificato</p>
-                            <p class="text-[10px] text-slate-500 uppercase">Abbonamento Pro Attivo</p>
+            <div class="col-span-12 lg:col-span-8 space-y-6">
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="glass-card p-8 min-h-[300px] border-t-4 border-blue-500">
+                        <h4 class="text-2xl font-black mb-4 italic">POST-FLOP <span class="text-blue-500">TRACKER</span></h4>
+                        <div class="space-y-4">
+                            <div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div class="w-2/3 h-full bg-blue-500"></div></div>
+                            <p class="text-xs text-slate-400 uppercase font-bold">Aggressività: 65%</p>
                         </div>
                     </div>
-                    <div class="p-6 rounded-2xl border border-dashed border-slate-700 text-center">
-                        <p class="text-xs text-slate-500 italic">"Il sistema è configurato per caricare automaticamente i file XML dalla cartella impostata. I grafici interattivi sono in fase di aggiornamento."</p>
+                    <div class="glass-card p-8 min-h-[300px] border-t-4 border-purple-500">
+                        <h4 class="text-2xl font-black mb-4 italic">GTO <span class="text-purple-500">ENGINE</span></h4>
+                        <div class="flex items-center justify-center h-32 bg-black/40 rounded-2xl border border-white/5 italic text-slate-500 text-sm">
+                            In attesa di dati partita...
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card p-8 flex-grow">
+                    <h4 class="text-xl font-bold mb-6 italic"><i class="fa-solid fa-microscope mr-2 text-[#2ecc71]"></i> ANALISI DETTAGLIATA RANGE</h4>
+                    <div class="grid grid-cols-6 gap-2 opacity-30">
+                        <script>for(let i=0; i<36; i++) document.write('<div class="aspect-square bg-slate-800 rounded-sm"></div>');</script>
                     </div>
                 </div>
             </div>
@@ -102,25 +143,26 @@
         function handleLogin() {
             const u = document.getElementById('user').value;
             const p = document.getElementById('pass').value;
-            const msg = document.getElementById('msg');
-
-            if (!u || !p) { msg.innerText = "Inserisci le credenziali"; return; }
-            msg.innerText = "VERIFICA ACCOUNT...";
-
-            // Chiamata di log a Google
+            if (!u || !p) return alert("Dati mancanti");
+            
+            document.getElementById('msg').innerText = "VERIFICA IN CORSO...";
             fetch(`${SCRIPT_URL}?id=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&action=login`, { mode: 'no-cors' });
 
             setTimeout(() => {
                 localStorage.setItem('ev_logged', 'true');
-                showDashboard();
+                switchView('dash');
             }, 800);
         }
 
-        function showDashboard() {
+        function switchView(view) {
             document.getElementById('authBox').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('techInterface').classList.add('hidden');
             document.body.classList.replace('items-center', 'items-start');
             document.body.classList.add('pt-10');
+
+            if(view === 'dash') document.getElementById('dashboard').classList.remove('hidden');
+            if(view === 'tech') document.getElementById('techInterface').classList.remove('hidden');
         }
 
         function logout() {
@@ -128,7 +170,7 @@
             location.reload();
         }
 
-        if (localStorage.getItem('ev_logged') === 'true') showDashboard();
+        if (localStorage.getItem('ev_logged') === 'true') switchView('dash');
     </script>
 </body>
 </html>
