@@ -1,119 +1,80 @@
 <!DOCTYPE html>
-<html lang="it">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EV Maximizer - Web Dashboard</title>
+    <title>EV Maximizer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0f172a; color: white; font-family: sans-serif; }
-        .accent-green { color: #2ecc71; }
-        .bg-accent { background-color: #2ecc71; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-        #mainContent { display: none; }
+        body { background: #0f172a; color: white; font-family: sans-serif; display: flex; align-items: center; justify-content: center; min-height: screen; margin: 0; }
+        .glass { background: rgba(30, 41, 59, 0.8); padding: 40px; border-radius: 20px; border: 1px solid #334155; width: 350px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; }
+        button { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-green { background: #2ecc71; color: #0f172a; }
+        .hidden { display: none; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
+<body>
 
-    <div id="authContainer" class="w-full max-w-md p-8 glass rounded-2xl shadow-2xl mx-4 text-center">
-        <h1 class="text-4xl font-bold accent-green mb-6">EV MAXIMIZER</h1>
-
-        <div id="loginForm">
-            <input type="text" id="userID" placeholder="Username ID" class="w-full p-3 mb-4 rounded bg-slate-800 border border-slate-700 outline-none focus:border-green-500">
-            <input type="password" id="userPass" placeholder="Password" class="w-full p-3 mb-6 rounded bg-slate-800 border border-slate-700 outline-none focus:border-green-500">
-            <button onclick="handleAuth('login')" class="w-full bg-accent text-slate-900 font-bold py-3 rounded-lg hover:bg-green-600 transition-all">ACCEDI</button>
-            <p class="mt-4 text-sm text-gray-400">Non hai un account? <button onclick="toggleAuth()" class="accent-green underline">Registrati</button></p>
+    <div id="authBox" class="glass">
+        <h1 style="color: #2ecc71; font-size: 24px; margin-bottom: 20px;">EV MAXIMIZER</h1>
+        
+        <div id="formContainer">
+            <input type="text" id="user" placeholder="ID Utente">
+            <input type="password" id="pass" placeholder="Password">
+            <button class="btn-green" onclick="invia('login')">ACCEDI</button>
+            <button style="background: transparent; color: #94a3b8; font-size: 13px;" onclick="mostraReg()">Non hai un account? Registrati</button>
         </div>
 
-        <div id="registerForm" class="hidden">
-            <input type="text" id="regID" placeholder="Nuovo Username" class="w-full p-3 mb-4 rounded bg-slate-800 border border-slate-700 outline-none focus:border-green-500">
-            <input type="password" id="regPass" placeholder="Nuova Password" class="w-full p-3 mb-6 rounded bg-slate-800 border border-slate-700 outline-none focus:border-green-500">
-            <button onclick="handleAuth('register')" class="w-full border-2 border-green-500 text-green-500 font-bold py-3 rounded-lg hover:bg-green-500 hover:text-white transition-all">INVIA RICHIESTA</button>
-            <p class="mt-4 text-sm text-gray-400"><button onclick="toggleAuth()" class="underline">Torna al Login</button></p>
-        </div>
-
-        <p id="statusMsg" class="mt-6 font-medium"></p>
+        <p id="msg" style="margin-top: 20px; font-size: 14px;"></p>
     </div>
 
-    <div id="mainContent" class="w-full max-w-6xl p-6 text-center">
-        <h2 class="text-3xl font-bold accent-green mb-10">BENVENUTO NELLA DASHBOARD</h2>
-        <div class="glass p-20 rounded-2xl">
-            <p>Contenuto riservato sbloccato con successo! 📈</p>
-            <button onclick="logout()" class="mt-10 bg-red-500 text-white px-6 py-2 rounded">Esci</button>
-        </div>
+    <div id="dashboard" class="hidden">
+        <h1 style="color: #2ecc71;">BENVENUTO!</h1>
+        <p>Accesso eseguito con successo.</p>
+        <button onclick="location.reload()" style="width: auto; background: #ef4444; color: white; padding: 10px 20px;">ESCI</button>
     </div>
 
     <script>
-        // URL del tuo script Google (Assicurati che sia quello che finisce in /exec)
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiPPRE0vPKvbpcD8vWS69A08Nx9w-9Zr1aUc2S3BxKycoBUQcSLpVkSzAljzhCbwD-0w/exec";
+        const URL_GOOGLE = "https://script.google.com/macros/s/AKfycbxiPPRE0vPKvbpcD8vWS69A08Nx9w-9Zr1aUc2S3BxKycoBUQcSLpVkSzAljzhCbwD-0w/exec";
 
-        function toggleAuth() {
-            const login = document.getElementById('loginForm');
-            const register = document.getElementById('registerForm');
-            login.classList.toggle('hidden');
-            register.classList.toggle('hidden');
-            document.getElementById('statusMsg').innerText = "";
+        function mostraReg() {
+            const btn = document.querySelector('.btn-green');
+            if(btn.innerText === "ACCEDI") {
+                btn.innerText = "INVIA REGISTRAZIONE";
+                btn.onclick = () => invia('register');
+            } else {
+                btn.innerText = "ACCEDI";
+                btn.onclick = () => invia('login');
+            }
         }
 
-        function handleAuth(action) {
-            const id = action === 'login' ? document.getElementById('userID').value : document.getElementById('regID').value;
-            const password = action === 'login' ? document.getElementById('userPass').value : document.getElementById('regPass').value;
-            const status = document.getElementById('statusMsg');
+        function invia(azione) {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            const m = document.getElementById('msg');
 
-            if (!id || !password) {
-                status.innerText = "⚠️ Inserisci tutti i dati!";
-                status.className = "mt-6 text-red-400";
-                return;
-            }
+            if(!u || !p) { m.innerText = "Inserisci i dati!"; return; }
 
-            status.innerText = "⏳ Inviando dati...";
-            status.className = "mt-6 text-yellow-500";
+            m.innerText = "Inviando...";
+            
+            // Metodo super-compatibile: invio dati come parametri URL
+            const urlFinal = URL_GOOGLE + "?id=" + encodeURIComponent(u) + "&password=" + encodeURIComponent(p) + "&action=" + azione;
 
-            // Usiamo una tecnica chiamata "Form Submission" che non viene bloccata dai browser
-            const formData = new URLSearchParams();
-            formData.append('action', action);
-            formData.append('id', id);
-            formData.append('password', password);
-
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors', // Questo evita i problemi di sicurezza (CORS)
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            })
+            fetch(urlFinal, { mode: 'no-cors' })
             .then(() => {
-                // Poiché usiamo no-cors, non possiamo leggere se è SUCCESS o FAIL.
-                // Quindi agiamo per fiducia: se è registrazione avvisiamo, se è login entriamo.
-                if (action === 'register') {
-                    status.innerText = "✅ Richiesta inviata! Controlla il foglio Google.";
-                    status.className = "mt-6 text-green-500";
+                if(azione === 'register') {
+                    m.innerText = "Richiesta inviata! Controlla il foglio Google.";
+                    m.style.color = "#2ecc71";
                 } else {
-                    status.innerText = "✅ Accesso in corso...";
-                    status.className = "mt-6 text-green-500";
-                    setTimeout(() => {
-                        localStorage.setItem('ev_logged', 'true');
-                        showDashboard();
-                    }, 1000);
+                    document.getElementById('authBox').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
                 }
             })
-            .catch(err => {
-                status.innerText = "❌ Errore di connessione.";
-                status.className = "mt-6 text-red-500";
+            .catch(() => {
+                m.innerText = "Errore di connessione.";
+                m.style.color = "#ef4444";
             });
         }
-
-        function showDashboard() {
-            document.getElementById('authContainer').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
-            document.body.classList.remove('items-center', 'justify-center');
-        }
-
-        function logout() {
-            localStorage.removeItem('ev_logged');
-            location.reload();
-        }
-
-        if (localStorage.getItem('ev_logged') === 'true') showDashboard();
     </script>
 </body>
 </html>
