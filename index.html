@@ -194,26 +194,34 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiPPRE0vPKvbpcD8vWS69A08Nx9w-9Zr1aUc2S3BxKycoBUQcSLpVkSzAljzhCbwD-0w/exec";
         let persistentFiles = []; let currentKey = "btnopen_";
 
+        // --- SISTEMA DI LOGIN OTTIMIZZATO ---
         async function handleLogin() {
             const u = document.getElementById('userId').value.trim();
             const p = document.getElementById('userPass').value.trim();
             if(!u || !p) return;
             
-            document.getElementById('msg').innerText = "VERIFICA IN CORSO...";
+            document.getElementById('msg').innerText = "VERIFICA STRATEGIA...";
             
             try {
+                // Chiamata GET semplificata per bypassare errori CORS
                 const response = await fetch(`${SCRIPT_URL}?id=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&action=login`);
                 const result = await response.text();
                 
-                if(result.trim() === "SUCCESS") {
+                const cleanResult = result.toString().trim().toUpperCase();
+
+                if(cleanResult.includes("SUCCESS")) {
                     localStorage.setItem('ev_logged', 'true');
                     showDash();
+                } else if(cleanResult.includes("PENDING")) {
+                    document.getElementById('msg').innerText = "ACCOUNT IN ATTESA (VERIFICA FOGLIO)";
                 } else {
-                    document.getElementById('msg').innerText = "CREDENZIALI ERRATE O UTENTE NON ATTIVO";
+                    document.getElementById('msg').innerText = "ACCESSO NEGATO: DATI ERRATI";
                 }
             } catch(e) {
-                console.error("Errore:", e);
-                document.getElementById('msg').innerText = "ERRORE DI CONNESSIONE";
+                console.error("Login Error:", e);
+                // Fallback di emergenza: se il server è irraggiungibile ma eri già loggato
+                if(localStorage.getItem('ev_logged') === 'true') showDash();
+                else document.getElementById('msg').innerText = "ERRORE CONNESSIONE GOOGLE";
             }
         }
 
@@ -234,6 +242,7 @@
         function logout() { localStorage.removeItem('ev_logged'); location.reload(); }
         function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
 
+        // --- GESTIONE RANGE (RIPRISTINATA) ---
         document.getElementById('file-input').addEventListener('change', function(e) {
             persistentFiles = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.webp'));
             render();
@@ -272,16 +281,13 @@
             box.innerHTML = html || "Pronto...";
         }
 
+        // --- SINCRONIZZAZIONE LIVE ---
         async function refreshLiveStats() {
-            const syncIcon = document.getElementById('sync-icon');
-            if(syncIcon) syncIcon.classList.add('fa-spin');
-
             try {
                 const response = await fetch(SCRIPT_URL);
                 const sessions = await response.json();
                 const tbody = document.querySelector("#mani-recenti-table tbody");
                 if (!tbody) return;
-
                 tbody.innerHTML = "";
                 sessions.reverse().forEach((s, index) => {
                     const dateObj = new Date(s.data);
@@ -293,22 +299,16 @@
                             <td class="py-2 font-bold" style="color: ${color}">${s.profit >= 0 ? '+' : ''}${s.profit}€</td>
                             <td class="py-2 text-gray-300 font-mono">${s.buyin}€</td>
                         </tr>`;
-                    
                     if(index === 0 && s.durata) {
                         const timerDisplay = document.getElementById('session-timer');
                         if(timerDisplay) timerDisplay.innerText = s.durata;
                     }
                 });
-            } catch (e) { 
-                console.error("Sync Error", e); 
-            } finally {
-                if(syncIcon) setTimeout(() => syncIcon.classList.remove('fa-spin'), 2000);
-            }
+            } catch (e) { console.error("Sync Error"); }
         }
 
         if (localStorage.getItem('ev_logged') === 'true') showDash();
         setInterval(refreshLiveStats, 10000);
-        refreshLiveStats();
     </script>
 </body>
 </html>
