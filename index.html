@@ -86,14 +86,20 @@
             <h2 class="text-2xl font-black italic">DASHBOARD <span class="text-[#00ff87]">PRO</span></h2>
             <button onclick="logout()" class="text-red-500 font-bold text-xs bg-red-500/10 px-4 py-2 rounded-lg">LOGOUT</button>
         </header>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <div class="glass-card p-6 border-l-4 border-[#00ff87]"><p class="text-slate-500 text-[10px] font-bold uppercase">Chip EV Totale</p><h3 class="text-3xl font-black">+2,450</h3></div>
-            <div class="glass-card p-6 border-l-4 border-[#00d4ff]"><p class="text-slate-500 text-[10px] font-bold uppercase">Sessioni Mese</p><h3 class="text-3xl font-black">142</h3></div>
-            <div class="glass-card p-6 border-l-4 border-purple-500"><p class="text-slate-500 text-[10px] font-bold uppercase">ROI Stimato</p><h3 class="text-3xl font-black">12.4%</h3></div>
+        
+        <div class="grid grid-cols-1 gap-6 mb-10">
+            <div class="glass-card p-8 border-l-4 border-[#00ff87] flex items-center justify-between">
+                <div>
+                    <p class="text-slate-500 text-[10px] font-bold uppercase mb-1">Stato Connessione Cloud</p>
+                    <h3 class="text-2xl font-black text-white uppercase tracking-tight">Sistema Sincronizzato</h3>
+                </div>
+                <i class="fa-solid fa-circle-check text-[#00ff87] text-4xl animate-pulse"></i>
+            </div>
         </div>
+
         <div class="glass-card p-12 text-center bg-gradient-to-br from-slate-800/30 to-transparent border-2 border-[#00ff87]/20">
             <i class="fa-solid fa-rocket text-5xl text-[#00ff87] mb-6"></i>
-            <h3 class="text-3xl font-black mb-4 uppercase">Sistema Caricato</h3>
+            <h3 class="text-3xl font-black mb-4 uppercase">Strategia Caricata</h3>
             <button onclick="showTech()" class="bg-[#00ff87] text-black px-12 py-5 rounded-2xl font-black text-xl shadow-lg hover:scale-105 transition-all uppercase">Lancia Interfaccia Analisi</button>
         </div>
     </div>
@@ -162,7 +168,7 @@
 
                     <div class="sync-card">
                         <div class="flex items-center gap-2 mb-2">
-                            <i id="sync-icon" class="fa-solid fa-sync text-blue-400 text-[10px]"></i>
+                            <i class="fa-solid fa-sync text-blue-400 text-[10px]"></i>
                             <span class="text-[0.65rem] font-black uppercase text-white">Sincronizzatore Live</span>
                         </div>
                         <label class="drop-zone block">
@@ -173,7 +179,10 @@
                     </div>
 
                     <div class="table-container">
-                        <p class="text-[0.6rem] font-bold text-slate-500 uppercase mb-2">Mani Recenti Live</p>
+                        <div class="flex justify-between items-center mb-2">
+                            <p class="text-[0.6rem] font-bold text-slate-500 uppercase">TAVOLI ATTIVI</p>
+                            <i class="fa-solid fa-arrows-rotate text-[#00ff87] text-[10px] animate-spin"></i>
+                        </div>
                         <table id="mani-recenti-table">
                             <thead>
                                 <tr>
@@ -191,38 +200,24 @@
     </div>
 
     <script>
-        const SCRIPT_URL ="https://script.google.com/macros/s/AKfycbzD0AT0NeqPsSJkTYxCtuKHABBnUbNaUlvRAY--fRrQDKNPE568B3EIRj65o4AFoc2ePA/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzD0AT0NeqPsSJkTYxCtuKHABBnUbNaUlvRAY--fRrQDKNPE568B3EIRj65o4AFoc2ePA/exec";
         let persistentFiles = []; let currentKey = "btnopen_";
 
-        // --- SISTEMA DI LOGIN OTTIMIZZATO ---
         async function handleLogin() {
             const u = document.getElementById('userId').value.trim();
             const p = document.getElementById('userPass').value.trim();
             if(!u || !p) return;
-            
-            document.getElementById('msg').innerText = "VERIFICA STRATEGIA...";
-            
+            document.getElementById('msg').innerText = "VERIFICA IN CORSO...";
             try {
-                // Chiamata GET semplificata per bypassare errori CORS
                 const response = await fetch(`${SCRIPT_URL}?id=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&action=login`);
                 const result = await response.text();
-                
-                const cleanResult = result.toString().trim().toUpperCase();
-
-                if(cleanResult.includes("SUCCESS")) {
+                if(result.toUpperCase().includes("SUCCESS")) {
                     localStorage.setItem('ev_logged', 'true');
                     showDash();
-                } else if(cleanResult.includes("PENDING")) {
-                    document.getElementById('msg').innerText = "ACCOUNT IN ATTESA (VERIFICA FOGLIO)";
                 } else {
-                    document.getElementById('msg').innerText = "ACCESSO NEGATO: DATI ERRATI";
+                    document.getElementById('msg').innerText = "ACCESSO NEGATO";
                 }
-            } catch(e) {
-                console.error("Login Error:", e);
-                // Fallback di emergenza: se il server è irraggiungibile ma eri già loggato
-                if(localStorage.getItem('ev_logged') === 'true') showDash();
-                else document.getElementById('msg').innerText = "ERRORE CONNESSIONE GOOGLE";
-            }
+            } catch(e) { document.getElementById('msg').innerText = "ERRORE CONNESSIONE"; }
         }
 
         function showDash() {
@@ -242,7 +237,6 @@
         function logout() { localStorage.removeItem('ev_logged'); location.reload(); }
         function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
 
-        // --- GESTIONE RANGE (RIPRISTINATA) ---
         document.getElementById('file-input').addEventListener('change', function(e) {
             persistentFiles = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.webp'));
             render();
@@ -281,17 +275,22 @@
             box.innerHTML = html || "Pronto...";
         }
 
-        // --- SINCRONIZZAZIONE LIVE ---
         async function refreshLiveStats() {
             try {
                 const response = await fetch(SCRIPT_URL);
                 const sessions = await response.json();
                 const tbody = document.querySelector("#mani-recenti-table tbody");
-                if (!tbody) return;
+                if (!tbody || !sessions.length) return;
+
+                const lastSession = sessions[sessions.length - 1];
+                if(lastSession.durata) {
+                    document.getElementById('session-timer').innerText = lastSession.durata;
+                }
+
                 tbody.innerHTML = "";
-                sessions.reverse().forEach((s, index) => {
+                sessions.slice(-10).reverse().forEach((s) => {
                     const dateObj = new Date(s.data);
-                    const timeStr = dateObj.getHours() + ":" + String(dateObj.getMinutes()).padStart(2, '0');
+                    const timeStr = isNaN(dateObj) ? "--:--" : dateObj.getHours() + ":" + String(dateObj.getMinutes()).padStart(2, '0');
                     const color = s.profit >= 0 ? "#00ff87" : "#ff4444";
                     tbody.innerHTML += `
                         <tr class="border-b border-[#1a1a1a]">
@@ -299,10 +298,6 @@
                             <td class="py-2 font-bold" style="color: ${color}">${s.profit >= 0 ? '+' : ''}${s.profit}€</td>
                             <td class="py-2 text-gray-300 font-mono">${s.buyin}€</td>
                         </tr>`;
-                    if(index === 0 && s.durata) {
-                        const timerDisplay = document.getElementById('session-timer');
-                        if(timerDisplay) timerDisplay.innerText = s.durata;
-                    }
                 });
             } catch (e) { console.error("Sync Error"); }
         }
