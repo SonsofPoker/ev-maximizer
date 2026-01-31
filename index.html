@@ -12,11 +12,10 @@
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         .hidden { display: none !important; }
         
-        /* --- STILI LOGIN E DASHBOARD --- */
+        /* --- STILI ORIGINALI --- */
         .glass-card { background: rgba(23, 32, 51, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; }
         .gradient-text { background: linear-gradient(90deg, #00ff87, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* --- SIDEBAR SINISTRA --- */
         #sidebar-left { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
         .sidebar-brand-container { padding: 25px 15px; text-align: center; }
         .brand-logo-main { width: 100%; max-width: 170px; filter: drop-shadow(0 0 10px var(--accent)); }
@@ -25,7 +24,6 @@
         .nav-btn { width: 100%; padding: 10px; margin-bottom: 4px; background: #0d0d0d; border: 1px solid #222; color: #777; text-align: left; cursor: pointer; border-radius: 6px; font-size: 0.75rem; transition: 0.2s; }
         .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; font-weight: bold; border-color: var(--accent); }
 
-        /* --- AREA CENTRALE --- */
         #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; overflow: hidden; }
         #header-tech { height: 70px; background: #0a0a0a; display: flex; align-items: center; justify-content: center; gap: 30px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
         #rng-box { font-family: 'Monaco', monospace; font-size: 2.2rem; color: var(--accent); background: #000; border: 1px solid var(--accent); padding: 5px 20px; border-radius: 6px; min-width: 80px; text-align: center; }
@@ -37,38 +35,25 @@
         #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 20px; }
         #current-img { max-width: 100%; max-height: 100%; object-fit: contain; display: none; z-index: 5; }
 
-        /* --- SIDEBAR DESTRA --- */
         #sidebar-right { width: 360px; background: var(--panel); border-left: 1px solid var(--border); padding: 15px; overflow-y: auto; flex-shrink: 0; display: flex; flex-direction: column; gap: 15px; }
         .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 8px; padding: 12px; border-top: 3px solid var(--accent); }
         .section-title { color: var(--blue); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; display: block; border-bottom: 1px solid #222; padding-bottom: 5px; }
         
         #session-timer { color: #00ff87; font-family: monospace; font-size: 1.5rem; margin-left: 20px; background: #000; padding: 5px 10px; border-radius: 5px; border: 1px solid #222; }
 
-        .nash-box { background: #0a0505; border: 1px solid var(--nash); border-radius: 12px; padding: 15px; box-shadow: 0 0 15px rgba(255, 68, 68, 0.15); }
-        .nash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .btn-nash { padding: 12px; border-radius: 8px; font-weight: 900; text-transform: uppercase; font-size: 0.85rem; transition: 0.2s; border: 2px solid transparent; text-align: center; }
-        .btn-call { background: #1a0000; color: var(--nash); border-color: var(--nash); }
-        .btn-push { background: #1a1a00; color: #ffcc00; border-color: #ffcc00; }
-
-        .sync-card { background: #0f172a; border: 1px solid var(--accent); border-radius: 12px; padding: 12px; text-align: center; }
-        .drop-zone { border: 1px dashed var(--accent); border-radius: 8px; padding: 15px; margin-top: 8px; cursor: pointer; }
-        
+        /* --- STILI NUOVI: SALDO E TABELLA --- */
+        .balance-display { background: linear-gradient(135deg, #0a0a0a, #111); border: 1px solid var(--blue); padding: 10px 20px; border-radius: 12px; text-align: center; min-width: 150px; }
         .table-container { background: #0f172a; border-radius: 12px; padding: 10px; border: 1px solid #1e293b; max-height: 250px; overflow-y: auto; }
         table { width: 100%; font-size: 0.65rem; border-collapse: collapse; }
         th { color: #64748b; text-transform: uppercase; padding: 6px; text-align: left; border-bottom: 1px solid #1e293b; }
-        td { padding: 6px; border-bottom: 1px solid #1e293b; font-weight: bold; }
-
-        .btn-pf { background: #151515; color: #fff; border: 1px solid #333; padding: 8px; border-radius: 4px; font-size: 0.6rem; cursor: pointer; font-weight: bold; text-transform: uppercase; width: 100%; }
-        .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 10px; margin-top: 8px; min-height: 100px; }
-        .gto-line { margin-bottom: 6px; border-left: 2px solid var(--accent); padding-left: 8px; }
-        .gto-label { color: var(--blue); font-size: 0.55rem; font-weight: bold; text-transform: uppercase; display: block; }
-        .gto-val { color: var(--accent); font-size: 0.7rem; font-weight: bold; }
+        .profit-pill { padding: 2px 6px; border-radius: 4px; font-weight: 900; }
+        .pos { background: rgba(0, 255, 135, 0.15); color: #00ff87; }
+        .neg { background: rgba(255, 68, 68, 0.15); color: #ff4444; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
+<body>
 
-    <div id="authBox" class="glass-card p-10 w-full max-w-md shadow-2xl">
+    <div id="authBox" class="glass-card p-10 w-full max-w-md mx-auto my-auto shadow-2xl">
         <div class="text-center mb-10">
             <h1 class="text-4xl font-black tracking-tighter gradient-text uppercase">EV Maximizer</h1>
             <p class="text-slate-500 text-[10px] mt-2 font-bold tracking-widest uppercase">Premium Strategy Suite</p>
@@ -81,17 +66,25 @@
         <p id="msg" class="mt-6 text-center text-sm font-bold text-yellow-500"></p>
     </div>
 
-    <div id="dashboard" class="hidden w-full max-w-5xl p-6">
+    <div id="dashboard" class="hidden w-full max-w-5xl mx-auto p-6 overflow-y-auto">
         <header class="flex justify-between items-center mb-10 bg-slate-900/50 p-6 rounded-3xl border border-white/5">
             <h2 class="text-2xl font-black italic">DASHBOARD <span class="text-[#00ff87]">PRO</span></h2>
             <button onclick="logout()" class="text-red-500 font-bold text-xs bg-red-500/10 px-4 py-2 rounded-lg">LOGOUT</button>
         </header>
         
-        <div class="grid grid-cols-1 gap-6 mb-10">
-            <div class="glass-card p-8 border-l-4 border-[#00ff87] flex items-center justify-between">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+            <div class="glass-card p-6 border border-blue-500/20">
+                <p class="text-blue-400 text-[10px] font-bold uppercase mb-4">Cassa Iniziale Sessione</p>
+                <div class="flex gap-2">
+                    <input type="number" id="initialBalance" placeholder="Esempio: 1000" class="flex-grow bg-black border border-slate-800 p-4 rounded-xl text-white font-mono text-xl outline-none focus:border-blue-500">
+                    <button onclick="saveBalance()" class="bg-blue-600 text-white px-6 rounded-xl font-bold uppercase text-xs">Salva</button>
+                </div>
+            </div>
+
+            <div class="glass-card p-6 border border-green-500/20 flex items-center justify-between">
                 <div>
-                    <p class="text-slate-500 text-[10px] font-bold uppercase mb-1">Stato Connessione Cloud</p>
-                    <h3 class="text-2xl font-black text-white uppercase tracking-tight">Sistema Sincronizzato</h3>
+                    <p class="text-green-500 text-[10px] font-bold uppercase mb-1">Stato Cloud</p>
+                    <h3 class="text-xl font-black text-white uppercase">Sincronizzato</h3>
                 </div>
                 <i class="fa-solid fa-circle-check text-[#00ff87] text-4xl animate-pulse"></i>
             </div>
@@ -135,6 +128,10 @@
                 <div id="rng-box">--</div>
                 <button onclick="roll()" class="bg-[#00ff87] text-black font-black px-12 h-[45px] rounded-md uppercase text-xs">ROLL RNG</button>
                 <div id="session-timer">00:00:00</div>
+                <div class="balance-display">
+                    <p class="text-[0.55rem] text-blue-400 font-bold uppercase">Saldo Real-Time</p>
+                    <h2 id="live-balance" class="text-xl font-black text-white">€ 0.00</h2>
+                </div>
             </header>
             
             <div id="workspace">
@@ -144,52 +141,40 @@
                 <aside id="sidebar-right">
                     <div class="section-box">
                         <span class="section-title">GTO Advisor Elite</span>
-                        <div class="pf-grid">
-                            <button class="btn-pf" onclick="advise('IP_AGG')">IP Aggressore</button>
-                            <button class="btn-pf" onclick="advise('IP_VS_AGG')">IP vs Aggr.</button>
-                            <button class="btn-pf" onclick="advise('OOP_AGG')">OOP Aggressore</button>
-                            <button class="btn-pf" onclick="advise('OOP_VS_AGG')">OOP vs Aggr.</button>
-                            <button class="btn-pf" onclick="advise('MW_POT')">Multiway Pot</button>
-                            <button class="btn-pf" onclick="advise('HU_ISO')">HU vs ISO</button>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button class="bg-[#151515] text-white p-2 text-[0.6rem] font-bold uppercase border border-slate-800" onclick="advise('IP_AGG')">IP Aggressore</button>
+                            <button class="bg-[#151515] text-white p-2 text-[0.6rem] font-bold uppercase border border-slate-800" onclick="advise('IP_VS_AGG')">IP vs Aggr.</button>
+                            <button class="bg-[#151515] text-white p-2 text-[0.6rem] font-bold uppercase border border-slate-800" onclick="advise('OOP_AGG')">OOP Aggressore</button>
+                            <button class="bg-[#151515] text-white p-2 text-[0.6rem] font-bold uppercase border border-slate-800" onclick="advise('OOP_VS_AGG')">OOP vs Aggr.</button>
                         </div>
-                        <div id="gto-solution-box"><div id="gto-content" class="text-[0.6rem] text-slate-500">Seleziona post-flop...</div></div>
+                        <div id="gto-solution-box" class="mt-2 p-2 bg-black min-h-[60px] border border-[#00ff87]/30 text-[0.6rem]">Seleziona post-flop...</div>
                     </div>
 
-                    <div class="nash-box">
-                        <div class="flex items-center gap-2 mb-3">
-                            <i class="fa-solid fa-skull-crossbones text-red-500 text-xs"></i>
-                            <span class="text-[0.7rem] font-black uppercase text-white tracking-widest">Nash Equilibrium</span>
-                        </div>
-                        <div class="nash-grid">
-                            <button class="btn-nash btn-call" onclick="sm('Nash Call', 'nashcall_', this)">CALL</button>
-                            <button class="btn-nash btn-push" onclick="sm('Nash Push', 'nashpush_', this)">PUSH</button>
+                    <div class="section-box !border-t-red-500">
+                        <span class="section-title !color-red-500">Nash Equilibrium</span>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button class="bg-red-950/30 text-red-500 border border-red-500 p-3 font-black text-xs" onclick="sm('Nash Call', 'nashcall_', this)">CALL</button>
+                            <button class="bg-yellow-950/30 text-yellow-500 border border-yellow-500 p-3 font-black text-xs" onclick="sm('Nash Push', 'nashpush_', this)">PUSH</button>
                         </div>
                     </div>
 
-                    <div class="sync-card">
-                        <div class="flex items-center gap-2 mb-2">
-                            <i class="fa-solid fa-sync text-blue-400 text-[10px]"></i>
-                            <span class="text-[0.65rem] font-black uppercase text-white">Sincronizzatore Live</span>
-                        </div>
-                        <label class="drop-zone block">
+                    <div class="section-box">
+                        <span class="section-title">Sincronizzatore Tavoli</span>
+                        <label class="block border border-dashed border-[#00ff87] p-4 text-center cursor-pointer">
                             <i class="fa-solid fa-folder-open text-[#00ff87] text-xl mb-1"></i>
-                            <p class="text-[0.5rem] text-slate-400 uppercase">Carica Range Cartella</p>
+                            <p class="text-[0.5rem] uppercase text-slate-500">Carica Range</p>
                             <input type="file" id="file-input" webkitdirectory directory multiple class="hidden">
                         </label>
                     </div>
 
                     <div class="table-container">
                         <div class="flex justify-between items-center mb-2">
-                            <p class="text-[0.6rem] font-bold text-slate-500 uppercase">TAVOLI ATTIVI</p>
+                            <p class="text-[0.6rem] font-bold text-slate-500 uppercase">Tavoli Attivi</p>
                             <i class="fa-solid fa-arrows-rotate text-[#00ff87] text-[10px] animate-spin"></i>
                         </div>
                         <table id="mani-recenti-table">
                             <thead>
-                                <tr>
-                                    <th>ORARIO</th>
-                                    <th>PROFIT</th>
-                                    <th>BUY-IN</th>
-                                </tr>
+                                <tr><th>ORA</th><th>PROFIT</th><th>BI</th></tr>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -201,22 +186,30 @@
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzD0AT0NeqPsSJkTYxCtuKHABBnUbNaUlvRAY--fRrQDKNPE568B3EIRj65o4AFoc2ePA/exec";
-        let persistentFiles = []; let currentKey = "btnopen_";
+        let persistentFiles = []; 
+        let currentKey = "btnopen_";
+        let startingBankroll = parseFloat(localStorage.getItem('bankroll')) || 0;
+
+        function saveBalance() {
+            const val = document.getElementById('initialBalance').value;
+            startingBankroll = parseFloat(val) || 0;
+            localStorage.setItem('bankroll', startingBankroll);
+            alert("Saldo Iniziale Salvato: €" + startingBankroll);
+            updateLiveBalance(0);
+        }
 
         async function handleLogin() {
             const u = document.getElementById('userId').value.trim();
             const p = document.getElementById('userPass').value.trim();
             if(!u || !p) return;
-            document.getElementById('msg').innerText = "VERIFICA IN CORSO...";
+            document.getElementById('msg').innerText = "VERIFICA...";
             try {
                 const response = await fetch(`${SCRIPT_URL}?id=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&action=login`);
                 const result = await response.text();
                 if(result.toUpperCase().includes("SUCCESS")) {
                     localStorage.setItem('ev_logged', 'true');
                     showDash();
-                } else {
-                    document.getElementById('msg').innerText = "ACCESSO NEGATO";
-                }
+                } else { document.getElementById('msg').innerText = "ACCESSO NEGATO"; }
             } catch(e) { document.getElementById('msg').innerText = "ERRORE CONNESSIONE"; }
         }
 
@@ -224,7 +217,8 @@
             document.getElementById('authBox').classList.add('hidden');
             document.getElementById('techInterface').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
-            document.body.className = "flex items-center justify-center min-h-screen p-4";
+            document.body.className = "flex items-center justify-center min-h-screen";
+            document.getElementById('initialBalance').value = startingBankroll;
             refreshLiveStats();
         }
 
@@ -269,10 +263,9 @@
         }
 
         function advise(type) {
-            const box = document.getElementById('gto-content');
-            const data = { 'IP_AGG': [{l: 'Flop Dry', v: 'Bet 33%'}], 'IP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x'}], 'OOP_AGG': [{l: 'Value (TP+)', v: 'Check-Raise'}], 'OOP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x'}], 'MW_POT': [{l: 'Value', v: 'Bet 100%'}], 'HU_ISO': [{l: 'TP Kicker 8+', v: 'Stack-off'}] };
-            let html = ''; data[type]?.forEach(item => { html += `<div class="gto-line"><span class="gto-label">${item.l}</span><span class="gto-val">${item.v}</span></div>`; });
-            box.innerHTML = html || "Pronto...";
+            const box = document.getElementById('gto-solution-box');
+            const data = { 'IP_AGG': 'Flop Dry: Bet 33% | Flop Wet: Check/Bet 75%', 'IP_VS_AGG': 'Value: Raise 3x | Draw: Call', 'OOP_AGG': 'OOP: Check-Raise frequency 18%', 'OOP_VS_AGG': 'Pure Call with Mid Pair' };
+            box.innerText = data[type] || "Seleziona...";
         }
 
         async function refreshLiveStats() {
@@ -282,24 +275,37 @@
                 const tbody = document.querySelector("#mani-recenti-table tbody");
                 if (!tbody || !sessions.length) return;
 
-                const lastSession = sessions[sessions.length - 1];
-                if(lastSession.durata) {
-                    document.getElementById('session-timer').innerText = lastSession.durata;
-                }
-
+                let totalProfitSession = 0;
                 tbody.innerHTML = "";
-                sessions.slice(-10).reverse().forEach((s) => {
-                    const dateObj = new Date(s.data);
-                    const timeStr = isNaN(dateObj) ? "--:--" : dateObj.getHours() + ":" + String(dateObj.getMinutes()).padStart(2, '0');
-                    const color = s.profit >= 0 ? "#00ff87" : "#ff4444";
+                
+                sessions.slice().reverse().forEach((s, idx) => {
+                    totalProfitSession += parseFloat(s.profit);
+                    const date = new Date(s.data);
+                    const ora = isNaN(date) ? "--:--" : date.getHours() + ":" + String(date.getMinutes()).padStart(2, '0');
+                    const colorClass = s.profit >= 0 ? "pos" : "neg";
+                    
                     tbody.innerHTML += `
-                        <tr class="border-b border-[#1a1a1a]">
-                            <td class="py-2 text-gray-400 font-mono">${timeStr}</td>
-                            <td class="py-2 font-bold" style="color: ${color}">${s.profit >= 0 ? '+' : ''}${s.profit}€</td>
-                            <td class="py-2 text-gray-300 font-mono">${s.buyin}€</td>
+                        <tr class="border-b border-white/5">
+                            <td class="py-2 text-slate-500 font-mono">${ora}</td>
+                            <td class="py-2"><span class="profit-pill ${colorClass}">${s.profit >= 0 ? '+' : ''}${s.profit}€</span></td>
+                            <td class="py-2 text-slate-300 font-mono">${s.buyin}€</td>
                         </tr>`;
+                    
+                    // Sincronizza Timer solo dall'ultima sessione
+                    if(idx === 0 && s.durata) {
+                        document.getElementById('session-timer').innerText = s.durata;
+                    }
                 });
-            } catch (e) { console.error("Sync Error"); }
+
+                updateLiveBalance(totalProfitSession);
+            } catch (e) { console.error("Sync..."); }
+        }
+
+        function updateLiveBalance(profit) {
+            const current = startingBankroll + profit;
+            const el = document.getElementById('live-balance');
+            el.innerText = "€ " + current.toFixed(2);
+            el.style.color = current >= startingBankroll ? "#00ff87" : "#ff4444";
         }
 
         if (localStorage.getItem('ev_logged') === 'true') showDash();
