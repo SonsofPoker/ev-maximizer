@@ -150,8 +150,7 @@
             </header>
             
             <div id="workspace">
-                <div id="stack-bar">
-                    </div>
+                <div id="stack-bar"></div>
                 <div id="image-area">
                     <img id="current-img" src="" alt="Range">
                 </div>
@@ -166,12 +165,12 @@
                             <button class="bg-[#151515] text-white p-2 text-[0.6rem] font-bold uppercase border border-slate-800 hover:border-blue-500" onclick="advise('OOP_VS_AGG')">OOP vs Aggr.</button>
                         </div>
                         <div id="gto-solution-box" class="mt-2 p-2 bg-black min-h-[60px] border border-[#00ff87]/30 text-[0.6rem] text-slate-400 leading-relaxed italic">
-                            Seleziona una situazione post-flop per ricevere il suggerimento strategico basato sulle frequenze ottimali.
+                            Seleziona una situazione post-flop per ricevere il suggerimento strategico.
                         </div>
                     </div>
 
                     <div class="section-box !border-t-red-500">
-                        <span class="section-title !color-red-500" style="color: #ff4444;">Nash Equilibrium</span>
+                        <span class="section-title" style="color: #ff4444;">Nash Equilibrium</span>
                         <div class="grid grid-cols-2 gap-2">
                             <button class="bg-red-950/30 text-red-500 border border-red-500 p-3 font-black text-xs hover:bg-red-500 hover:text-white transition-all" onclick="sm('Nash Call', 'nashcall_', this)">CALL</button>
                             <button class="bg-yellow-950/30 text-yellow-500 border border-yellow-500 p-3 font-black text-xs hover:bg-yellow-500 hover:text-white transition-all" onclick="sm('Nash Push', 'nashpush_', this)">PUSH</button>
@@ -200,8 +199,7 @@
                                     <th>BUY-IN</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-white">
-                                </tbody>
+                            <tbody class="text-white"></tbody>
                         </table>
                     </div>
                 </aside>
@@ -217,8 +215,7 @@
         let startingBankroll = parseFloat(localStorage.getItem('bankroll')) || 0;
 
         function saveBalance() {
-            const val = document.getElementById('initialBalance').value;
-            startingBankroll = parseFloat(val) || 0;
+            startingBankroll = parseFloat(document.getElementById('initialBalance').value) || 0;
             localStorage.setItem('bankroll', startingBankroll);
             alert("Saldo Iniziale Salvato: €" + startingBankroll);
             refreshLiveStats();
@@ -228,22 +225,14 @@
             const u = document.getElementById('userId').value.trim();
             const p = document.getElementById('userPass').value.trim();
             if(!u || !p) return;
-
-            document.getElementById('msg').innerText = "VERIFICA CREDENZIALI...";
-
+            document.getElementById('msg').innerText = "VERIFICA...";
             try {
-                const response = await fetch(`${SCRIPT_URL}?id=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&action=login`);
-                const result = await response.text();
-
-                if(result.toUpperCase().includes("SUCCESS")) {
+                const r = await fetch(`${SCRIPT_URL}?id=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&action=login`);
+                if((await r.text()).toUpperCase().includes("SUCCESS")) {
                     localStorage.setItem('ev_logged', 'true');
                     showDash();
-                } else {
-                    document.getElementById('msg').innerText = "ACCESSO NEGATO";
-                }
-            } catch(e) {
-                document.getElementById('msg').innerText = "ERRORE DI CONNESSIONE";
-            }
+                } else { document.getElementById('msg').innerText = "ACCESSO NEGATO"; }
+            } catch(e) { document.getElementById('msg').innerText = "ERRORE CONNESSIONE"; }
         }
 
         function showDash() {
@@ -261,18 +250,12 @@
             document.body.className = ""; 
         }
 
-        function logout() {
-            localStorage.removeItem('ev_logged');
-            location.reload();
-        }
+        function logout() { localStorage.removeItem('ev_logged'); location.reload(); }
 
-        function roll() {
-            document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101);
-        }
+        function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
 
         document.getElementById('file-input').addEventListener('change', function(e) {
-            const files = Array.from(e.target.files);
-            persistentFiles = files.filter(f => f.name.toLowerCase().endsWith('.webp'));
+            persistentFiles = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.webp'));
             render();
         });
 
@@ -283,34 +266,32 @@
             render();
         }
 
+        // --- FUNZIONE RENDER CON ORDINE INVERSO ---
         function render() {
             const bar = document.getElementById('stack-bar');
             const img = document.getElementById('current-img');
             bar.innerHTML = '';
-
             if (persistentFiles.length === 0) return;
 
             const filtered = persistentFiles.filter(f => f.name.toLowerCase().startsWith(currentKey.toLowerCase()));
 
             if (filtered.length > 0) {
                 img.style.display = 'block';
+                
+                // ORDINE INVERSO: Dal valore più alto al più basso (es: 30bb in alto, 10bb in basso)
                 filtered.sort((a,b) => {
                     const numA = parseInt(a.name.match(/\d+/)) || 0;
                     const numB = parseInt(b.name.match(/\d+/)) || 0;
-                    return numA - numB;
+                    return numB - numA; // Cambiato da numA - numB a numB - numA
                 });
 
                 filtered.forEach((f, i) => {
                     const b = document.createElement('button');
                     b.className = 'stk-btn';
-                    const label = f.name.split('_')[1]?.replace('.webp', '').toUpperCase() || "RG";
-                    b.innerText = label;
-                    
+                    b.innerText = f.name.split('_')[1]?.replace('.webp', '').toUpperCase() || "RG";
                     b.onclick = () => {
                         const r = new FileReader();
-                        r.onload = (e) => { 
-                            img.src = e.target.result; 
-                        };
+                        r.onload = (e) => { img.src = e.target.result; };
                         r.readAsDataURL(f);
                         document.querySelectorAll('.stk-btn').forEach(x => x.classList.remove('active'));
                         b.classList.add('active');
@@ -318,23 +299,21 @@
                     bar.appendChild(b);
                     if(i === 0) b.click();
                 });
-            } else {
-                img.style.display = 'none';
-            }
+            } else { img.style.display = 'none'; }
         }
 
         function advise(type) {
             const box = document.getElementById('gto-solution-box');
             const data = {
-                'IP_AGG': 'Flop Dry: Bet 33% | Flop Wet: Check o Bet 75%. Su Turn Blank continuare con 66%.',
-                'IP_VS_AGG': 'Value: Raise 3x o Call | Draw: Pure Call se le odds sono favorevoli. Fold su Overbet.',
-                'OOP_AGG': 'OOP: Check-Raise frequency 18%. Su Board connessi favorire il Check-Fold con air.',
-                'OOP_VS_AGG': 'Pure Call con Mid Pair o Flush Draw. Donk Bet sconsigliata nel 95% dei casi.'
+                'IP_AGG': 'Flop Dry: Bet 33% | Flop Wet: Check o Bet 75%.',
+                'IP_VS_AGG': 'Value: Raise 3x o Call | Fold su Overbet.',
+                'OOP_AGG': 'OOP: Check-Raise frequency 18%.',
+                'OOP_VS_AGG': 'Pure Call con Mid Pair o Flush Draw.'
             };
             box.innerText = data[type] || "Seleziona...";
         }
 
-        // --- SISTEMA DI SINCRONIZZAZIONE AGGIORNATO (MENSILE) ---
+        // --- SINCRONIZZAZIONE MENSILE ---
         async function refreshLiveStats() {
             try {
                 const response = await fetch(SCRIPT_URL);
@@ -346,39 +325,28 @@
                 const currentMonth = new Date().getMonth() + 1;
                 let monthlyProfit = 0;
 
-                // Calcolo profitto filtrato per mese corrente
                 sessions.forEach(s => {
                     const sDate = new Date(s.data);
-                    if((sDate.getMonth() + 1) === currentMonth) {
-                        monthlyProfit += parseFloat(s.profit);
-                    }
+                    if((sDate.getMonth() + 1) === currentMonth) monthlyProfit += parseFloat(s.profit);
                 });
 
-                // Visualizza le sessioni invertite
+                // Tabella: Ultima mano in alto
                 sessions.slice().reverse().forEach((s, index) => {
                     const dateObj = new Date(s.data);
                     const timeStr = isNaN(dateObj) ? "--:--" : dateObj.getHours() + ":" + String(dateObj.getMinutes()).padStart(2, '0');
-                    
-                    const profitVal = parseFloat(s.profit);
-                    const colorClass = profitVal < 0 ? "neg" : "pos";
+                    const colorClass = parseFloat(s.profit) < 0 ? "neg" : "pos";
                     
                     tbody.innerHTML += `
                         <tr class="border-b border-white/5">
                             <td class="py-2 text-slate-500 font-mono">${timeStr}</td>
-                            <td class="py-2"><span class="profit-pill ${colorClass}">${profitVal >= 0 ? '+' : ''}${profitVal.toFixed(2)}€</span></td>
+                            <td class="py-2"><span class="profit-pill ${colorClass}">${parseFloat(s.profit) >= 0 ? '+' : ''}${s.profit}€</span></td>
                             <td class="py-2 text-slate-300 font-mono">${s.buyin}€</td>
                         </tr>`;
                     
-                    // Sincronizza Timer dall'ultima riga
-                    if(index === 0 && s.durata) {
-                        const timerDisplay = document.getElementById('session-timer');
-                        if(timerDisplay) timerDisplay.innerText = s.durata;
-                    }
+                    if(index === 0 && s.durata) document.getElementById('session-timer').innerText = s.durata;
                 });
 
-                // Aggiornamento Saldo: Cassa Iniziale + Solo Profitto del Mese
                 updateLiveBalance(monthlyProfit);
-
             } catch (e) { console.error("Sync Error"); }
         }
 
@@ -393,7 +361,6 @@
 
         if (localStorage.getItem('ev_logged') === 'true') showDash();
         setInterval(refreshLiveStats, 10000);
-
     </script>
 </body>
 </html>
