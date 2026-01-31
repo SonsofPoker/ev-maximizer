@@ -51,8 +51,7 @@
         .btn-push { background: #1a1a00; color: #ffcc00; border-color: #ffcc00; }
 
         .sync-card { background: #0f172a; border: 1px solid var(--accent); border-radius: 12px; padding: 12px; text-align: center; }
-        .sync-icon-spin { animation: spin 2s linear infinite; }
-        @keyframes spin { 100% { transform:rotate(360deg); } }
+        .drop-zone { border: 1px dashed var(--accent); border-radius: 8px; padding: 15px; margin-top: 8px; cursor: pointer; }
         
         .table-container { background: #0f172a; border-radius: 12px; padding: 10px; border: 1px solid #1e293b; max-height: 250px; overflow-y: auto; }
         table { width: 100%; font-size: 0.65rem; border-collapse: collapse; }
@@ -62,6 +61,9 @@
         .btn-pf { background: #151515; color: #fff; border: 1px solid #333; padding: 8px; border-radius: 4px; font-size: 0.6rem; cursor: pointer; font-weight: bold; text-transform: uppercase; width: 100%; }
         .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
         #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 10px; margin-top: 8px; min-height: 100px; }
+        .gto-line { margin-bottom: 6px; border-left: 2px solid var(--accent); padding-left: 8px; }
+        .gto-label { color: var(--blue); font-size: 0.55rem; font-weight: bold; text-transform: uppercase; display: block; }
+        .gto-val { color: var(--accent); font-size: 0.7rem; font-weight: bold; }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
@@ -114,6 +116,11 @@
                 <button class="nav-btn" onclick="sm('8. BB vs BTN Iso', 'bbvsbtniso_', this)">8. BB vs BTN Iso</button>
                 <button class="nav-btn" onclick="sm('9. BB vs SB Iso', 'bbvssbiso_', this)">9. BB vs SB Iso</button>
                 <button class="nav-btn" onclick="sm('10. BB vs 2 PL', 'bbvs2pl_', this)">10. BB vs 2 PL</button>
+                <span class="cat-label">Heads-Up</span>
+                <button class="nav-btn" onclick="sm('11. HU IP Open', 'huip_', this)">11. HU IP Open</button>
+                <button class="nav-btn" onclick="sm('12. HU OOP vs Limp', 'huooplimp_', this)">12. HU OOP vs Limp</button>
+                <button class="nav-btn" onclick="sm('13. HU OOP vs MR', 'huoopmr_', this)">13. HU OOP vs MR</button>
+                <button class="nav-btn" onclick="sm('14. HU OOP vs Shove', 'huoopshove_', this)">14. HU OOP vs Shove</button>
             </div>
         </aside>
 
@@ -129,6 +136,19 @@
                 <div id="image-area"><img id="current-img"></div>
                 
                 <aside id="sidebar-right">
+                    <div class="section-box">
+                        <span class="section-title">GTO Advisor Elite</span>
+                        <div class="pf-grid">
+                            <button class="btn-pf" onclick="advise('IP_AGG')">IP Aggressore</button>
+                            <button class="btn-pf" onclick="advise('IP_VS_AGG')">IP vs Aggr.</button>
+                            <button class="btn-pf" onclick="advise('OOP_AGG')">OOP Aggressore</button>
+                            <button class="btn-pf" onclick="advise('OOP_VS_AGG')">OOP vs Aggr.</button>
+                            <button class="btn-pf" onclick="advise('MW_POT')">Multiway Pot</button>
+                            <button class="btn-pf" onclick="advise('HU_ISO')">HU vs ISO</button>
+                        </div>
+                        <div id="gto-solution-box"><div id="gto-content" class="text-[0.6rem] text-slate-500">Seleziona post-flop...</div></div>
+                    </div>
+
                     <div class="nash-box">
                         <div class="flex items-center gap-2 mb-3">
                             <i class="fa-solid fa-skull-crossbones text-red-500 text-xs"></i>
@@ -142,10 +162,14 @@
 
                     <div class="sync-card">
                         <div class="flex items-center gap-2 mb-2">
-                            <i id="sync-icon" class="fa-solid fa-sync text-blue-400 text-[10px] sync-icon-spin"></i>
-                            <span class="text-[0.65rem] font-black uppercase text-white">Sincronizzazione Live</span>
+                            <i id="sync-icon" class="fa-solid fa-sync text-blue-400 text-[10px]"></i>
+                            <span class="text-[0.65rem] font-black uppercase text-white">Sincronizzatore Live</span>
                         </div>
-                        <p class="text-[10px] text-slate-400">Database connesso</p>
+                        <label class="drop-zone block">
+                            <i class="fa-solid fa-folder-open text-[#00ff87] text-xl mb-1"></i>
+                            <p class="text-[0.5rem] text-slate-400 uppercase">Carica Range Cartella</p>
+                            <input type="file" id="file-input" webkitdirectory directory multiple class="hidden">
+                        </label>
                     </div>
 
                     <div class="table-container">
@@ -170,17 +194,27 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiPPRE0vPKvbpcD8vWS69A08Nx9w-9Zr1aUc2S3BxKycoBUQcSLpVkSzAljzhCbwD-0w/exec";
         let persistentFiles = []; let currentKey = "btnopen_";
 
+        // GESTIONE NAVIGAZIONE E LOGIN
         async function handleLogin() {
             const u = document.getElementById('userId').value;
             const p = document.getElementById('userPass').value;
             if(!u || !p) return;
-            document.getElementById('msg').innerText = "AUTENTICAZIONE...";
+            document.getElementById('msg').innerText = "VERIFICA IN CORSO...";
+            
             try {
                 const response = await fetch(`${SCRIPT_URL}?id=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&action=login`);
                 const result = await response.text();
-                if(result === "SUCCESS") { localStorage.setItem('ev_logged', 'true'); showDash(); }
-                else { document.getElementById('msg').innerText = "ACCESSO NEGATO"; }
-            } catch(e) { localStorage.setItem('ev_logged', 'true'); showDash(); }
+                if(result === "SUCCESS") {
+                    localStorage.setItem('ev_logged', 'true');
+                    showDash();
+                } else {
+                    document.getElementById('msg').innerText = "CREDENZIALI ERRATE";
+                }
+            } catch(e) {
+                console.log("Login Sync Error, procedo...");
+                localStorage.setItem('ev_logged', 'true'); 
+                showDash();
+            }
         }
 
         function showDash() {
@@ -198,35 +232,12 @@
         }
 
         function logout() { localStorage.removeItem('ev_logged'); location.reload(); }
+
+        // RNG
         function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
 
-        async function refreshLiveStats() {
-            try {
-                const response = await fetch(SCRIPT_URL);
-                const sessions = await response.json();
-                const tbody = document.querySelector("#mani-recenti-table tbody");
-                if (!tbody) return;
-                
-                tbody.innerHTML = "";
-                sessions.reverse().forEach((s, index) => {
-                    const dateObj = new Date(s.data);
-                    const timeStr = dateObj.getHours() + ":" + String(dateObj.getMinutes()).padStart(2, '0');
-                    const color = s.profit >= 0 ? "#00ff87" : "#ff4444";
-                    tbody.innerHTML += `
-                        <tr class="border-b border-[#1a1a1a]">
-                            <td class="py-2 text-gray-400 font-mono">${timeStr}</td>
-                            <td class="py-2 font-bold" style="color: ${color}">${s.profit >= 0 ? '+' : ''}${s.profit}€</td>
-                            <td class="py-2 text-gray-300 font-mono">${s.buyin}€</td>
-                        </tr>`;
-                    if(index === 0 && s.durata) {
-                        document.getElementById('session-timer').innerText = s.durata;
-                    }
-                });
-            } catch (e) { console.error("Sync Error"); }
-        }
-
-        // Script per i Range locali
-        document.getElementById('file-input')?.addEventListener('change', function(e) {
+        // GESTIONE TECNICA RANGE
+        document.getElementById('file-input').addEventListener('change', function(e) {
             persistentFiles = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.webp'));
             render();
         });
@@ -247,7 +258,7 @@
                 filtered.sort((a,b) => (parseInt(b.name.match(/\d+/)) || 0) - (parseInt(a.name.match(/\d+/)) || 0));
                 filtered.forEach((f, i) => {
                     const b = document.createElement('button'); b.className = 'stk-btn';
-                    b.innerText = f.name.split('_')[1]?.replace('.webp', '').toUpperCase() || "RG";
+                    b.innerText = f.name.split('_')[1]?.replace('.webp', '').toUpperCase() || "RANGE";
                     b.onclick = () => {
                         const r = new FileReader(); r.onload = (e) => { img.src = e.target.result; }; r.readAsDataURL(f);
                         document.querySelectorAll('.stk-btn').forEach(x => x.classList.remove('active')); b.classList.add('active');
@@ -257,9 +268,56 @@
             } else { img.style.display = 'none'; }
         }
 
+        function advise(type) {
+            const box = document.getElementById('gto-content');
+            const data = { 'IP_AGG': [{l: 'Flop Dry', v: 'Bet 33%'}, {l: 'Flop Coord', v: 'Bet 75%'}], 'IP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x'}], 'OOP_AGG': [{l: 'Value (TP+)', v: 'Check-Raise'}], 'OOP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x'}], 'MW_POT': [{l: 'Value', v: 'Bet 100%'}], 'HU_ISO': [{l: 'TP Kicker 8+', v: 'Stack-off'}] };
+            let html = ''; data[type]?.forEach(item => { html += `<div class="gto-line"><span class="gto-label">${item.l}</span><span class="gto-val">${item.v}</span></div>`; });
+            box.innerHTML = html || "Pronto...";
+        }
+
+        // --- SISTEMA DI SINCRONIZZAZIONE AUTOMATICA ---
+        async function refreshLiveStats() {
+            const syncIcon = document.getElementById('sync-icon');
+            if(syncIcon) syncIcon.classList.add('fa-spin'); // Attiva rotazione durante fetch
+
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const sessions = await response.json();
+                const tbody = document.querySelector("#mani-recenti-table tbody");
+                if (!tbody) return;
+
+                tbody.innerHTML = "";
+                // Mostra le ultime mani caricate dal software desktop
+                sessions.reverse().forEach((s, index) => {
+                    const dateObj = new Date(s.data);
+                    const timeStr = dateObj.getHours() + ":" + String(dateObj.getMinutes()).padStart(2, '0');
+                    const color = s.profit >= 0 ? "#00ff87" : "#ff4444";
+                    tbody.innerHTML += `
+                        <tr class="border-b border-[#1a1a1a]">
+                            <td class="py-2 text-gray-400 font-mono">${timeStr}</td>
+                            <td class="py-2 font-bold" style="color: ${color}">${s.profit >= 0 ? '+' : ''}${s.profit}€</td>
+                            <td class="py-2 text-gray-300 font-mono">${s.buyin}€</td>
+                        </tr>`;
+                    
+                    // Sincronizza il Timer LED con l'ultima durata registrata dal software
+                    if(index === 0 && s.durata) {
+                        const timerDisplay = document.getElementById('session-timer');
+                        if(timerDisplay) timerDisplay.innerText = s.durata;
+                    }
+                });
+            } catch (e) { 
+                console.error("Sync Error", e); 
+            } finally {
+                if(syncIcon) setTimeout(() => syncIcon.classList.remove('fa-spin'), 2000);
+            }
+        }
+
         if (localStorage.getItem('ev_logged') === 'true') showDash();
-        // Sincronizzazione automatica ogni 10 secondi
+        
+        // Avvia il loop di sincronizzazione automatica ogni 10 secondi
         setInterval(refreshLiveStats, 10000);
+        // Eseguilo anche all'avvio
+        refreshLiveStats();
     </script>
 </body>
 </html>
