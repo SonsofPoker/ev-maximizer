@@ -194,26 +194,26 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiPPRE0vPKvbpcD8vWS69A08Nx9w-9Zr1aUc2S3BxKycoBUQcSLpVkSzAljzhCbwD-0w/exec";
         let persistentFiles = []; let currentKey = "btnopen_";
 
-        // GESTIONE NAVIGAZIONE E LOGIN
         async function handleLogin() {
-            const u = document.getElementById('userId').value;
-            const p = document.getElementById('userPass').value;
+            const u = document.getElementById('userId').value.trim();
+            const p = document.getElementById('userPass').value.trim();
             if(!u || !p) return;
+            
             document.getElementById('msg').innerText = "VERIFICA IN CORSO...";
             
             try {
                 const response = await fetch(`${SCRIPT_URL}?id=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&action=login`);
                 const result = await response.text();
-                if(result === "SUCCESS") {
+                
+                if(result.trim() === "SUCCESS") {
                     localStorage.setItem('ev_logged', 'true');
                     showDash();
                 } else {
-                    document.getElementById('msg').innerText = "CREDENZIALI ERRATE";
+                    document.getElementById('msg').innerText = "CREDENZIALI ERRATE O UTENTE NON ATTIVO";
                 }
             } catch(e) {
-                console.log("Login Sync Error, procedo...");
-                localStorage.setItem('ev_logged', 'true'); 
-                showDash();
+                console.error("Errore:", e);
+                document.getElementById('msg').innerText = "ERRORE DI CONNESSIONE";
             }
         }
 
@@ -232,11 +232,8 @@
         }
 
         function logout() { localStorage.removeItem('ev_logged'); location.reload(); }
-
-        // RNG
         function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
 
-        // GESTIONE TECNICA RANGE
         document.getElementById('file-input').addEventListener('change', function(e) {
             persistentFiles = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.webp'));
             render();
@@ -258,7 +255,7 @@
                 filtered.sort((a,b) => (parseInt(b.name.match(/\d+/)) || 0) - (parseInt(a.name.match(/\d+/)) || 0));
                 filtered.forEach((f, i) => {
                     const b = document.createElement('button'); b.className = 'stk-btn';
-                    b.innerText = f.name.split('_')[1]?.replace('.webp', '').toUpperCase() || "RANGE";
+                    b.innerText = f.name.split('_')[1]?.replace('.webp', '').toUpperCase() || "RG";
                     b.onclick = () => {
                         const r = new FileReader(); r.onload = (e) => { img.src = e.target.result; }; r.readAsDataURL(f);
                         document.querySelectorAll('.stk-btn').forEach(x => x.classList.remove('active')); b.classList.add('active');
@@ -270,15 +267,14 @@
 
         function advise(type) {
             const box = document.getElementById('gto-content');
-            const data = { 'IP_AGG': [{l: 'Flop Dry', v: 'Bet 33%'}, {l: 'Flop Coord', v: 'Bet 75%'}], 'IP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x'}], 'OOP_AGG': [{l: 'Value (TP+)', v: 'Check-Raise'}], 'OOP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x'}], 'MW_POT': [{l: 'Value', v: 'Bet 100%'}], 'HU_ISO': [{l: 'TP Kicker 8+', v: 'Stack-off'}] };
+            const data = { 'IP_AGG': [{l: 'Flop Dry', v: 'Bet 33%'}], 'IP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x'}], 'OOP_AGG': [{l: 'Value (TP+)', v: 'Check-Raise'}], 'OOP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x'}], 'MW_POT': [{l: 'Value', v: 'Bet 100%'}], 'HU_ISO': [{l: 'TP Kicker 8+', v: 'Stack-off'}] };
             let html = ''; data[type]?.forEach(item => { html += `<div class="gto-line"><span class="gto-label">${item.l}</span><span class="gto-val">${item.v}</span></div>`; });
             box.innerHTML = html || "Pronto...";
         }
 
-        // --- SISTEMA DI SINCRONIZZAZIONE AUTOMATICA ---
         async function refreshLiveStats() {
             const syncIcon = document.getElementById('sync-icon');
-            if(syncIcon) syncIcon.classList.add('fa-spin'); // Attiva rotazione durante fetch
+            if(syncIcon) syncIcon.classList.add('fa-spin');
 
             try {
                 const response = await fetch(SCRIPT_URL);
@@ -287,7 +283,6 @@
                 if (!tbody) return;
 
                 tbody.innerHTML = "";
-                // Mostra le ultime mani caricate dal software desktop
                 sessions.reverse().forEach((s, index) => {
                     const dateObj = new Date(s.data);
                     const timeStr = dateObj.getHours() + ":" + String(dateObj.getMinutes()).padStart(2, '0');
@@ -299,7 +294,6 @@
                             <td class="py-2 text-gray-300 font-mono">${s.buyin}€</td>
                         </tr>`;
                     
-                    // Sincronizza il Timer LED con l'ultima durata registrata dal software
                     if(index === 0 && s.durata) {
                         const timerDisplay = document.getElementById('session-timer');
                         if(timerDisplay) timerDisplay.innerText = s.durata;
@@ -313,10 +307,7 @@
         }
 
         if (localStorage.getItem('ev_logged') === 'true') showDash();
-        
-        // Avvia il loop di sincronizzazione automatica ogni 10 secondi
         setInterval(refreshLiveStats, 10000);
-        // Eseguilo anche all'avvio
         refreshLiveStats();
     </script>
 </body>
