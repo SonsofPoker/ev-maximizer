@@ -12,22 +12,25 @@
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         .hidden { display: none !important; }
         
-        /* --- STILI ORIGINALI --- */
+        /* --- STILI LOGIN E DASHBOARD --- */
         .glass-card { background: rgba(23, 32, 51, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; }
         .gradient-text { background: linear-gradient(90deg, #00ff87, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
+        /* --- SIDEBAR SINISTRA --- */
         #sidebar-left { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
         .sidebar-brand-container { padding: 25px 15px; text-align: center; }
         .brand-logo-main { width: 100%; max-width: 170px; filter: drop-shadow(0 0 10px var(--accent)); }
         .nav-group { padding: 10px 15px; }
-        .cat-label { font-size: 0.65rem; text-transform: uppercase; margin: 20px 0 8px; display: block; font-weight: 800; letter-spacing: 1.5px; color: var(--accent); }
-        .nav-btn { width: 100%; padding: 10px; margin-bottom: 4px; background: #0d0d0d; border: 1px solid #222; color: #777; text-align: left; cursor: pointer; border-radius: 6px; font-size: 0.75rem; transition: 0.2s; }
+        .cat-label { font-size: 0.65rem; text-transform: uppercase; margin: 20px 0 8px; display: block; font-weight: 800; letter-spacing: 1.5px; color: var(--accent); opacity: 0.8; }
+        .nav-btn { width: 100%; padding: 10px; margin-bottom: 4px; background: #0d0d0d; border: 1px solid #222; color: #777; text-align: left; cursor: pointer; border-radius: 6px; font-size: 0.75rem; transition: 0.2s; font-weight: 500; }
         .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; font-weight: bold; border-color: var(--accent); }
 
+        /* --- AREA PRINCIPALE --- */
         #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; overflow: hidden; }
-        #header-tech { height: 70px; background: #0a0a0a; display: flex; align-items: center; justify-content: center; gap: 30px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+        #header-tech { height: 70px; background: #0a0a0a; display: flex; align-items: center; justify-content: center; gap: 30px; border-bottom: 1px solid var(--border); flex-shrink: 0; padding: 0 20px; }
         #rng-box { font-family: 'Monaco', monospace; font-size: 2.2rem; color: var(--accent); background: #000; border: 1px solid var(--accent); padding: 5px 20px; border-radius: 6px; min-width: 80px; text-align: center; }
         
+        /* --- WORKSPACE --- */
         #workspace { display: flex; flex-grow: 1; overflow: hidden; }
         #stack-bar { width: 110px; background: #050505; display: flex; flex-direction: column; gap: 8px; padding: 15px 10px; overflow-y: auto; border-right: 1px solid var(--border); }
         .stk-btn { width: 100%; padding: 12px 5px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; cursor: pointer; font-size: 0.75rem; font-weight: bold; text-align: center; }
@@ -35,15 +38,17 @@
         #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 20px; }
         #current-img { max-width: 100%; max-height: 100%; object-fit: contain; display: none; z-index: 5; }
 
+        /* --- SIDEBAR DESTRA --- */
         #sidebar-right { width: 360px; background: var(--panel); border-left: 1px solid var(--border); padding: 15px; overflow-y: auto; flex-shrink: 0; display: flex; flex-direction: column; gap: 15px; }
         .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 8px; padding: 12px; border-top: 3px solid var(--accent); }
         .section-title { color: var(--blue); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; display: block; border-bottom: 1px solid #222; padding-bottom: 5px; }
         
+        /* --- TIMER E SALDO --- */
         #session-timer { color: #00ff87; font-family: monospace; font-size: 1.5rem; margin-left: 20px; background: #000; padding: 5px 10px; border-radius: 5px; border: 1px solid #222; }
-
-        /* --- STILI NUOVI: SALDO E TABELLA --- */
-        .balance-display { background: linear-gradient(135deg, #0a0a0a, #111); border: 1px solid var(--blue); padding: 10px 20px; border-radius: 12px; text-align: center; min-width: 150px; }
-        .table-container { background: #0f172a; border-radius: 12px; padding: 10px; border: 1px solid #1e293b; max-height: 250px; overflow-y: auto; }
+        .balance-display { background: linear-gradient(135deg, #0a0a0a, #111); border: 1px solid var(--blue); padding: 8px 15px; border-radius: 12px; text-align: center; min-width: 130px; }
+        
+        /* --- TABELLA TAVOLI --- */
+        .table-container { background: #050505; border-radius: 8px; padding: 10px; border: 1px solid #1a1a1a; max-height: 250px; overflow-y: auto; }
         table { width: 100%; font-size: 0.65rem; border-collapse: collapse; }
         th { color: #64748b; text-transform: uppercase; padding: 6px; text-align: left; border-bottom: 1px solid #1e293b; }
         .profit-pill { padding: 2px 6px; border-radius: 4px; font-weight: 900; }
@@ -59,9 +64,9 @@
             <p class="text-slate-500 text-[10px] mt-2 font-bold tracking-widest uppercase">Premium Strategy Suite</p>
         </div>
         <div class="space-y-4">
-            <input type="text" id="userId" placeholder="Username" class="w-full px-4 py-4 rounded-xl outline-none bg-slate-900 border border-slate-800 text-white">
-            <input type="password" id="userPass" placeholder="Password" class="w-full px-4 py-4 rounded-xl outline-none bg-slate-900 border border-slate-800 text-white">
-            <button onclick="handleLogin()" class="w-full bg-[#00ff87] text-black font-black py-4 rounded-xl uppercase hover:scale-[1.02] transition-transform">Accedi</button>
+            <input type="text" id="userId" placeholder="Username" class="w-full px-4 py-4 rounded-xl outline-none bg-slate-900 border border-slate-800 text-white focus:border-[#00ff87]">
+            <input type="password" id="userPass" placeholder="Password" class="w-full px-4 py-4 rounded-xl outline-none bg-slate-900 border border-slate-800 text-white focus:border-[#00ff87]">
+            <button onclick="handleLogin()" class="w-full bg-[#00ff87] text-black font-black py-4 rounded-xl uppercase hover:scale-[1.02] transition-transform shadow-lg">Accedi</button>
         </div>
         <p id="msg" class="mt-6 text-center text-sm font-bold text-yellow-500"></p>
     </div>
@@ -69,14 +74,14 @@
     <div id="dashboard" class="hidden w-full max-w-5xl mx-auto p-6 overflow-y-auto">
         <header class="flex justify-between items-center mb-10 bg-slate-900/50 p-6 rounded-3xl border border-white/5">
             <h2 class="text-2xl font-black italic">DASHBOARD <span class="text-[#00ff87]">PRO</span></h2>
-            <button onclick="logout()" class="text-red-500 font-bold text-xs bg-red-500/10 px-4 py-2 rounded-lg">LOGOUT</button>
+            <button onclick="logout()" class="text-red-500 font-bold text-xs bg-red-500/10 px-4 py-2 rounded-lg hover:bg-red-500/20">LOGOUT</button>
         </header>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
             <div class="glass-card p-6 border border-blue-500/20">
                 <p class="text-blue-400 text-[10px] font-bold uppercase mb-4">Cassa Iniziale Sessione</p>
                 <div class="flex gap-2">
-                    <input type="number" id="initialBalance" placeholder="Esempio: 1000" class="flex-grow bg-black border border-slate-800 p-4 rounded-xl text-white font-mono text-xl outline-none focus:border-blue-500">
+                    <input type="number" id="initialBalance" placeholder="Esempio: 500" class="flex-grow bg-black border border-slate-800 p-4 rounded-xl text-white font-mono text-xl outline-none focus:border-blue-500">
                     <button onclick="saveBalance()" class="bg-blue-600 text-white px-6 rounded-xl font-bold uppercase text-xs">Salva</button>
                 </div>
             </div>
@@ -147,22 +152,22 @@
                             <button class="bg-[#151515] text-white p-2 text-[0.6rem] font-bold uppercase border border-slate-800" onclick="advise('OOP_AGG')">OOP Aggressore</button>
                             <button class="bg-[#151515] text-white p-2 text-[0.6rem] font-bold uppercase border border-slate-800" onclick="advise('OOP_VS_AGG')">OOP vs Aggr.</button>
                         </div>
-                        <div id="gto-solution-box" class="mt-2 p-2 bg-black min-h-[60px] border border-[#00ff87]/30 text-[0.6rem]">Seleziona post-flop...</div>
+                        <div id="gto-solution-box" class="mt-2 p-2 bg-black min-h-[60px] border border-[#00ff87]/30 text-[0.6rem] text-slate-400">Seleziona post-flop...</div>
                     </div>
 
                     <div class="section-box !border-t-red-500">
                         <span class="section-title !color-red-500">Nash Equilibrium</span>
                         <div class="grid grid-cols-2 gap-2">
-                            <button class="bg-red-950/30 text-red-500 border border-red-500 p-3 font-black text-xs" onclick="sm('Nash Call', 'nashcall_', this)">CALL</button>
-                            <button class="bg-yellow-950/30 text-yellow-500 border border-yellow-500 p-3 font-black text-xs" onclick="sm('Nash Push', 'nashpush_', this)">PUSH</button>
+                            <button class="bg-red-950/30 text-red-500 border border-red-500 p-3 font-black text-xs hover:bg-red-500 hover:text-white" onclick="sm('Nash Call', 'nashcall_', this)">CALL</button>
+                            <button class="bg-yellow-950/30 text-yellow-500 border border-yellow-500 p-3 font-black text-xs hover:bg-yellow-500 hover:text-white" onclick="sm('Nash Push', 'nashpush_', this)">PUSH</button>
                         </div>
                     </div>
 
                     <div class="section-box">
                         <span class="section-title">Sincronizzatore Tavoli</span>
-                        <label class="block border border-dashed border-[#00ff87] p-4 text-center cursor-pointer">
+                        <label class="block border border-dashed border-[#00ff87] p-4 text-center cursor-pointer hover:bg-[#00ff87]/10 transition-colors">
                             <i class="fa-solid fa-folder-open text-[#00ff87] text-xl mb-1"></i>
-                            <p class="text-[0.5rem] uppercase text-slate-500">Carica Range</p>
+                            <p class="text-[0.5rem] uppercase text-slate-500">Carica Range Locale</p>
                             <input type="file" id="file-input" webkitdirectory directory multiple class="hidden">
                         </label>
                     </div>
@@ -176,7 +181,7 @@
                             <thead>
                                 <tr><th>ORA</th><th>PROFIT</th><th>BI</th></tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody class="text-white"></tbody>
                         </table>
                     </div>
                 </aside>
@@ -238,8 +243,8 @@
 
         function sm(name, key, btn) {
             currentKey = key;
-            document.querySelectorAll('.nav-btn, .btn-nash').forEach(b => b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            if(btn && btn.classList.contains('nav-btn')) btn.classList.add('active');
             render();
         }
 
@@ -249,7 +254,7 @@
             const filtered = persistentFiles.filter(f => f.name.toLowerCase().startsWith(currentKey.toLowerCase()));
             if (filtered.length > 0) {
                 img.style.display = 'block';
-                filtered.sort((a,b) => (parseInt(b.name.match(/\d+/)) || 0) - (parseInt(a.name.match(/\d+/)) || 0));
+                filtered.sort((a,b) => (parseInt(a.name.match(/\d+/)) || 0) - (parseInt(b.name.match(/\d+/)) || 0));
                 filtered.forEach((f, i) => {
                     const b = document.createElement('button'); b.className = 'stk-btn';
                     b.innerText = f.name.split('_')[1]?.replace('.webp', '').toUpperCase() || "RG";
@@ -273,39 +278,44 @@
                 const response = await fetch(SCRIPT_URL);
                 const sessions = await response.json();
                 const tbody = document.querySelector("#mani-recenti-table tbody");
-                if (!tbody || !sessions.length) return;
-
-                let totalProfitSession = 0;
-                tbody.innerHTML = "";
+                if (!tbody) return;
                 
-                sessions.slice().reverse().forEach((s, idx) => {
-                    totalProfitSession += parseFloat(s.profit);
-                    const date = new Date(s.data);
-                    const ora = isNaN(date) ? "--:--" : date.getHours() + ":" + String(date.getMinutes()).padStart(2, '0');
-                    const colorClass = s.profit >= 0 ? "pos" : "neg";
-                    
+                tbody.innerHTML = "";
+                let netProfit = 0;
+
+                // Calcolo saldo sessione
+                sessions.forEach(s => { netProfit += parseFloat(s.profit); });
+
+                sessions.slice().reverse().forEach((s, index) => {
+                    const dateObj = new Date(s.data);
+                    const timeStr = isNaN(dateObj) ? "--:--" : dateObj.getHours() + ":" + String(dateObj.getMinutes()).padStart(2, '0');
+                    const isLoss = parseFloat(s.profit) < 0;
+                    const pillClass = isLoss ? "neg" : "pos";
+
                     tbody.innerHTML += `
-                        <tr class="border-b border-white/5">
-                            <td class="py-2 text-slate-500 font-mono">${ora}</td>
-                            <td class="py-2"><span class="profit-pill ${colorClass}">${s.profit >= 0 ? '+' : ''}${s.profit}€</span></td>
-                            <td class="py-2 text-slate-300 font-mono">${s.buyin}€</td>
+                        <tr class="border-b border-[#1a1a1a]">
+                            <td class="py-2 text-gray-500 font-mono">${timeStr}</td>
+                            <td class="py-2"><span class="profit-pill ${pillClass}">${parseFloat(s.profit) >= 0 ? '+' : ''}${s.profit}€</span></td>
+                            <td class="py-2 text-gray-400 font-mono">${s.buyin}€</td>
                         </tr>`;
-                    
-                    // Sincronizza Timer solo dall'ultima sessione
-                    if(idx === 0 && s.durata) {
-                        document.getElementById('session-timer').innerText = s.durata;
+
+                    if(index === 0 && s.durata) {
+                        const timerDisplay = document.getElementById('session-timer');
+                        if(timerDisplay) timerDisplay.innerText = s.durata;
                     }
                 });
 
-                updateLiveBalance(totalProfitSession);
-            } catch (e) { console.error("Sync..."); }
+                updateLiveBalance(netProfit);
+            } catch (e) { console.error("Sync Error"); }
         }
 
         function updateLiveBalance(profit) {
             const current = startingBankroll + profit;
             const el = document.getElementById('live-balance');
-            el.innerText = "€ " + current.toFixed(2);
-            el.style.color = current >= startingBankroll ? "#00ff87" : "#ff4444";
+            if(el) {
+                el.innerText = "€ " + current.toFixed(2);
+                el.style.color = current >= startingBankroll ? "#00ff87" : "#ff4444";
+            }
         }
 
         if (localStorage.getItem('ev_logged') === 'true') showDash();
