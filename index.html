@@ -144,7 +144,7 @@
                 <div id="session-timer">00:00:00</div>
 
                 <div class="balance-display">
-                    <p class="text-[0.55rem] text-blue-400 font-bold uppercase tracking-widest">Saldo Real-Time</p>
+                    <p class="text-[0.55rem] text-blue-400 font-bold uppercase tracking-widest">Saldo Real-Time (Mese)</p>
                     <h2 id="live-balance" class="text-xl font-black text-white">€ 0.00</h2>
                 </div>
             </header>
@@ -334,7 +334,7 @@
             box.innerText = data[type] || "Seleziona...";
         }
 
-        // --- SISTEMA DI SINCRONIZZAZIONE CORRETTO ---
+        // --- SISTEMA DI SINCRONIZZAZIONE AGGIORNATO (MENSILE) ---
         async function refreshLiveStats() {
             try {
                 const response = await fetch(SCRIPT_URL);
@@ -343,11 +343,15 @@
                 if (!tbody) return;
                 
                 tbody.innerHTML = "";
-                let totalProfitSession = 0;
+                const currentMonth = new Date().getMonth() + 1;
+                let monthlyProfit = 0;
 
-                // Calcolo profitto totale (somma di ogni s.profit che può essere negativo o positivo)
+                // Calcolo profitto filtrato per mese corrente
                 sessions.forEach(s => {
-                    totalProfitSession += parseFloat(s.profit);
+                    const sDate = new Date(s.data);
+                    if((sDate.getMonth() + 1) === currentMonth) {
+                        monthlyProfit += parseFloat(s.profit);
+                    }
                 });
 
                 // Visualizza le sessioni invertite
@@ -356,8 +360,7 @@
                     const timeStr = isNaN(dateObj) ? "--:--" : dateObj.getHours() + ":" + String(dateObj.getMinutes()).padStart(2, '0');
                     
                     const profitVal = parseFloat(s.profit);
-                    const isLoss = profitVal < 0;
-                    const colorClass = isLoss ? "neg" : "pos";
+                    const colorClass = profitVal < 0 ? "neg" : "pos";
                     
                     tbody.innerHTML += `
                         <tr class="border-b border-white/5">
@@ -366,14 +369,15 @@
                             <td class="py-2 text-slate-300 font-mono">${s.buyin}€</td>
                         </tr>`;
                     
-                    // Sincronizza Timer solo dall'ultima sessione inviata
+                    // Sincronizza Timer dall'ultima riga
                     if(index === 0 && s.durata) {
                         const timerDisplay = document.getElementById('session-timer');
                         if(timerDisplay) timerDisplay.innerText = s.durata;
                     }
                 });
 
-                updateLiveBalance(totalProfitSession);
+                // Aggiornamento Saldo: Cassa Iniziale + Solo Profitto del Mese
+                updateLiveBalance(monthlyProfit);
 
             } catch (e) { console.error("Sync Error"); }
         }
@@ -387,10 +391,7 @@
             }
         }
 
-        // Auto-Login Check
         if (localStorage.getItem('ev_logged') === 'true') showDash();
-        
-        // Refresh ogni 10 secondi
         setInterval(refreshLiveStats, 10000);
 
     </script>
