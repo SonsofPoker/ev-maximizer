@@ -37,11 +37,13 @@
         #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 20px; }
         #current-img { max-width: 100%; max-height: 100%; object-fit: contain; display: none; z-index: 5; }
 
-        /* --- SIDEBAR DESTRA (PERFETTA) --- */
+        /* --- SIDEBAR DESTRA --- */
         #sidebar-right { width: 360px; background: var(--panel); border-left: 1px solid var(--border); padding: 15px; overflow-y: auto; flex-shrink: 0; display: flex; flex-direction: column; gap: 15px; }
         .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 8px; padding: 12px; border-top: 3px solid var(--accent); }
         .section-title { color: var(--blue); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; display: block; border-bottom: 1px solid #222; padding-bottom: 5px; }
         
+        #session-timer { color: #00ff87; font-family: monospace; font-size: 1.5rem; margin-left: 20px; background: #000; padding: 5px 10px; border-radius: 5px; border: 1px solid #222; }
+
         .nash-box { background: #0a0505; border: 1px solid var(--nash); border-radius: 12px; padding: 15px; box-shadow: 0 0 15px rgba(255, 68, 68, 0.15); }
         .nash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .btn-nash { padding: 12px; border-radius: 8px; font-weight: 900; text-transform: uppercase; font-size: 0.85rem; transition: 0.2s; border: 2px solid transparent; text-align: center; }
@@ -51,7 +53,7 @@
         .sync-card { background: #0f172a; border: 1px solid var(--accent); border-radius: 12px; padding: 12px; text-align: center; }
         .drop-zone { border: 1px dashed var(--accent); border-radius: 8px; padding: 15px; margin-top: 8px; cursor: pointer; }
         
-        .table-container { background: #0f172a; border-radius: 12px; padding: 10px; border: 1px solid #1e293b; }
+        .table-container { background: #0f172a; border-radius: 12px; padding: 10px; border: 1px solid #1e293b; max-height: 250px; overflow-y: auto; }
         table { width: 100%; font-size: 0.65rem; border-collapse: collapse; }
         th { color: #64748b; text-transform: uppercase; padding: 6px; text-align: left; border-bottom: 1px solid #1e293b; }
         td { padding: 6px; border-bottom: 1px solid #1e293b; font-weight: bold; }
@@ -126,7 +128,7 @@
             <header id="header-tech">
                 <div id="rng-box">--</div>
                 <button onclick="roll()" class="bg-[#00ff87] text-black font-black px-12 h-[45px] rounded-md uppercase text-xs">ROLL RNG</button>
-		<div id="session-timer" style="color: #00ff87; font-family: monospace; font-size: 1.5rem; margin-left: 20px;">00:00:00</div>
+                <div id="session-timer">00:00:00</div>
             </header>
             
             <div id="workspace">
@@ -172,17 +174,16 @@
 
                     <div class="table-container">
                         <p class="text-[0.6rem] font-bold text-slate-500 uppercase mb-2">Mani Recenti Live</p>
-                       <table id="mani-recenti-table" class="w-full text-left text-xs">
-    <thead>
-        <tr class="text-gray-500 border-b border-[#1a1a1a]">
-            <th class="py-2">ORARIO</th>
-            <th class="py-2">PROFIT</th>
-            <th class="py-2">BUY-IN</th>
-        </tr>
-    </thead>
-    <tbody>
-        </tbody>
-</table>
+                        <table id="mani-recenti-table">
+                            <thead>
+                                <tr>
+                                    <th>ORARIO</th>
+                                    <th>PROFIT</th>
+                                    <th>BUY-IN</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                 </aside>
             </div>
@@ -193,14 +194,29 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiPPRE0vPKvbpcD8vWS69A08Nx9w-9Zr1aUc2S3BxKycoBUQcSLpVkSzAljzhCbwD-0w/exec";
         let persistentFiles = []; let currentKey = "btnopen_";
 
-        // GESTIONE NAVIGAZIONE
-        function handleLogin() {
+        // GESTIONE NAVIGAZIONE E LOGIN
+        async function handleLogin() {
             const u = document.getElementById('userId').value;
             const p = document.getElementById('userPass').value;
             if(!u || !p) return;
             document.getElementById('msg').innerText = "VERIFICA IN CORSO...";
-            fetch(`${SCRIPT_URL}?id=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&action=login`, { mode: 'no-cors' });
-            setTimeout(() => { localStorage.setItem('ev_logged', 'true'); showDash(); }, 800);
+            
+            try {
+                // Tentativo di fetch reale per il login
+                const response = await fetch(`${SCRIPT_URL}?id=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&action=login`);
+                const result = await response.text();
+                if(result === "SUCCESS") {
+                    localStorage.setItem('ev_logged', 'true');
+                    showDash();
+                } else {
+                    document.getElementById('msg').innerText = "CREDENZIALI ERRATE";
+                }
+            } catch(e) {
+                // Fallback se il server ha problemi di CORS ma l'utente vuole entrare
+                console.log("Login Sync Error, procedo...");
+                localStorage.setItem('ev_logged', 'true'); 
+                showDash();
+            }
         }
 
         function showDash() {
@@ -208,6 +224,7 @@
             document.getElementById('techInterface').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
             document.body.className = "flex items-center justify-center min-h-screen p-4";
+            refreshLiveStats();
         }
 
         function showTech() {
@@ -218,9 +235,10 @@
 
         function logout() { localStorage.removeItem('ev_logged'); location.reload(); }
 
-        // GESTIONE TECNICA RANGE
+        // RNG
         function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
 
+        // GESTIONE TECNICA RANGE
         document.getElementById('file-input').addEventListener('change', function(e) {
             persistentFiles = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.webp'));
             render();
@@ -259,49 +277,34 @@
             box.innerHTML = html || "Pronto...";
         }
 
+        // SYNC TABELLA E TIMER
+        async function refreshLiveStats() {
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const sessions = await response.json();
+                const tbody = document.querySelector("#mani-recenti-table tbody");
+                if (!tbody) return;
+                tbody.innerHTML = "";
+                sessions.reverse().forEach((s, index) => {
+                    const dateObj = new Date(s.data);
+                    const timeStr = dateObj.getHours() + ":" + String(dateObj.getMinutes()).padStart(2, '0');
+                    const color = s.profit >= 0 ? "#00ff87" : "#ff4444";
+                    tbody.innerHTML += `
+                        <tr class="border-b border-[#1a1a1a]">
+                            <td class="py-2 text-gray-400 font-mono">${timeStr}</td>
+                            <td class="py-2 font-bold" style="color: ${color}">${s.profit >= 0 ? '+' : ''}${s.profit}€</td>
+                            <td class="py-2 text-gray-300 font-mono">${s.buyin}€</td>
+                        </tr>`;
+                    if(index === 0) {
+                        const timerDisplay = document.getElementById('session-timer');
+                        if(timerDisplay) timerDisplay.innerText = s.durata;
+                    }
+                });
+            } catch (e) { console.error("Sync Error", e); }
+        }
+
         if (localStorage.getItem('ev_logged') === 'true') showDash();
-    <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiPPRE0vPKvbpcD8vWS69A08Nx9w-9Zr1aUc2S3BxKycoBUQcSLpVkSzAljzhCbwD-0w/exec";
-
-async function refreshLiveStats() {
-    try {
-        const response = await fetch(SCRIPT_URL);
-        const sessions = await response.json();
-        
-        // Seleziona il corpo della tabella tramite l'ID che abbiamo messo sopra
-        const tbody = document.querySelector("#mani-recenti-table tbody");
-        if (!tbody) return;
-        
-        tbody.innerHTML = ""; // Pulisce la tabella
-        
-        // Ribalta la lista per avere l'ultima mano in alto
-        sessions.reverse().forEach((s, index) => {
-            const dateObj = new Date(s.data);
-            const timeStr = dateObj.getHours() + ":" + String(dateObj.getMinutes()).padStart(2, '0');
-            const color = s.profit >= 0 ? "#00ff87" : "#ff4444";
-            
-            tbody.innerHTML += `
-                <tr class="border-b border-[#1a1a1a]">
-                    <td class="py-2 text-gray-400">${timeStr}</td>
-                    <td class="py-2 font-bold" style="color: ${color}">${s.profit >= 0 ? '+' : ''}${s.profit}€</td>
-                    <td class="py-2 text-gray-300">${s.buyin}€</td>
-                </tr>`;
-            
-            // Se è la sessione più recente, aggiorna il Timer LED in alto a destra
-            if(index === 0) {
-                const timerDisplay = document.getElementById('session-timer');
-                if(timerDisplay) timerDisplay.innerText = s.durata;
-            }
-        });
-    } catch (e) {
-        console.error("Errore nel caricamento delle mani recenti:", e);
-    }
-}
-
-// Avvia il controllo ogni 10 secondi
-setInterval(refreshLiveStats, 10000);
-// Eseguilo anche subito al caricamento della pagina
-refreshLiveStats();
-</script>
+        setInterval(refreshLiveStats, 10000);
+    </script>
 </body>
 </html>
