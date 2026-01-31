@@ -12,12 +12,12 @@
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         .hidden { display: none !important; }
         
-        /* --- STILI LOGIN E DASHBOARD --- */
+        /* --- STILI ORIGINALI RIPRISTINATI --- */
         .glass-card { background: rgba(23, 32, 51, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; }
         .sidebar { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 30px 20px; }
         .main-content { flex: 1; padding: 40px; overflow-y: auto; background: radial-gradient(circle at top right, #0a1510, #000); }
         
-        .stat-card { background: #0a0a0a; border: 1px solid var(--border); padding: 25px; border-radius: 20px; transition: all 0.3s; }
+        .stat-card { background: #0a0a0a; border: 1px solid var(--border); padding: 25px; border-radius: 20px; transition: all 0.3s; position: relative; overflow: hidden; }
         .stat-card:hover { border-color: var(--accent); transform: translateY(-5px); }
         
         .profit-pill { padding: 4px 12px; border-radius: 99px; font-weight: bold; font-size: 0.85rem; }
@@ -51,7 +51,6 @@
             <div class="mb-12">
                 <h2 class="text-2xl font-black text-[#00ff87] italic">EV<span class="text-white">MAX</span></h2>
             </div>
-            
             <nav class="space-y-2 flex-1">
                 <a href="#" class="flex items-center gap-4 p-4 bg-[#00ff87]/10 text-[#00ff87] rounded-xl font-bold">
                     <i class="fas fa-chart-line w-5"></i> Dashboard
@@ -63,7 +62,6 @@
                     <i class="fas fa-cog w-5"></i> Impostazioni
                 </a>
             </nav>
-
             <button onclick="logout()" class="flex items-center gap-4 p-4 text-red-400 hover:bg-red-500/10 rounded-xl transition font-bold">
                 <i class="fas fa-sign-out-alt w-5"></i> LOGOUT
             </button>
@@ -90,7 +88,7 @@
                     <p class="text-xs font-bold text-gray-500 uppercase mb-2">Timer Sessione</p>
                     <h3 id="session-timer" class="text-4xl font-black font-mono text-white">00:00:00</h3>
                 </div>
-                <div class="stat-card relative overflow-hidden">
+                <div class="stat-card">
                     <p class="text-xs font-bold text-gray-500 uppercase mb-2">Stato Sistema</p>
                     <h3 class="text-4xl font-black italic text-[#00ff87]">ATTIVO</h3>
                 </div>
@@ -107,10 +105,10 @@
                             <tr class="text-gray-500 text-xs uppercase tracking-widest border-b border-white/5">
                                 <th class="pb-4">Orario</th>
                                 <th class="pb-4">Profit/Loss</th>
-                                <th class="pb-4">Stake</th>
+                                <th class="pb-4">Buy-in</th>
                             </tr>
                         </thead>
-                        <tbody class="text-sm font-medium">
+                        <tbody class="text-sm font-medium text-gray-300">
                             </tbody>
                     </table>
                 </div>
@@ -121,7 +119,7 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzD0AT0NeqPsSJkTYxCtuKHABBnUbNaUlvRAY--fRrQDKNPE568B3EIRj65o4AFoc2ePA/exec";
         
-        // Carica bankroll iniziale o imposta default
+        // Carica bankroll iniziale
         let startingBankroll = parseFloat(localStorage.getItem('bankroll')) || 500.00;
 
         async function login() {
@@ -129,9 +127,9 @@
             const p = document.getElementById('pass').value;
             const err = document.getElementById('login-err');
             
-            if(!u || !p) { err.innerText = "Inserisci credenziali"; return; }
+            if(!u || !p) { err.innerText = "Inserisci i dati"; return; }
 
-            err.innerText = "Accesso in corso...";
+            err.innerText = "Verifica in corso...";
             try {
                 const r = await fetch(`${SCRIPT_URL}?id=${u}&password=${p}&action=login`);
                 const res = await r.text();
@@ -139,10 +137,10 @@
                     localStorage.setItem('ev_logged', 'true');
                     showDash();
                 } else {
-                    err.innerText = "Credenziali non autorizzate.";
+                    err.innerText = "Credenziali non valide.";
                 }
             } catch(e) {
-                err.innerText = "Errore di connessione al server.";
+                err.innerText = "Errore di connessione.";
             }
         }
 
@@ -150,7 +148,6 @@
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
             refreshLiveStats();
-            // Aggiornamento automatico ogni 10 secondi
             setInterval(refreshLiveStats, 10000);
         }
 
@@ -159,6 +156,7 @@
             location.reload();
         }
 
+        // --- FUNZIONE DI SINCRONIZZAZIONE (MODIFICATA CON LOGICA MENSILE) ---
         async function refreshLiveStats() {
             try {
                 const response = await fetch(SCRIPT_URL);
@@ -166,64 +164,63 @@
                 const tbody = document.querySelector("#mani-recenti-table tbody");
                 if (!tbody) return;
 
-                if (!sessions || !sessions.length) {
-                    tbody.innerHTML = "<tr><td colspan='3' class='text-center py-4 text-gray-600 font-bold uppercase'>In attesa di dati...</td></tr>";
+                if (!sessions || sessions.length === 0) {
+                    tbody.innerHTML = "<tr><td colspan='3' class='text-center py-4 text-gray-600'>In attesa di dati...</td></tr>";
                     document.getElementById('live-balance').innerText = "€ " + startingBankroll.toFixed(2);
                     return;
                 }
 
                 const currentMonth = new Date().getMonth() + 1;
-                let netProfitMonth = 0;
+                let monthlyProfit = 0;
                 tbody.innerHTML = "";
 
-                // 1. Calcolo profitto totale filtrato per il mese corrente
-                sessions.forEach(s => {
-                    const sDate = new Date(s.data);
-                    if((sDate.getMonth() + 1) === currentMonth) {
-                        netProfitMonth += parseFloat(s.profit);
+                // 1. Filtro Mensile per il Saldo
+                sessions.forEach((s) => {
+                    const sessionDate = new Date(s.data);
+                    if ((sessionDate.getMonth() + 1) === currentMonth) {
+                        monthlyProfit += parseFloat(s.profit);
                     }
                 });
 
-                // 2. Popolamento Tabella Ultime 10 mani
+                // 2. Tabella Ultime 10 Sessioni
                 sessions.slice(-10).reverse().forEach((s, index) => {
-                    const dateObj = new Date(s.data);
-                    const timeStr = isNaN(dateObj) ? "--:--" : dateObj.getHours() + ":" + String(dateObj.getMinutes()).padStart(2, '0');
-                    
-                    const pValue = parseFloat(s.profit);
-                    const colorClass = pValue >= 0 ? "pos" : "neg";
+                    const date = new Date(s.data);
+                    const ora = isNaN(date) ? "--:--" : date.getHours() + ":" + String(date.getMinutes()).padStart(2, '0');
+                    const profitVal = parseFloat(s.profit);
+                    const colorClass = profitVal >= 0 ? "pos" : "neg";
                     
                     tbody.innerHTML += `
                         <tr class="border-b border-white/5">
-                            <td class="py-2 text-gray-500 font-mono">${timeStr}</td>
-                            <td class="py-2"><span class="profit-pill ${colorClass}">${pValue >= 0 ? '+' : ''}${pValue.toFixed(2)}€</span></td>
-                            <td class="py-2 text-gray-400 font-mono">STAKE</td>
+                            <td class="py-2 text-slate-500 font-mono">${ora}</td>
+                            <td class="py-2"><span class="profit-pill ${colorClass}">${profitVal >= 0 ? '+' : ''}${profitVal.toFixed(2)}€</span></td>
+                            <td class="py-2 text-slate-300 font-mono">${s.buyin}€</td>
                         </tr>`;
-
-                    // 3. Sincronizzazione Timer dall'ultima riga valida
+                    
+                    // 3. Sincronizzazione Timer (dall'ultima riga inviata dall'app)
                     if(index === 0 && s.durata) {
-                        const timerEl = document.getElementById('session-timer');
-                        if(timerEl) timerEl.innerText = s.durata;
+                        const timerDisplay = document.getElementById('session-timer');
+                        if(timerDisplay) timerDisplay.innerText = s.durata;
                     }
                 });
 
-                // 4. Aggiornamento Saldo: Bankroll Iniziale + Profitto del Mese
-                updateBalanceUI(netProfitMonth);
+                // 4. Aggiornamento Cassa Live
+                updateLiveBalance(monthlyProfit);
 
             } catch (e) { 
-                console.error("Errore Sincronizzazione:", e); 
+                console.error("Sync Error:", e); 
             }
         }
 
-        function updateBalanceUI(monthlyProfit) {
-            const finalBalance = startingBankroll + monthlyProfit;
-            const balanceEl = document.getElementById('live-balance');
-            if(balanceEl) {
-                balanceEl.innerText = "€ " + finalBalance.toFixed(2);
-                balanceEl.style.color = finalBalance >= startingBankroll ? "#00ff87" : "#ff4444";
+        function updateLiveBalance(profit) {
+            const current = startingBankroll + profit;
+            const el = document.getElementById('live-balance');
+            if(el) {
+                el.innerText = "€ " + current.toFixed(2);
+                el.style.color = current >= startingBankroll ? "#00ff87" : "#ff4444";
             }
         }
 
-        // Controllo sessione al caricamento
+        // Auto-Login
         if (localStorage.getItem('ev_logged') === 'true') showDash();
         
     </script>
