@@ -126,6 +126,7 @@
             <header id="header-tech">
                 <div id="rng-box">--</div>
                 <button onclick="roll()" class="bg-[#00ff87] text-black font-black px-12 h-[45px] rounded-md uppercase text-xs">ROLL RNG</button>
+		<div id="session-timer" style="color: #00ff87; font-family: monospace; font-size: 1.5rem; margin-left: 20px;">00:00:00</div>
             </header>
             
             <div id="workspace">
@@ -171,13 +172,17 @@
 
                     <div class="table-container">
                         <p class="text-[0.6rem] font-bold text-slate-500 uppercase mb-2">Mani Recenti Live</p>
-                        <table>
-                            <thead><tr><th>Data</th><th>EV</th><th>Chip</th></tr></thead>
-                            <tbody>
-                                <tr><td>30/01</td><td class="text-[#00ff87]">+1.2</td><td>450</td></tr>
-                                <tr><td>30/01</td><td class="text-red-500">-0.5</td><td>120</td></tr>
-                            </tbody>
-                        </table>
+                       <table id="mani-recenti-table" class="w-full text-left text-xs">
+    <thead>
+        <tr class="text-gray-500 border-b border-[#1a1a1a]">
+            <th class="py-2">ORARIO</th>
+            <th class="py-2">PROFIT</th>
+            <th class="py-2">BUY-IN</th>
+        </tr>
+    </thead>
+    <tbody>
+        </tbody>
+</table>
                     </div>
                 </aside>
             </div>
@@ -255,6 +260,48 @@
         }
 
         if (localStorage.getItem('ev_logged') === 'true') showDash();
-    </script>
+    <script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiPPRE0vPKvbpcD8vWS69A08Nx9w-9Zr1aUc2S3BxKycoBUQcSLpVkSzAljzhCbwD-0w/exec";
+
+async function refreshLiveStats() {
+    try {
+        const response = await fetch(SCRIPT_URL);
+        const sessions = await response.json();
+        
+        // Seleziona il corpo della tabella tramite l'ID che abbiamo messo sopra
+        const tbody = document.querySelector("#mani-recenti-table tbody");
+        if (!tbody) return;
+        
+        tbody.innerHTML = ""; // Pulisce la tabella
+        
+        // Ribalta la lista per avere l'ultima mano in alto
+        sessions.reverse().forEach((s, index) => {
+            const dateObj = new Date(s.data);
+            const timeStr = dateObj.getHours() + ":" + String(dateObj.getMinutes()).padStart(2, '0');
+            const color = s.profit >= 0 ? "#00ff87" : "#ff4444";
+            
+            tbody.innerHTML += `
+                <tr class="border-b border-[#1a1a1a]">
+                    <td class="py-2 text-gray-400">${timeStr}</td>
+                    <td class="py-2 font-bold" style="color: ${color}">${s.profit >= 0 ? '+' : ''}${s.profit}€</td>
+                    <td class="py-2 text-gray-300">${s.buyin}€</td>
+                </tr>`;
+            
+            // Se è la sessione più recente, aggiorna il Timer LED in alto a destra
+            if(index === 0) {
+                const timerDisplay = document.getElementById('session-timer');
+                if(timerDisplay) timerDisplay.innerText = s.durata;
+            }
+        });
+    } catch (e) {
+        console.error("Errore nel caricamento delle mani recenti:", e);
+    }
+}
+
+// Avvia il controllo ogni 10 secondi
+setInterval(refreshLiveStats, 10000);
+// Eseguilo anche subito al caricamento della pagina
+refreshLiveStats();
+</script>
 </body>
 </html>
