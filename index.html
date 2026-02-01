@@ -178,12 +178,11 @@
                     </div>
 
                     <div class="section-box">
-                        <span class="section-title">Sincronizzatore Tavoli</span>
-                        <label class="block border border-dashed border-[#00ff87] p-4 text-center cursor-pointer hover:bg-[#00ff87]/10 transition-colors">
-                            <i class="fa-solid fa-folder-open text-[#00ff87] text-xl mb-1"></i>
-                            <p class="text-[0.5rem] uppercase text-slate-500 font-bold">Carica Cartella Range WebP</p>
-                            <input type="file" id="file-input" webkitdirectory directory multiple class="hidden">
-                        </label>
+                        <span class="section-title">Sincronizzazione Cloud</span>
+                        <div class="flex items-center gap-2 p-2 bg-black/50 rounded-lg border border-[#00ff87]/20">
+                            <i class="fa-solid fa-cloud-arrow-down text-[#00ff87] animate-bounce"></i>
+                            <p class="text-[0.6rem] uppercase text-slate-400 font-bold">Range caricati da Drive</p>
+                        </div>
                     </div>
 
                     <div class="table-container">
@@ -208,9 +207,9 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjbRyM4asZvtuQ5ROUZ3XA7fiKX95egrH_c-k3h-nc4rf5-QkFodI_xucdoUHBlzkJQQ/exec";
+        const SCRIPT_URL = "INCOLLA_QUI_IL_TUO_URL_SCRIPT";
         
-        let persistentFiles = []; 
+        let driveFiles = []; // Array per i file dal Cloud
         let currentKey = "btnopen_";
         let startingBankroll = parseFloat(localStorage.getItem('bankroll')) || 0;
 
@@ -227,7 +226,6 @@
             if(!u || !p) return;
             document.getElementById('msg').innerText = "VERIFICA...";
             try {
-                // Invio parametri espliciti action, user e pass
                 const r = await fetch(`${SCRIPT_URL}?action=login&user=${encodeURIComponent(u)}&pass=${encodeURIComponent(p)}`);
                 const responseText = await r.text();
                 if(responseText.toUpperCase().includes("SUCCESS")) {
@@ -238,7 +236,6 @@
                 }
             } catch(e) { 
                 document.getElementById('msg').innerText = "ERRORE CONNESSIONE"; 
-                console.error(e);
             }
         }
 
@@ -251,20 +248,30 @@
             refreshLiveStats();
         }
 
-        function showTech() {
+        async function showTech() {
             document.getElementById('dashboard').classList.add('hidden');
             document.getElementById('techInterface').classList.remove('hidden');
             document.body.className = ""; 
+            
+            // Avvia caricamento range dal Cloud
+            if(driveFiles.length === 0) {
+                await loadRangesFromCloud();
+            }
+        }
+
+        async function loadRangesFromCloud() {
+            try {
+                const r = await fetch(`${SCRIPT_URL}?action=getFiles`);
+                driveFiles = await r.json();
+                render();
+            } catch(e) {
+                console.error("Errore Drive:", e);
+            }
         }
 
         function logout() { localStorage.removeItem('ev_logged'); location.reload(); }
 
         function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
-
-        document.getElementById('file-input').addEventListener('change', function(e) {
-            persistentFiles = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.webp'));
-            render();
-        });
 
         function sm(name, key, btn) {
             currentKey = key;
@@ -277,13 +284,15 @@
             const bar = document.getElementById('stack-bar');
             const img = document.getElementById('current-img');
             bar.innerHTML = '';
-            if (persistentFiles.length === 0) return;
+            
+            if (driveFiles.length === 0) return;
 
-            const filtered = persistentFiles.filter(f => f.name.toLowerCase().startsWith(currentKey.toLowerCase()));
+            const filtered = driveFiles.filter(f => f.name.toLowerCase().startsWith(currentKey.toLowerCase()));
 
             if (filtered.length > 0) {
                 img.style.display = 'block';
                 
+                // Ordinamento numerico (es. 20bb, 30bb)
                 filtered.sort((a,b) => {
                     const numA = parseInt(a.name.match(/\d+/)) || 0;
                     const numB = parseInt(b.name.match(/\d+/)) || 0;
@@ -295,9 +304,8 @@
                     b.className = 'stk-btn';
                     b.innerText = f.name.split('_')[1]?.replace('.webp', '').toUpperCase() || "RG";
                     b.onclick = () => {
-                        const r = new FileReader();
-                        r.onload = (e) => { img.src = e.target.result; };
-                        r.readAsDataURL(f);
+                        // Carica miniatura ad alta risoluzione da Drive
+                        img.src = `https://drive.google.com/thumbnail?id=${f.id}&sz=w1000`;
                         document.querySelectorAll('.stk-btn').forEach(x => x.classList.remove('active'));
                         b.classList.add('active');
                     };
