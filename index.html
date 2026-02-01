@@ -208,7 +208,8 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "python -m PyInstaller --noconsole --onefile --icon=icona.ico --add-data "logo_maximizer.png;." --add-data "icona.ico;." poker_tracker.py";
+        // SOSTITUISCI QUESTO URL CON QUELLO OTTENUTO DALLA DISTRIBUZIONE DI GOOGLE APPS SCRIPT
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzD0AT0NeqPsSJkTYxCtuKHABBnUbNaUlvRAY--fRrQDKNPE568B3EIRj65o4AFoc2ePA/exec";
         
         let persistentFiles = []; 
         let currentKey = "btnopen_";
@@ -227,12 +228,18 @@
             if(!u || !p) return;
             document.getElementById('msg').innerText = "VERIFICA...";
             try {
-                const r = await fetch(`${SCRIPT_URL}?id=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&action=login`);
-                if((await r.text()).toUpperCase().includes("SUCCESS")) {
+                const r = await fetch(`${SCRIPT_URL}?action=login&user=${encodeURIComponent(u)}&pass=${encodeURIComponent(p)}`);
+                const responseText = await r.text();
+                if(responseText.toUpperCase().includes("SUCCESS")) {
                     localStorage.setItem('ev_logged', 'true');
                     showDash();
-                } else { document.getElementById('msg').innerText = "ACCESSO NEGATO"; }
-            } catch(e) { document.getElementById('msg').innerText = "ERRORE CONNESSIONE"; }
+                } else { 
+                    document.getElementById('msg').innerText = "ACCESSO NEGATO"; 
+                }
+            } catch(e) { 
+                document.getElementById('msg').innerText = "ERRORE CONNESSIONE"; 
+                console.error(e);
+            }
         }
 
         function showDash() {
@@ -266,7 +273,6 @@
             render();
         }
 
-        // --- FUNZIONE RENDER CON ORDINE INVERSO ---
         function render() {
             const bar = document.getElementById('stack-bar');
             const img = document.getElementById('current-img');
@@ -278,11 +284,10 @@
             if (filtered.length > 0) {
                 img.style.display = 'block';
                 
-                // ORDINE INVERSO: Dal valore più alto al più basso (es: 30bb in alto, 10bb in basso)
                 filtered.sort((a,b) => {
                     const numA = parseInt(a.name.match(/\d+/)) || 0;
                     const numB = parseInt(b.name.match(/\d+/)) || 0;
-                    return numB - numA; // Cambiato da numA - numB a numB - numA
+                    return numB - numA; 
                 });
 
                 filtered.forEach((f, i) => {
@@ -313,24 +318,29 @@
             box.innerText = data[type] || "Seleziona...";
         }
 
-        // --- SINCRONIZZAZIONE MENSILE ---
         async function refreshLiveStats() {
             try {
                 const response = await fetch(SCRIPT_URL);
-                const sessions = await response.json();
+                const text = await response.text();
+                
+                if (!isNaN(parseFloat(text))) {
+                    updateLiveBalance(parseFloat(text));
+                    return;
+                }
+
+                const sessions = JSON.parse(text);
                 const tbody = document.querySelector("#mani-recenti-table tbody");
                 if (!tbody) return;
                 
                 tbody.innerHTML = "";
-                const currentMonth = new Date().getMonth() + 1;
+                const currentMonth = new Date().getMonth();
                 let monthlyProfit = 0;
 
                 sessions.forEach(s => {
                     const sDate = new Date(s.data);
-                    if((sDate.getMonth() + 1) === currentMonth) monthlyProfit += parseFloat(s.profit);
+                    if(sDate.getMonth() === currentMonth) monthlyProfit += parseFloat(s.profit.toString().replace(',','.'));
                 });
 
-                // Tabella: Ultima mano in alto
                 sessions.slice().reverse().forEach((s, index) => {
                     const dateObj = new Date(s.data);
                     const timeStr = isNaN(dateObj) ? "--:--" : dateObj.getHours() + ":" + String(dateObj.getMinutes()).padStart(2, '0');
@@ -347,7 +357,7 @@
                 });
 
                 updateLiveBalance(monthlyProfit);
-            } catch (e) { console.error("Sync Error"); }
+            } catch (e) { console.log("Refresh stats error"); }
         }
 
         function updateLiveBalance(profit) {
@@ -360,7 +370,7 @@
         }
 
         if (localStorage.getItem('ev_logged') === 'true') showDash();
-        setInterval(refreshLiveStats, 10000);
+        setInterval(refreshLiveStats, 30000);
     </script>
 </body>
 </html>
