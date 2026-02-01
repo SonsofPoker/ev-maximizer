@@ -208,7 +208,7 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzD0AT0NeqPsSJkTYxCtuKHABBnUbNaUlvRAY--fRrQDKNPE568B3EIRj65o4AFoc2ePA/exec";
+        const SCRIPT_URL = "python -m PyInstaller --noconsole --onefile --icon=icona.ico --add-data "logo_maximizer.png;." --add-data "icona.ico;." poker_tracker.py";
         
         let persistentFiles = []; 
         let currentKey = "btnopen_";
