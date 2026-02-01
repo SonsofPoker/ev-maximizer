@@ -208,8 +208,7 @@
     </div>
 
     <script>
-        // SOSTITUISCI QUESTO URL CON QUELLO OTTENUTO DALLA DISTRIBUZIONE DI GOOGLE APPS SCRIPT
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxgM5nLOSuxlV6YdtIOstjSQfSCtewxGorLQJ9cVz8uyqOVXaLBi5091jExw78LpRfzyQ/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxgM5nLOSuxlV6YdtIOstjSQfSCtewxGorLQJ9cVz8uyqOVxaLBi5091jExw78LpRfzyQ/exec";
         
         let persistentFiles = []; 
         let currentKey = "btnopen_";
@@ -228,6 +227,7 @@
             if(!u || !p) return;
             document.getElementById('msg').innerText = "VERIFICA...";
             try {
+                // Invio parametri espliciti action, user e pass
                 const r = await fetch(`${SCRIPT_URL}?action=login&user=${encodeURIComponent(u)}&pass=${encodeURIComponent(p)}`);
                 const responseText = await r.text();
                 if(responseText.toUpperCase().includes("SUCCESS")) {
