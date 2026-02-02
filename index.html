@@ -225,7 +225,8 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjbRyM4asZvtuQ5ROUZ3XA7fiKX95egrH_c-k3h-nc4rf5-QkFodI_xucdoUHBlzkJQQ/exec";
+        // URL DEFINITIVO AGGIORNATO
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbysHnxHlOQt6qwbLmqMx7PkvW7WYePu5k1gjfl_H7LMvMVWf5MuOklghvQRwJlmzYIjxQ/exec";
         
         let driveFiles = []; 
         let currentKey = "btnopen_";
@@ -264,14 +265,20 @@
             refreshLiveStats();
         }
 
+        // FUNZIONE LOGIN MIGLIORATA (Evita errori di connessione)
         async function handleLogin() {
             const u = document.getElementById('userId').value.trim();
             const p = document.getElementById('userPass').value.trim();
             if(!u || !p) return;
+            
             document.getElementById('msg').innerText = "VERIFICA...";
+            
             try {
-                const r = await fetch(`${SCRIPT_URL}?action=login&user=${encodeURIComponent(u)}&pass=${encodeURIComponent(p)}`);
+                // Utilizzo di template literal per l'URL corretto
+                const url = `${SCRIPT_URL}?action=login&user=${encodeURIComponent(u)}&pass=${encodeURIComponent(p)}`;
+                const r = await fetch(url);
                 const responseText = await r.text();
+                
                 if(responseText.toUpperCase().includes("SUCCESS")) {
                     localStorage.setItem('ev_logged', 'true');
                     showDash();
@@ -279,6 +286,7 @@
                     document.getElementById('msg').innerText = "ACCESSO NEGATO"; 
                 }
             } catch(e) { 
+                console.error("Login Error:", e);
                 document.getElementById('msg').innerText = "ERRORE CONNESSIONE"; 
             }
         }
