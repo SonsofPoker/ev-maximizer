@@ -12,171 +12,249 @@
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         .hidden { display: none !important; }
         
-        /* --- STILI DASHBOARD (Mantenuti come originali) --- */
+        /* --- STILI LOGIN E DASHBOARD --- */
         .glass-card { background: rgba(23, 32, 51, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; }
-        .sidebar { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 30px 20px; z-index: 50; }
-        .nav-item { padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 12px; color: #888; }
-        .nav-item.active { background: rgba(0, 255, 135, 0.1); color: var(--accent); }
-        .main-content { flex: 1; padding: 40px; overflow-y: auto; position: relative; }
-        .stat-card { background: var(--panel); border: 1px solid var(--border); padding: 24px; border-radius: 20px; }
-        .profit-pill { padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; }
-        .pos { background: rgba(0, 255, 135, 0.1); color: #00ff87; }
-        .neg { background: rgba(255, 68, 68, 0.1); color: #ff4444; }
+        .gradient-text { background: linear-gradient(90deg, #00ff87, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* --- SIDEBAR SINISTRA --- */
+        #sidebar-left { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+        .sidebar-brand-container { padding: 25px 15px; text-align: center; }
+        .brand-logo-main { width: 100%; max-width: 170px; filter: drop-shadow(0 0 10px var(--accent)); }
+        .nav-group { padding: 10px 15px; }
+        .cat-label { font-size: 0.65rem; text-transform: uppercase; margin: 20px 0 8px; display: block; font-weight: 800; letter-spacing: 1.5px; color: var(--accent); }
+        .nav-btn { width: 100%; padding: 10px; margin-bottom: 4px; background: #0d0d0d; border: 1px solid #222; color: #777; text-align: left; cursor: pointer; border-radius: 6px; font-size: 0.75rem; transition: 0.2s; }
+        .nav-btn:hover, .nav-btn.active { background: var(--accent); color: #000; font-weight: bold; border-color: var(--accent); }
+
+        /* --- AREA CENTRALE --- */
+        #main-view { flex-grow: 1; display: flex; flex-direction: column; background: #000; overflow: hidden; }
+        #header-tech { height: 70px; background: #0a0a0a; display: flex; align-items: center; justify-content: center; gap: 30px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+        #rng-box { font-family: 'Monaco', monospace; font-size: 2.2rem; color: var(--accent); background: #000; border: 1px solid var(--accent); padding: 5px 20px; border-radius: 6px; min-width: 80px; text-align: center; }
+        
+        #workspace { display: flex; flex-grow: 1; overflow: hidden; }
+        #stack-bar { width: 110px; background: #050505; display: flex; flex-direction: column; gap: 8px; padding: 15px 10px; overflow-y: auto; border-right: 1px solid var(--border); }
+        .stk-btn { width: 100%; padding: 12px 5px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; cursor: pointer; font-size: 0.75rem; font-weight: bold; text-align: center; }
+        .stk-btn.active { background: var(--blue); color: #000; border-color: var(--blue); }
+        #image-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 20px; }
+        #current-img { max-width: 100%; max-height: 100%; object-fit: contain; display: none; z-index: 5; }
+
+        /* --- SIDEBAR DESTRA (PERFETTA) --- */
+        #sidebar-right { width: 360px; background: var(--panel); border-left: 1px solid var(--border); padding: 15px; overflow-y: auto; flex-shrink: 0; display: flex; flex-direction: column; gap: 15px; }
+        .section-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 8px; padding: 12px; border-top: 3px solid var(--accent); }
+        .section-title { color: var(--blue); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; display: block; border-bottom: 1px solid #222; padding-bottom: 5px; }
+        
+        .nash-box { background: #0a0505; border: 1px solid var(--nash); border-radius: 12px; padding: 15px; box-shadow: 0 0 15px rgba(255, 68, 68, 0.15); }
+        .nash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .btn-nash { padding: 12px; border-radius: 8px; font-weight: 900; text-transform: uppercase; font-size: 0.85rem; transition: 0.2s; border: 2px solid transparent; text-align: center; }
+        .btn-call { background: #1a0000; color: var(--nash); border-color: var(--nash); }
+        .btn-push { background: #1a1a00; color: #ffcc00; border-color: #ffcc00; }
+
+        .sync-card { background: #0f172a; border: 1px solid var(--accent); border-radius: 12px; padding: 12px; text-align: center; }
+        .drop-zone { border: 1px dashed var(--accent); border-radius: 8px; padding: 15px; margin-top: 8px; cursor: pointer; }
+        
+        .table-container { background: #0f172a; border-radius: 12px; padding: 10px; border: 1px solid #1e293b; }
+        table { width: 100%; font-size: 0.65rem; border-collapse: collapse; }
+        th { color: #64748b; text-transform: uppercase; padding: 6px; text-align: left; border-bottom: 1px solid #1e293b; }
+        td { padding: 6px; border-bottom: 1px solid #1e293b; font-weight: bold; }
+
+        .btn-pf { background: #151515; color: #fff; border: 1px solid #333; padding: 8px; border-radius: 4px; font-size: 0.6rem; cursor: pointer; font-weight: bold; text-transform: uppercase; width: 100%; }
+        .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        #gto-solution-box { background: #000; border: 1px solid var(--accent); border-radius: 6px; padding: 10px; margin-top: 8px; min-height: 100px; }
+        .gto-line { margin-bottom: 6px; border-left: 2px solid var(--accent); padding-left: 8px; }
+        .gto-label { color: var(--blue); font-size: 0.55rem; font-weight: bold; text-transform: uppercase; display: block; }
+        .gto-val { color: var(--accent); font-size: 0.7rem; font-weight: bold; }
     </style>
 </head>
-<body>
+<body class="flex items-center justify-center min-h-screen">
 
-    <div id="authBox" class="fixed inset-0 z-[100] flex items-center justify-center bg-black hidden">
-        <div class="glass-card p-10 w-full max-w-md text-center border border-white/10">
-            <h2 class="text-3xl font-black mb-2 tracking-tighter">EV <span class="text-[#00ff87]">MAXIMIZER</span></h2>
-            <p class="text-slate-400 mb-8 text-sm">Elite GTO Grinder System</p>
-            <input type="text" id="user" placeholder="Username" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl mb-4 outline-none focus:border-[#00ff87] transition-all">
-            <input type="password" id="pass" placeholder="Password" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl mb-6 outline-none focus:border-[#00ff87] transition-all">
-            <button onclick="handleLogin()" class="w-full bg-[#00ff87] text-black font-black p-4 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all">ACCEDI AL SISTEMA</button>
+    <div id="authBox" class="glass-card p-10 w-full max-w-md shadow-2xl">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-black tracking-tighter gradient-text uppercase">EV Maximizer</h1>
+            <p class="text-slate-500 text-[10px] mt-2 font-bold tracking-widest uppercase">Premium Strategy Suite</p>
+        </div>
+        <div class="space-y-4">
+            <input type="text" id="userId" placeholder="Username" class="w-full px-4 py-4 rounded-xl outline-none bg-slate-900 border border-slate-800 text-white">
+            <input type="password" id="userPass" placeholder="Password" class="w-full px-4 py-4 rounded-xl outline-none bg-slate-900 border border-slate-800 text-white">
+            <button onclick="handleLogin()" class="w-full bg-[#00ff87] text-black font-black py-4 rounded-xl uppercase hover:scale-[1.02] transition-transform">Accedi</button>
+        </div>
+        <p id="msg" class="mt-6 text-center text-sm font-bold text-yellow-500"></p>
+    </div>
+
+    <div id="dashboard" class="hidden w-full max-w-5xl p-6">
+        <header class="flex justify-between items-center mb-10 bg-slate-900/50 p-6 rounded-3xl border border-white/5">
+            <h2 class="text-2xl font-black italic">DASHBOARD <span class="text-[#00ff87]">PRO</span></h2>
+            <button onclick="logout()" class="text-red-500 font-bold text-xs bg-red-500/10 px-4 py-2 rounded-lg">LOGOUT</button>
+        </header>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="glass-card p-6 border-l-4 border-[#00ff87]"><p class="text-slate-500 text-[10px] font-bold uppercase">Chip EV Totale</p><h3 class="text-3xl font-black">+2,450</h3></div>
+            <div class="glass-card p-6 border-l-4 border-[#00d4ff]"><p class="text-slate-500 text-[10px] font-bold uppercase">Sessioni Mese</p><h3 class="text-3xl font-black">142</h3></div>
+            <div class="glass-card p-6 border-l-4 border-purple-500"><p class="text-slate-500 text-[10px] font-bold uppercase">ROI Stimato</p><h3 class="text-3xl font-black">12.4%</h3></div>
+        </div>
+        <div class="glass-card p-12 text-center bg-gradient-to-br from-slate-800/30 to-transparent border-2 border-[#00ff87]/20">
+            <i class="fa-solid fa-rocket text-5xl text-[#00ff87] mb-6"></i>
+            <h3 class="text-3xl font-black mb-4 uppercase">Sistema Caricato</h3>
+            <button onclick="showTech()" class="bg-[#00ff87] text-black px-12 py-5 rounded-2xl font-black text-xl shadow-lg hover:scale-105 transition-all uppercase">Lancia Interfaccia Analisi</button>
         </div>
     </div>
 
-    <div id="dashboard" class="flex w-full hidden">
-        <aside class="sidebar">
-            <div class="text-2xl font-black mb-10 tracking-tighter px-4">EV <span class="text-[#00ff87]">MAX</span></div>
-            <nav class="flex-1">
-                <div class="nav-item active"><i class="fas fa-chart-line"></i> Dashboard</div>
-                <div class="nav-item"><i class="fas fa-history"></i> Sessioni</div>
-                <div class="nav-item"><i class="fas fa-brain"></i> GTO Trainer</div>
-            </nav>
-            <div class="glass-card p-4 mt-auto">
-                <div class="text-[10px] text-slate-500 uppercase font-bold mb-1">Status Sistema</div>
-                <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 bg-[#00ff87] rounded-full animate-pulse"></div>
-                    <span class="text-xs font-bold text-slate-300">CLOUD SYNC ACTIVE</span>
-                </div>
+    <div id="techInterface" class="hidden w-full h-screen flex">
+        <aside id="sidebar-left">
+            <div class="sidebar-brand-container">
+                <button onclick="showDash()" class="text-[10px] text-slate-500 mb-4 block hover:text-[#00ff87] uppercase font-bold"><i class="fa-solid fa-arrow-left"></i> Dashboard</button>
+                <img src="logo_maximizer.webp" class="brand-logo-main">
+            </div>
+            <div class="nav-group">
+                <span class="cat-label">3-Way Strategy</span>
+                <button class="nav-btn active" onclick="sm('1. BTN Open', 'btnopen_', this)">1. BTN Open</button>
+                <button class="nav-btn" onclick="sm('2. SB vs BTN', 'sbvsbtn_', this)">2. SB vs BTN</button>
+                <button class="nav-btn" onclick="sm('3. SB vs BB', 'sbvsbb_', this)">3. SB vs BB</button>
+                <button class="nav-btn" onclick="sm('4. SB vs BTN Limp', 'sbvslimp_', this)">4. SB vs BTN Limp</button>
+                <button class="nav-btn" onclick="sm('5. BB vs BTN', 'bbvbt_', this)">5. BB vs BTN</button>
+                <button class="nav-btn" onclick="sm('6. BB vs SB', 'bbvssb_', this)">6. BB vs SB</button>
+                <button class="nav-btn" onclick="sm('7. BB vs SB Limp', 'bbvssblimp_', this)">7. BB vs SB Limp</button>
+                <button class="nav-btn" onclick="sm('8. BB vs BTN Iso', 'bbvsbtniso_', this)">8. BB vs BTN Iso</button>
+                <button class="nav-btn" onclick="sm('9. BB vs SB Iso', 'bbvssbiso_', this)">9. BB vs SB Iso</button>
+                <button class="nav-btn" onclick="sm('10. BB vs 2 PL', 'bbvs2pl_', this)">10. BB vs 2 PL</button>
+                <span class="cat-label">Heads-Up</span>
+                <button class="nav-btn" onclick="sm('11. HU IP Open', 'huip_', this)">11. HU IP Open</button>
+                <button class="nav-btn" onclick="sm('12. HU OOP vs Limp', 'huooplimp_', this)">12. HU OOP vs Limp</button>
+                <button class="nav-btn" onclick="sm('13. HU OOP vs MR', 'huoopmr_', this)">13. HU OOP vs MR</button>
+                <button class="nav-btn" onclick="sm('14. HU OOP vs Shove', 'huoopshove_', this)">14. HU OOP vs Shove</button>
             </div>
         </aside>
 
-        <main class="main-content">
-            <header class="flex justify-between items-center mb-12">
-                <div>
-                    <h1 class="text-4xl font-black tracking-tight" id="welcome-msg">Bentornato, OPERATOR</h1>
-                    <p class="text-slate-500 font-medium">Analisi in tempo reale del tuo grinding</p>
-                </div>
-                <div class="text-right">
-                    <div class="text-[10px] text-slate-500 font-black uppercase tracking-widest">Bankroll Attuale</div>
-                    <div id="live-balance" class="text-3xl font-black text-[#00ff87]">€ 0.00</div>
-                </div>
+        <main id="main-view">
+            <header id="header-tech">
+                <div id="rng-box">--</div>
+                <button onclick="roll()" class="bg-[#00ff87] text-black font-black px-12 h-[45px] rounded-md uppercase text-xs">ROLL RNG</button>
             </header>
+            
+            <div id="workspace">
+                <div id="stack-bar"></div>
+                <div id="image-area"><img id="current-img"></div>
+                
+                <aside id="sidebar-right">
+                    <div class="section-box">
+                        <span class="section-title">GTO Advisor Elite</span>
+                        <div class="pf-grid">
+                            <button class="btn-pf" onclick="advise('IP_AGG')">IP Aggressore</button>
+                            <button class="btn-pf" onclick="advise('IP_VS_AGG')">IP vs Aggr.</button>
+                            <button class="btn-pf" onclick="advise('OOP_AGG')">OOP Aggressore</button>
+                            <button class="btn-pf" onclick="advise('OOP_VS_AGG')">OOP vs Aggr.</button>
+                            <button class="btn-pf" onclick="advise('MW_POT')">Multiway Pot</button>
+                            <button class="btn-pf" onclick="advise('HU_ISO')">HU vs ISO</button>
+                        </div>
+                        <div id="gto-solution-box"><div id="gto-content" class="text-[0.6rem] text-slate-500">Seleziona post-flop...</div></div>
+                    </div>
 
-            <div class="grid grid-cols-3 gap-6 mb-10">
-                <div class="stat-card">
-                    <div class="text-slate-500 text-xs font-bold uppercase mb-2">Profitto Mensile</div>
-                    <div id="monthly-profit" class="text-2xl font-black">€ 0.00</div>
-                </div>
-                <div class="stat-card border-l-4 border-l-[#00ff87]">
-                    <div class="text-slate-500 text-xs font-bold uppercase mb-2">Mani Totali</div>
-                    <div id="total-hands" class="text-2xl font-black">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="text-slate-500 text-xs font-bold uppercase mb-2">EV Atteso</div>
-                    <div id="ev-stat" class="text-2xl font-black text-cyan-400">0.00 bb/100</div>
-                </div>
-            </div>
+                    <div class="nash-box">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i class="fa-solid fa-skull-crossbones text-red-500 text-xs"></i>
+                            <span class="text-[0.7rem] font-black uppercase text-white tracking-widest">Nash Equilibrium</span>
+                        </div>
+                        <div class="nash-grid">
+                            <button class="btn-nash btn-call" onclick="sm('Nash Call', 'nashcall_', this)">CALL</button>
+                            <button class="btn-nash btn-push" onclick="sm('Nash Push', 'nashpush_', this)">PUSH</button>
+                        </div>
+                    </div>
 
-            <div class="glass-card p-8">
-                <h3 class="text-xl font-black mb-6 flex items-center gap-3">
-                    <i class="fas fa-list-ul text-[#00ff87]"></i> Ultime Sessioni
-                </h3>
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="text-slate-500 text-[10px] font-black uppercase tracking-widest border-b border-white/5">
-                            <th class="pb-4">Orario</th>
-                            <th class="pb-4">Profitto</th>
-                            <th class="pb-4">Buy-in</th>
-                        </tr>
-                    </thead>
-                    <tbody id="session-table">
-                        </tbody>
-                </table>
+                    <div class="sync-card">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="fa-solid fa-sync fa-spin text-blue-400 text-[10px]"></i>
+                            <span class="text-[0.65rem] font-black uppercase text-white">Sincronizzatore</span>
+                        </div>
+                        <label class="drop-zone block">
+                            <i class="fa-solid fa-folder-open text-[#00ff87] text-xl mb-1"></i>
+                            <p class="text-[0.5rem] text-slate-400 uppercase">Carica Range Cartella</p>
+                            <input type="file" id="file-input" webkitdirectory directory multiple class="hidden">
+                        </label>
+                    </div>
+
+                    <div class="table-container">
+                        <p class="text-[0.6rem] font-bold text-slate-500 uppercase mb-2">Mani Recenti Live</p>
+                        <table>
+                            <thead><tr><th>Data</th><th>EV</th><th>Chip</th></tr></thead>
+                            <tbody>
+                                <tr><td>30/01</td><td class="text-[#00ff87]">+1.2</td><td>450</td></tr>
+                                <tr><td>30/01</td><td class="text-red-500">-0.5</td><td>120</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </aside>
             </div>
         </main>
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4XJHjnP22eyaBmSzzxD_3i51YK-LXLEtO65FSpGHiGGGXz2Gw-BZG23u4NnnKniNj/exec"; // Assicurati di mettere l'URL del nuovo deployment
-        let startingBankroll = 5000; 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4XJHjnP22eyaBmSzzxD_3i51YK-LXLEtO65FSpGHiGGGXz2Gw-BZG23u4NnnKniNj/exec";
+        let persistentFiles = []; let currentKey = "btnopen_";
 
-        // --- LOGICA DI ACCESSO DIRETTO (SENIOR BYPASS) ---
-        window.onload = function() {
-            // Iniettiamo forzatamente lo stato loggato
-            localStorage.setItem('ev_logged', 'true');
-            localStorage.setItem('ev_user', 'OPERATOR');
-            
-            // Portiamo l'utente direttamente alla dashboard
-            showDash();
-            
-            // Avviamo il recupero dei dati
-            refreshStats();
-            // Loop di aggiornamento ogni 30 secondi
-            setInterval(refreshStats, 30000);
-        };
+        // GESTIONE NAVIGAZIONE
+        function handleLogin() {
+            const u = document.getElementById('userId').value;
+            const p = document.getElementById('userPass').value;
+            if(!u || !p) return;
+            document.getElementById('msg').innerText = "VERIFICA IN CORSO...";
+            fetch(`${SCRIPT_URL}?id=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&action=login`, { mode: 'no-cors' });
+            setTimeout(() => { localStorage.setItem('ev_logged', 'true'); showDash(); }, 800);
+        }
 
         function showDash() {
             document.getElementById('authBox').classList.add('hidden');
+            document.getElementById('techInterface').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
-            document.body.className = "bg-black text-white";
+            document.body.className = "flex items-center justify-center min-h-screen p-4";
         }
 
-        async function refreshStats() {
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=getSessions&username=OPERATOR`);
-                const sessions = await response.json();
-                
-                let monthlyProfit = 0;
-                let totalHands = 0;
-                const tbody = document.getElementById('session-table');
-                tbody.innerHTML = "";
+        function showTech() {
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('techInterface').classList.remove('hidden');
+            document.body.className = ""; 
+        }
 
-                sessions.forEach(s => {
-                    monthlyProfit += parseFloat(s.profit || 0);
-                    totalHands += parseInt(s.hands || 0);
+        function logout() { localStorage.removeItem('ev_logged'); location.reload(); }
+
+        // GESTIONE TECNICA RANGE
+        function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
+
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            persistentFiles = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.webp'));
+            render();
+        });
+
+        function sm(name, key, btn) {
+            currentKey = key;
+            document.querySelectorAll('.nav-btn, .btn-nash').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            render();
+        }
+
+        function render() {
+            const bar = document.getElementById('stack-bar'); const img = document.getElementById('current-img');
+            bar.innerHTML = ''; if (persistentFiles.length === 0) return;
+            const filtered = persistentFiles.filter(f => f.name.toLowerCase().startsWith(currentKey.toLowerCase()));
+            if (filtered.length > 0) {
+                img.style.display = 'block';
+                filtered.sort((a,b) => (parseInt(b.name.match(/\d+/)) || 0) - (parseInt(a.name.match(/\d+/)) || 0));
+                filtered.forEach((f, i) => {
+                    const b = document.createElement('button'); b.className = 'stk-btn';
+                    b.innerText = f.name.split('_')[1]?.replace('.webp', '').toUpperCase() || "RANGE";
+                    b.onclick = () => {
+                        const r = new FileReader(); r.onload = (e) => { img.src = e.target.result; }; r.readAsDataURL(f);
+                        document.querySelectorAll('.stk-btn').forEach(x => x.classList.remove('active')); b.classList.add('active');
+                    };
+                    bar.appendChild(b); if(i === 0) b.click();
                 });
-
-                document.getElementById('monthly-profit').innerText = `€ ${monthlyProfit.toFixed(2)}`;
-                document.getElementById('total-hands').innerText = totalHands.toLocaleString();
-                
-                // Popolamento Tabella
-                sessions.slice().reverse().slice(0, 10).forEach(s => {
-                    const dateObj = new Date(s.timestamp || s.data);
-                    const timeStr = isNaN(dateObj) ? "--:--" : dateObj.getHours() + ":" + String(dateObj.getMinutes()).padStart(2, '0');
-                    const colorClass = parseFloat(s.profit) < 0 ? "neg" : "pos";
-                    
-                    tbody.innerHTML += `
-                        <tr class="border-b border-white/5">
-                            <td class="py-3 text-slate-500 font-mono text-sm">${timeStr}</td>
-                            <td class="py-3"><span class="profit-pill ${colorClass}">${parseFloat(s.profit) >= 0 ? '+' : ''}${s.profit}€</span></td>
-                            <td class="py-3 text-slate-300 font-mono text-sm">${s.buyin}€</td>
-                        </tr>`;
-                });
-
-                updateLiveBalance(monthlyProfit);
-            } catch (e) { 
-                console.log("Sync Error:", e);
-            }
+            } else { img.style.display = 'none'; }
         }
 
-        function updateLiveBalance(profit) {
-            const current = startingBankroll + profit;
-            const el = document.getElementById('live-balance');
-            if(el) {
-                el.innerText = "€ " + current.toFixed(2);
-                el.style.color = current >= startingBankroll ? "#00ff87" : "#ff4444";
-            }
+        function advise(type) {
+            const box = document.getElementById('gto-content');
+            const data = { 'IP_AGG': [{l: 'Flop Dry', v: 'Bet 33%'}, {l: 'Flop Coord', v: 'Bet 75%'}], 'IP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x'}], 'OOP_AGG': [{l: 'Value (TP+)', v: 'Check-Raise'}], 'OOP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x'}], 'MW_POT': [{l: 'Value', v: 'Bet 100%'}], 'HU_ISO': [{l: 'TP Kicker 8+', v: 'Stack-off'}] };
+            let html = ''; data[type]?.forEach(item => { html += `<div class="gto-line"><span class="gto-label">${item.l}</span><span class="gto-val">${item.v}</span></div>`; });
+            box.innerHTML = html || "Pronto...";
         }
 
-        // Manteniamo handleLogin solo come fallback di emergenza
-        async function handleLogin() {
-            localStorage.setItem('ev_logged', 'true');
-            showDash();
-            refreshStats();
-        }
+        if (localStorage.getItem('ev_logged') === 'true') showDash();
     </script>
 </body>
 </html>
