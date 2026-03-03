@@ -162,21 +162,15 @@
                             <i class="fa-solid fa-sync fa-spin text-blue-400 text-[10px]"></i>
                             <span class="text-[0.65rem] font-black uppercase text-white">Sincronizzatore</span>
                         </div>
-                        <label class="drop-zone block">
-                            <i class="fa-solid fa-folder-open text-[#00ff87] text-xl mb-1"></i>
-                            <p class="text-[0.5rem] text-slate-400 uppercase">Carica Range Cartella</p>
-                            <input type="file" id="file-input" webkitdirectory directory multiple class="hidden">
-                        </label>
+                        <p class="text-[0.5rem] text-[#00ff87] uppercase font-bold">Cloud Drive Attivo</p>
                     </div>
 
                     <div class="table-container">
                         <p class="text-[0.6rem] font-bold text-slate-500 uppercase mb-2">Mani Recenti Live</p>
-                        <table>
-                            <thead><tr><th>Data</th><th>EV</th><th>Chip</th></tr></thead>
+                        <table id="recent-sessions-table">
+                            <thead><tr><th>Data</th><th>Profit</th><th>Buy-in</th></tr></thead>
                             <tbody>
-                                <tr><td>30/01</td><td class="text-[#00ff87]">+1.2</td><td>450</td></tr>
-                                <tr><td>30/01</td><td class="text-red-500">-0.5</td><td>120</td></tr>
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                 </aside>
@@ -185,17 +179,32 @@
     </div>
 
     <script>
+        // Manteniamo l'URL che era nel tuo file
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4XJHjnP22eyaBmSzzxD_3i51YK-LXLEtO65FSpGHiGGGXz2Gw-BZG23u4NnnKniNj/exec";
-        let persistentFiles = []; let currentKey = "btnopen_";
+        
+        let persistentFiles = []; 
+        let currentKey = "btnopen_";
 
-        // GESTIONE NAVIGAZIONE
-        function handleLogin() {
+        // GESTIONE LOGIN (Coordinata con Codice.gs)
+        async function handleLogin() {
             const u = document.getElementById('userId').value;
             const p = document.getElementById('userPass').value;
             if(!u || !p) return;
             document.getElementById('msg').innerText = "VERIFICA IN CORSO...";
-            fetch(`${SCRIPT_URL}?id=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&action=login`, { mode: 'no-cors' });
-            setTimeout(() => { localStorage.setItem('ev_logged', 'true'); showDash(); }, 800);
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=login&username=${encodeURIComponent(u)}&pass=${encodeURIComponent(p)}`);
+                const res = await response.json();
+                if(res.status === "success") {
+                    localStorage.setItem('ev_logged', 'true');
+                    localStorage.setItem('ev_user', u);
+                    showDash();
+                } else {
+                    document.getElementById('msg').innerText = "CREDENZIALI ERRATE";
+                }
+            } catch(e) {
+                document.getElementById('msg').innerText = "ERRORE CONNESSIONE";
+            }
         }
 
         function showDash() {
@@ -203,23 +212,53 @@
             document.getElementById('techInterface').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
             document.body.className = "flex items-center justify-center min-h-screen p-4";
+            refreshSessions();
         }
 
-        function showTech() {
+        async function showTech() {
             document.getElementById('dashboard').classList.add('hidden');
             document.getElementById('techInterface').classList.remove('hidden');
             document.body.className = ""; 
+            // Carica automaticamente i file dal Drive
+            await loadRangesFromCloud();
         }
 
         function logout() { localStorage.removeItem('ev_logged'); location.reload(); }
 
-        // GESTIONE TECNICA RANGE
-        function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
+        // SINCRONIZZAZIONE AUTOMATICA GOOGLE DRIVE
+        async function loadRangesFromCloud() {
+            const syncLabel = document.querySelector('.sync-card p');
+            syncLabel.innerText = "SINCRO DRIVE...";
+            try {
+                const r = await fetch(`${SCRIPT_URL}?action=getFiles`);
+                persistentFiles = await r.json();
+                syncLabel.innerText = `SYNC: ${persistentFiles.length} RANGE`;
+                render();
+            } catch(e) {
+                syncLabel.innerText = "ERRORE DRIVE";
+            }
+        }
 
-        document.getElementById('file-input').addEventListener('change', function(e) {
-            persistentFiles = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.webp'));
-            render();
-        });
+        // AGGIORNAMENTO TABELLA SESSIONI DA GOOGLE SHEET
+        async function refreshSessions() {
+            const user = localStorage.getItem('ev_user') || "";
+            try {
+                const r = await fetch(`${SCRIPT_URL}?action=getSessions&username=${user}`);
+                const data = await r.json();
+                const tbody = document.querySelector('#recent-sessions-table tbody');
+                tbody.innerHTML = "";
+                data.slice(-5).reverse().forEach(s => {
+                    const color = parseFloat(s.profit) >= 0 ? 'text-[#00ff87]' : 'text-red-500';
+                    tbody.innerHTML += `<tr>
+                        <td>${new Date(s.timestamp).toLocaleDateString()}</td>
+                        <td class="${color}">${s.profit}€</td>
+                        <td>${s.buyin}€</td>
+                    </tr>`;
+                });
+            } catch(e) { console.log("Errore sessioni"); }
+        }
+
+        function roll() { document.getElementById('rng-box').innerText = Math.floor(Math.random() * 101); }
 
         function sm(name, key, btn) {
             currentKey = key;
@@ -229,28 +268,51 @@
         }
 
         function render() {
-            const bar = document.getElementById('stack-bar'); const img = document.getElementById('current-img');
-            bar.innerHTML = ''; if (persistentFiles.length === 0) return;
+            const bar = document.getElementById('stack-bar'); 
+            const img = document.getElementById('current-img');
+            bar.innerHTML = ''; 
+            
+            if (persistentFiles.length === 0) return;
+            
             const filtered = persistentFiles.filter(f => f.name.toLowerCase().startsWith(currentKey.toLowerCase()));
+            
             if (filtered.length > 0) {
                 img.style.display = 'block';
                 filtered.sort((a,b) => (parseInt(b.name.match(/\d+/)) || 0) - (parseInt(a.name.match(/\d+/)) || 0));
+                
                 filtered.forEach((f, i) => {
-                    const b = document.createElement('button'); b.className = 'stk-btn';
+                    const b = document.createElement('button'); 
+                    b.className = 'stk-btn';
                     b.innerText = f.name.split('_')[1]?.replace('.webp', '').toUpperCase() || "RANGE";
+                    
                     b.onclick = () => {
-                        const r = new FileReader(); r.onload = (e) => { img.src = e.target.result; }; r.readAsDataURL(f);
-                        document.querySelectorAll('.stk-btn').forEach(x => x.classList.remove('active')); b.classList.add('active');
+                        // Usa l'ID del file di Drive per caricare l'immagine
+                        img.src = `https://drive.google.com/thumbnail?id=${f.id}&sz=w1000`;
+                        document.querySelectorAll('.stk-btn').forEach(x => x.classList.remove('active')); 
+                        b.classList.add('active');
                     };
-                    bar.appendChild(b); if(i === 0) b.click();
+                    bar.appendChild(b); 
+                    if(i === 0) b.click();
                 });
-            } else { img.style.display = 'none'; }
+            } else { 
+                img.style.display = 'none'; 
+            }
         }
 
         function advise(type) {
             const box = document.getElementById('gto-content');
-            const data = { 'IP_AGG': [{l: 'Flop Dry', v: 'Bet 33%'}, {l: 'Flop Coord', v: 'Bet 75%'}], 'IP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x'}], 'OOP_AGG': [{l: 'Value (TP+)', v: 'Check-Raise'}], 'OOP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x'}], 'MW_POT': [{l: 'Value', v: 'Bet 100%'}], 'HU_ISO': [{l: 'TP Kicker 8+', v: 'Stack-off'}] };
-            let html = ''; data[type]?.forEach(item => { html += `<div class="gto-line"><span class="gto-label">${item.l}</span><span class="gto-val">${item.v}</span></div>`; });
+            const data = { 
+                'IP_AGG': [{l: 'Flop Dry', v: 'Bet 33%'}, {l: 'Flop Coord', v: 'Bet 75%'}], 
+                'IP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x'}], 
+                'OOP_AGG': [{l: 'Value (TP+)', v: 'Check-Raise'}], 
+                'OOP_VS_AGG': [{l: 'TP Kicker 8+', v: 'Raise 3x'}], 
+                'MW_POT': [{l: 'Value', v: 'Bet 100%'}], 
+                'HU_ISO': [{l: 'TP Kicker 8+', v: 'Stack-off'}] 
+            };
+            let html = ''; 
+            data[type]?.forEach(item => { 
+                html += `<div class="gto-line"><span class="gto-label">${item.l}</span><span class="gto-val">${item.v}</span></div>`; 
+            });
             box.innerHTML = html || "Pronto...";
         }
 
