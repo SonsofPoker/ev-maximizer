@@ -223,18 +223,23 @@
             await loadRangesFromCloud();
         }
 
-        function logout() { localStorage.removeItem('ev_logged'); location.reload(); }
-
-        // SINCRONIZZAZIONE AUTOMATICA GOOGLE DRIVE
         async function loadRangesFromCloud() {
             const syncLabel = document.querySelector('.sync-card p');
             syncLabel.innerText = "SINCRO DRIVE...";
             try {
-                const r = await fetch(`${SCRIPT_URL}?action=getFiles`);
+                // Aggiunto il parametro redirect: 'follow'
+                const r = await fetch(`${SCRIPT_URL}?action=getFiles`, {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+        
+                if (!r.ok) throw new Error('Network response was not ok');
+        
                 persistentFiles = await r.json();
                 syncLabel.innerText = `SYNC: ${persistentFiles.length} RANGE`;
                 render();
             } catch(e) {
+                console.error("Dettaglio Errore:", e);
                 syncLabel.innerText = "ERRORE DRIVE";
             }
         }
